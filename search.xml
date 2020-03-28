@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Mac配置优化</title>
+    <url>/2020/03/27/%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/Mac%E9%85%8D%E7%BD%AE%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[<p>话说为啥会用到Mac Pro呢, 原本我用的小黑, 原因是近期为了搭梯子, 使得连接公司的VPN损坏Σ(っ °Д °;)っ</p>
+<p>然后经过一番原因排查, 知道了是因为这个梯子和Windows下的EC会起冲突.</p>
+<p>其实如果排除玩游戏, Office, 以及一些必要的社交工具如微信, 钉钉(这排除的有点多啊喂), 我个人是更喜欢Ubuntu的, WIndows系统实在一言难尽つ﹏⊂</p>
+<p>于是我将目光投向了Mac OS, 买Mac Pro, 是的我看中的是苹果系统. 但在人生第一次开箱后, 我被震惊了, 这一眼看过去就很高级的做工, 这低调内敛, 精益求精的态度, 我甚至想下一部手机也换Iphone好了(｡･∀･)ﾉﾞ</p>
+<a id="more"></a>
+<h1 id="一些基本操作"><a href="#一些基本操作" class="headerlink" title="一些基本操作"></a>一些基本操作</h1><ul>
+<li><p>Home: fn left or command left</p>
+</li>
+<li><p>End: fn right or command right</p>
+</li>
+<li><p>PageUp: fn up</p>
+</li>
+<li><p>PageDown: fn down</p>
+</li>
+<li><p>Delete: fn backspace</p>
+</li>
+<li><p>按单词移动: option left or option right</p>
+</li>
+<li><p>iTerm2快捷键设置:</p>
+<p>总体思路是查询原有快捷键, 将其配置赋予自定义的快捷键.</p>
+<ul>
+<li><p>按单词移动:</p>
+<p>Preferences &gt; Profiles &gt; Keys</p>
+<p>option left Send Escape Sequence b</p>
+<p>option right Send Escape Sequence f</p>
+</li>
+<li><p>按单词删除:</p>
+<p>Preferences &gt; Profiles &gt; Keys</p>
+<p>Left Option: Normal &gt; Esc+</p>
+</li>
+<li><p>整行删除:</p>
+<p>Preferences &gt; Keys</p>
+<p>command backspace Send Hex Codes 0x15</p>
+</li>
+<li><p>移动到句首/尾:</p>
+<p>Preferences &gt; Keys</p>
+<p>command left/right Send Hex Codes 0x01/0x05</p>
+</li>
+<li><p>撤销:</p>
+<p>Preferences &gt; Profiles &gt; Keys</p>
+<p>command z Send Hex Codes 0x01/0x1f</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="一些必要的APP"><a href="#一些必要的APP" class="headerlink" title="一些必要的APP"></a>一些必要的APP</h1><p>包含但不限于:</p>
+<ul>
+<li>钉钉</li>
+<li>微信</li>
+<li>Chrome</li>
+<li>EeasyConnect</li>
+<li>ClashX</li>
+<li>Tencent lemon</li>
+<li>The Unarchiver</li>
+</ul>
+<h1 id="生产工具"><a href="#生产工具" class="headerlink" title="生产工具"></a>生产工具</h1><ul>
+<li><p>Anaconda3</p>
+<p>可在清华镜像下载. 安装完成后, 需要将路径写入环境变量<code>~/.zsh_profile</code>.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Anaconda3.</span><br><span class="line">export PATH=&quot;/Users/opt/anaconda3/bin:$PATH&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PyCharm</p>
+<p>下载安装, 并配置解释器路径和主题.</p>
+</li>
+<li><p>Office</p>
+<p>下载官网最新版, 然后寻找激活方法. 可选择装部分应用.</p>
+</li>
+<li><p>Git</p>
+<p>一般自带. 需要创建公钥私钥, GitHub关联.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Node.js</p>
+<p>官网下载安装.</p>
+</li>
+<li><p>typora</p>
+<p>官网下载安装.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 在~/.zsh_profile中添加如下, 使其可在终端快速启动.</span><br><span class="line">alias typora=&quot;open -a typora&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="终端相关"><a href="#终端相关" class="headerlink" title="终端相关"></a>终端相关</h1><ul>
+<li><p>homebrew</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>iTerm2</p>
+<p>官网下载安装.</p>
+<p>设置为默认终端.</p>
+<p>调整字体大小15, 光标闪动, 色彩对比度.</p>
+<p>preference =&gt; Keys =&gt; Hotkey =&gt; Show/hide iTerm2 with a system-wide hotkey, 设置为command ..</p>
+<p>preference  =&gt; profiles =&gt; colors =&gt; Color Presets =&gt; Solarized Light.</p>
+</li>
+<li><p>oh-my-zsh</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 查看安装的shell.</span><br><span class="line">$ cat /etc/shells</span><br><span class="line"># 查看当前shell.</span><br><span class="line">$ echo $SHELL</span><br><span class="line"># 切换shell.</span><br><span class="line">$ chsh -s /bin/zsh</span><br><span class="line"># 安装oh-my-zsh</span><br><span class="line">$ sh -c &quot;$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 配置oh-my-zsh.</span><br><span class="line">$ open -t .zshrc</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 主题列表: https://github.com/ohmyzsh/ohmyzsh/wiki/themes</span><br><span class="line">ZSH_THEME=avit</span><br><span class="line"># 插件.</span><br><span class="line">plugins=(git osx zsh-autosuggestions zsh-syntax-highlighting)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 插件中的zsh-autosuggestions 和 zsh-syntax-highlighting 是自定义安装的插件, 需要用 git 将插件 clone 到指定插件目录下：</span><br><span class="line"># 自动提示插件</span><br><span class="line">git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions</span><br><span class="line"># 语法高亮插件</span><br><span class="line">git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>流程记录</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Binary Gap</title>
+    <url>/2020/03/26/LeetCode/Binary-Gap/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a positive integer <code>N</code>, find and return the longest distance between two consecutive 1’s in the binary representation of <code>N</code>.</p>
+<p>If there aren’t two consecutive 1’s, return 0.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 22</span><br><span class="line">Output: 2</span><br><span class="line">Explanation: </span><br><span class="line">22 in binary is 0b10110.</span><br><span class="line">In the binary representation of 22, there are three ones, and two consecutive pairs of 1&apos;s.</span><br><span class="line">The first consecutive pair of 1&apos;s have distance 2.</span><br><span class="line">The second consecutive pair of 1&apos;s have distance 1.</span><br><span class="line">The answer is the largest of these two distances, which is 2.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 5</span><br><span class="line">Output: 2</span><br><span class="line">Explanation: </span><br><span class="line">5 in binary is 0b101.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 6</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: </span><br><span class="line">6 in binary is 0b110.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 4:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 8</span><br><span class="line">Output: 0</span><br><span class="line">Explanation: </span><br><span class="line">8 in binary is 0b1000.</span><br><span class="line">There aren&apos;t any consecutive pairs of 1&apos;s in the binary representation of 8, so we return 0.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ul>
+<li><code>1 &lt;= N &lt;= 10^9</code></li>
+</ul>
+<hr>
+<p>给定一个正整数 <code>N</code>，找到并返回 <code>N</code> 的二进制表示中两个连续的 1 之间的最长距离。 </p>
+<p>如果没有两个连续的 1，返回 <code>0</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：22</span><br><span class="line">输出：2</span><br><span class="line">解释：</span><br><span class="line">22 的二进制是 0b10110 。</span><br><span class="line">在 22 的二进制表示中，有三个 1，组成两对连续的 1 。</span><br><span class="line">第一对连续的 1 中，两个 1 之间的距离为 2 。</span><br><span class="line">第二对连续的 1 中，两个 1 之间的距离为 1 。</span><br><span class="line">答案取两个距离之中最大的，也就是 2 。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：5</span><br><span class="line">输出：2</span><br><span class="line">解释：</span><br><span class="line">5 的二进制是 0b101 。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：6</span><br><span class="line">输出：1</span><br><span class="line">解释：</span><br><span class="line">6 的二进制是 0b110 。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 4：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：8</span><br><span class="line">输出：0</span><br><span class="line">解释：</span><br><span class="line">8 的二进制是 0b1000 。</span><br><span class="line">在 8 的二进制表示中没有连续的 1，所以返回 0 。</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= N &lt;= 10^9</code></li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>我的方法是先将数字转换成2进制, 然后去除首尾的<code>0</code>, 再利用<code>1</code>进行分割, 对分割得到的最长子字符串, 返回其长度加一.</p>
+<p>需要考虑的边界情况:</p>
+<ul>
+<li>全是0.</li>
+<li>只有一个1.</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">binaryGap</span><span class="params">(self, N)</span>:</span></span><br><span class="line">        list_ = [len(x) + <span class="number">1</span> <span class="keyword">for</span> x <span class="keyword">in</span> bin(N)[<span class="number">2</span>:].strip(<span class="string">'0'</span>).split(<span class="string">'1'</span>)]</span><br><span class="line">        <span class="keyword">if</span> len(list_) &lt;= <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> max(list_)</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-26</li>
+<li>击败比例: 69.24%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Math</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Univalued Binary Tree</title>
+    <url>/2020/03/25/LeetCode/Univalued-Binary-Tree/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>A binary tree is <em>univalued</em> if every node in the tree has the same value.</p>
+<p>Return <code>true</code> if and only if the given tree is univalued.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<p><img src="https://assets.leetcode.com/uploads/2018/12/28/unival_bst_1.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [1,1,1,1,1,null,1]</span><br><span class="line">Output: true</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<p><img src="https://assets.leetcode.com/uploads/2018/12/28/unival_bst_2.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [2,2,2,5,2]</span><br><span class="line">Output: false</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li>The number of nodes in the given tree will be in the range <code>[1, 100]</code>.</li>
+<li>Each node’s value will be an integer in the range <code>[0, 99]</code>.</li>
+</ol>
+<hr>
+<p>如果二叉树每个节点都具有相同的值，那么该二叉树就是<em>单值</em>二叉树。</p>
+<p>只有给定的树是单值二叉树时，才返回 <code>true</code>；否则返回 <code>false</code>。</p>
+<p><strong>示例 1：</strong></p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/29/screen-shot-2018-12-25-at-50104-pm.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[1,1,1,1,1,null,1]</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/29/screen-shot-2018-12-25-at-50050-pm.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[2,2,2,5,2]</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li>给定树的节点数范围是 <code>[1, 100]</code>。</li>
+<li>每个节点的值都是整数，范围为 <code>[0, 99]</code> 。</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>非常简单的一道题, 按照某种顺序进行遍历, 当发现出现不一样的数字时, 返回<code>false</code>, 否在返回<code>true</code>.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.val = <span class="literal">None</span></span><br><span class="line">        self.res = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isUnivalTree</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        self.val = root.val</span><br><span class="line">        self.helper(root)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> node <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> <span class="keyword">not</span> self.res:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> node.val != self.val:</span><br><span class="line">            self.res = <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        self.helper(node.left)</span><br><span class="line">        self.helper(node.right)</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-25</li>
+<li>击败比例: 36.63%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Tree</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据建模(二)-样本设计</title>
+    <url>/2020/03/24/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1-%E4%BA%8C-%E6%A0%B7%E6%9C%AC%E8%AE%BE%E8%AE%A1/</url>
+    <content><![CDATA[<p>一般在一些数据挖掘比赛中, 比赛的样本, 样本的特征, 标签啥的, 都是比赛方提供的. 作为参赛者, 大部分时候不需要准备额外的数据, 充分利用给定的数据就行.</p>
+<p>但是在实际生产环境中, 通常是由自己, 或者一个小团体, 针对某个问题来做样本设计. 那么什么是<strong>样本设计</strong>呢, 其实就是反过来, <strong>设计样本</strong>o(*≧▽≦)ツ</p>
+<a id="more"></a>
+<p>咳…认真点, 比如我们想通过数据, 针对某个问题进行建模, 来实现对业务的优化, 大致会有以下几种情况:</p>
+<ul>
+<li><p>对于每个样本(比如人), 在这个问题上, 采集哪些维度的信息(特征), 可能是有帮助的?</p>
+</li>
+<li><p>可以采集大量的数据进行建模, 但是每一份样本的采集是有成本的.</p>
+</li>
+<li><p>样本集(比如用户客群), 包含了一些群组, 但是这些群组并不均衡, 也不稳定, 应该怎么做?</p>
+</li>
+<li>若采用有监督算法, 标签如何定义, 可以更好地解决问题呢?</li>
+</ul>
+<p>针对以上一些问题, 下面逐一进行阐述.</p>
+<h1 id="特征维度"><a href="#特征维度" class="headerlink" title="特征维度"></a>特征维度</h1><p>这里先举一个比较扯栗子吧, 比如我想建模预测股市大盘的涨跌, 然后通过观察历史数据, 我发现股市的涨跌尽然和小明的考试成绩呈现很高的正相关, 皮尔森相关系数高达0.6. 这好像是一个不错的特征, 可以帮助模型预测股市的变化.</p>
+<p>但是真的是这样吗? 明显不是呀ヽ(✿ﾟ▽ﾟ)ノ</p>
+<p>第一, 股市大盘长期来看, 是持续性增长的, 小明也许以前比较贪玩, 后来慢慢好好学习, 考试分数也上去了. 第二, 小明下次考试缺考, 股市是不是得熔断? 小明毕业了, 没有考试了, 股市是不是得关门?</p>
+<p>对没错, 就是<strong>相关性 VS 因果性</strong>. 通常我们希望用于建模的特征, 是与问题本身有一定的因果性的, 这样才能够具有一定的<strong>解释性</strong>, 以及更好的<strong>稳定性</strong>.</p>
+<p>通常, 一个特征和我们的问题(或者说标签y), 相关性是很好计算的, 几行代码, 皮尔森, 斯皮尔曼, 肯德尔, 互信息, 方差检验…线性与非线性的相关性都能计算.</p>
+<p>因果性怎么计算呢? 无法计算, 只能靠人的一些经验进行判断. 一个特征与问题标签有因果性, 也应该有相关性; 但若发现有相关性, 能说明有因果性吗?</p>
+<p>所以, 我们想优先找有<strong>因果性</strong>的特征, 但由于因果性难以判断, 退而求其次, 寻找有<strong>相关性</strong>的特征. 而最终判断是否保留某个特征, 可以结合<strong>特征选择</strong>的手段, <strong>模型表现</strong>等来决策.</p>
+<h1 id="样本维度"><a href="#样本维度" class="headerlink" title="样本维度"></a>样本维度</h1><p>很多时候, 数据并不是免费资源, 有很多依靠卖数据而存在的公司. 当作为甲方, 向数据公司(乙方)索求数据(特征)时, 是要考虑成本的.</p>
+<p>即要保证足量的样本, 来使模型学习得更好, 又要缩减成本. 对此, 我们需要考虑我们全部可以用于建模的样本有哪些, 然后在这些样本中进行<strong>选择</strong>, 使用其中部分样本来购买数据进行建模.</p>
+<p>那么, 如何进行选择呢?</p>
+<p>首先, 可以考虑<strong>时间维度</strong>. 在一个随时间会发生变化的场景中, 如果我们想观察一些事物随时间的变化, 最好的办法就是把时间线拉长. 同时, 我们是在<strong>未来</strong>使用我们的模型, <strong>近期</strong>的样本理论上和未来可能有更相似, 因此要尽可能使用近期的样本.</p>
+<p>时间维度上, 就成了<strong>长期 VS 近期</strong>, 我们要找到一种平衡, 使得我们的样本同时满足以下两点:</p>
+<ul>
+<li>较长的时间跨度.</li>
+<li>包含大量近期的样本.</li>
+</ul>
+<p>然后, 如果还想进一步对样本进行缩减, 可以对样本进行<strong>随机抽样</strong>. 随机抽样的方式, 通常有两种:</p>
+<ul>
+<li>完全随机抽样.</li>
+<li>分层随机抽样.</li>
+</ul>
+<p>对于<strong>完全随机抽样</strong>, 不必多说. 对于<strong>分层随机抽样</strong>, 比如我们要做的是二分类模型, 已有0, 1标签, 并且假设正负样本比例不均衡, 正样本远少于负样本. 那么采用分层随机抽样时, 即可以使正负样本在抽样后仍维持原有比例, 也可以分别对正负样本进行不同程度的抽样. 如保留所有正样本, 仅仅对负样本下采样.</p>
+<h1 id="组群平衡"><a href="#组群平衡" class="headerlink" title="组群平衡"></a>组群平衡</h1><p>这里仍然举个栗子╰(<em>°▽°</em>)╯</p>
+<p>假如我们有一帮用户, 他们组成了我们的样本集. 而用户中存在一些我们人为划分的组群, 如用户是从哪看到我们的广告, 而进行注册的, 可以称之为注册渠道.</p>
+<p>可能的注册渠道有很多, 不同注册渠道的用户可能有不同的性质和表现, 一般会进行对应的分析. 那我们能够使用<code>注册渠道</code>这个特征参与建模吗?</p>
+<p>如果使用<code>注册渠道</code>参与建模, 可能会出现如下两个问题:</p>
+<ul>
+<li>高基数的类别特征, 容易导致过拟合.</li>
+<li>这样的特征随时间可能并不稳定.</li>
+</ul>
+<p>首先说第一点, 对于高基数的类别特征, 如果不进行比较细致的人工处理, 直接使用一些类别特征的编码方法, 相对其它特征类型, 是容易出现过拟合的. 即这个特征可能在训练集上是一个强特征, 但实际上特征本身并没有这么强.</p>
+<p>然后是第二点, 这是更关键的一点, 即特征随时间变化太大. 比如有的渠道现在有, 未来也许就关闭了, 有的渠道现在没有, 未来加入了. 对于这种情况模型基于这个特征学到的东西, 就没用了(。・・)ノ</p>
+<p>那么不把这样的特征参与建模, 就完全没用了吗? 是有用的嗷ヾ(´･ω･｀)ﾉ</p>
+<p>如前所述, 组群若随时间发生变化, 那么我用现在已有的样本, 去预测未来的样本, 就需要考虑组群之间的<strong>平衡</strong>问题. 比如<code>组群A</code>, 在现有的全部样本中, 占比超过50%, 而<code>组群B</code>现在占比较少, 仅有10%. 同时通过业务了解到, 未来<code>组群A</code>占比会减少, <code>组群B</code>占比会增加. </p>
+<p>问: 此时因该怎么做?</p>
+<p>答: 将现有样本中的<code>组群A</code>进行下采样, 如减少一半的样本, 使模型在学习过程中, 不会过度倾向<code>组群A</code>的特点.</p>
+<h1 id="标签设计"><a href="#标签设计" class="headerlink" title="标签设计"></a>标签设计</h1><p>尽管有不少无监督学习算法, 但不少情况下, 还是有监督学习算法更好用一些. 而对于有监督学习算法, 用于预测的<strong>标签</strong>是必不可少的.</p>
+<p>一些场景下, 标签的获取, 以及定义都比较简单和直接; 而另一些场景下, 标签的获取可能是一件<strong>高成本</strong>的事情, 同时需要一定的<strong>表现期</strong>, 没有现成的<strong>定义方式</strong>.</p>
+<p>对于标签成本, 表现期长短, 一般来说是不太好控制的. 而对于标签的定义, 是可控并直接影响模型表现的关键因素.</p>
+<p>首先, 要明确应该以什么指标来作为标签, 能够使得模型进行学习后, 预测的结果更好地解决我们的问题. 一些时候问题比较直接, 可能就是想预测用户的年龄, 收入, 性别; 而一些时候问题相对模糊, 比如想衡量一个用户的信用, 对某件商品的兴趣. 对于后者, 一般可以通过用户的一些<strong>行为表现</strong>, 来进行表征, 如利用是否按期还款来作为信用的标签, 按是否购买某商品来作为兴趣的标签.</p>
+<p>然后, 进一步, 对于某个问题, 我们是把标签保持为原有的连续值, 形成一个回归问题; 还是将其按某阈值划分0, 1标签, 形成一个二分类排序问题等. 这要根据实际的情况进行决定, 如果原始标签是是连续值, 并且其值是相对稳定, 与观察时间窗口无关, 比如某个用户对电影的评分, 是固定值, 此时可直接采用连续标签. 而一些情况下, 标签值是会随着观察窗口变化的, 比如信用卡还款中的逾期时间, <code>用户A</code>今天累计逾期了30天, 到明天可能就31天了, <code>用户B</code>今天累计逾期20天, 是否说明<code>用户B</code>比<code>用户A</code>信用好呢, 其实是因为<code>用户B</code>的<code>最后还款日期</code>相比<code>用户A</code>迟10天, 而且这都算严重逾期, 因此可以设定一个阈值如10天, 将逾期超10天的都定义为正样本.</p>
+<p>此外, 在进行标签设计时, 按某阈值划分正负样本, 可能处于阈值附近的样本, 会使得模型学起来较为困难, 从而降低模型效果. 这时候可以尝试将处于阈值附近的样本过滤掉, 不参与建模. 当然, 这都是要看实际表现来进行决策的, 有时候增加模型学习的难度, 模型或许可以获得更好的表现(๑•̀ㅂ•́)و✧</p>
+]]></content>
+      <categories>
+        <category>数据建模</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据建模(一)-解决问题流程</title>
+    <url>/2020/03/24/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1-%E4%B8%80-%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%E6%B5%81%E7%A8%8B/</url>
+    <content><![CDATA[<p>生活中, 工作中我们会遇到很多问题, 其中大部分问题是我们以前遇到过的, 我们可以凭借经验进行解决. 然而当我们遇到一个之前没有遇到过的问题时, 我们应该怎么做呢?</p>
+<p>作为一个菜鸟小白, 其实自知没有水平写关于这个讨论的文章, 毕竟现在自己遇到问题的时候几乎都是去搬别人的方法. 我个人认为这项能力, 即<code>分析问题 &amp; 转化问题</code>的能力, 是非常重要的, 这也是为什么把这个话题放到了<code>数据建模</code>的第一篇.</p>
+<a id="more"></a>
+<p>如果, 能够在一开始遇到问题的时候, 明确想要达到的目的, 然后用合理的思路, 将其转化为数学语言, 或者定量的描述, 或者优化目标, 后续的工作大概率是有意义的. 反之, 一开始就错误理解了问题, 或者没有很好地描述问题, 则后续很可能做无用功.</p>
+<h1 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h1><p>一开始遇到一个问题的时候, 最好先按某种顺序进行梳理, 如从前往后, 或者从整体到局部.</p>
+<p>重点在于明确我们要做什么, 可利用的资源有哪些, 难点可能在哪.</p>
+<p>这里我就胡扯一个栗子吧, 真的是胡扯ヾ(´･ω･｀)ﾉ</p>
+<p>比如我想财富自由, 或者目标放低点, 我想躺着赚钱, 请问有没有什么法子?</p>
+<p>有的, 只要买对了股票, 就可以躺着赚钱(。・・)ノ</p>
+<p>那怎么买股票呢? 这就是一个模糊的问题, 我们先把模糊的问题具体化.</p>
+<p>首先我能用来买股票的钱是有限的.</p>
+<p>其次股市有风险, 可能躺着赚钱, 也可能被别人躺着赚钱.</p>
+<p>对于散户来说, 一般牛市的时候, 容易赚钱, 熊市的时候, 容易亏钱.</p>
+<p>别把鸡蛋都放在一个篮子里.</p>
+<p>收益越大, 风险越大.</p>
+<p>…</p>
+<p>大概这些就是我的一些经验信息, 结合这些信息, 我想做的事情就是:</p>
+<blockquote>
+<p>用有限的钱, 去买一种股票组合, 使得期望收益最大化.</p>
+</blockquote>
+<h1 id="转化问题"><a href="#转化问题" class="headerlink" title="转化问题"></a>转化问题</h1><p>有了这个明确的目标, 那下一步考虑是否可以转化成一些定量描述, 或者数学模型.</p>
+<p>这一看应该是可以的, <code>最大化</code>就是一个优化问题, <code>有限的钱</code>就是限制条件.</p>
+<p>假设咱们有收集数据的能力, 收集到了几种股票的历史长期表现, 再经过一些简单的算法, 可以定量得到每个股票的<code>收益</code>与<code>风险</code>.</p>
+<p>现在我们要最大化如下目标函数:</p>
+<script type="math/tex; mode=display">
+arg\ max(\sum_i资金_i(收益_i-风险_i))\\
+s.t.\ 资金_i\ge0\quad i\in I\\
+\sum_i资金_i=总资金</script><p>相信聪明的同学已经发现了, 这个优化问题根本不需要所谓的优化o(〃’▽’〃)o</p>
+<p>只要把钱全部拿来买<code>收益-风险</code>最大的这一个股票, 就行了.</p>
+<p>啊…完美解决问题, （＾∀＾●）ﾉｼ</p>
+<p>但是有些不太对劲, 咱们其实并没有完全用到上一节中咱们梳理得到的经验或者知识:</p>
+<blockquote>
+<p>别把鸡蛋放在一个篮子里.</p>
+<p>牛市容易赚钱, 熊市容易亏钱.</p>
+</blockquote>
+<p>能不能把这些经验或者知识也加入到模型中呢? 试试吧(o゜▽゜)o☆</p>
+<p>对于第一条经验, 其实是让我们尽量分散投资, 那我们可以在目标函数中添加一个惩罚机制, 如果越集中购买, 就惩罚越重, <code>L2</code>正则在这里可以达到这样的效果.</p>
+<p>对于第二条经验, 可以通过根据当前大盘的局势判断, 来选择<code>总资金</code>的量, 牛市的时候用更多的资金投资, 熊市的时候用少量的资金投资.</p>
+<p>总结起来, 现在的目标函数变成了下面这个样子:</p>
+<script type="math/tex; mode=display">
+arg\ max(\sum_i资金_i(收益_i-风险_i))-\lambda\sum_i资金_i^2\\
+s.t.\ 资金_i\ge0\quad i\in I\\
+\sum_i资金_i=总资金\times\beta</script><p>其中的$\lambda$是<code>L2</code>正则参数, 越大, 则资金越分散, 越小则越集中.</p>
+<p>$\beta$是大盘局势, 牛市时值大, 熊市时值小.</p>
+<p>通过调节以上两个超参数, 可以控制<code>购买总金额</code>以及<code>资金分散程度</code>.</p>
+<h1 id="寻找相似问题"><a href="#寻找相似问题" class="headerlink" title="寻找相似问题"></a>寻找相似问题</h1><p>现在我们有了具体的数学优化函数, 那如合进一步去解决这个问题呢?</p>
+<p>我认为最好的方法, 仍然是首先借鉴前人的智慧. 如果存在一个类似的问题, 前人已经解决过, 那这时候我们可以借鉴, 甚至直接照搬其中的做法. 这样可以达到事半功倍的效果（。＾▽＾）</p>
+<p>那有的同学就要问了, 我怎么知道哪里有相似的问题呢, 别人的办法我看不懂怎么办, 看懂了也不会做怎么办</p>
+<p>摸摸头 (。・・)ノ</p>
+<p>确实是这样的, 所以这就涉及到一个平时积累的过程了. </p>
+<p>一些问题的解法, 或许我们平时生活工作中是没有用到过的, 但是出于好奇心感兴趣, 或者就是认为以后某一天这个会派上用场, 而去学习理解, 并归纳消化.</p>
+<p>如此, 有了一定的知识库作为支撑, 才能够看得更远(ง •_•)ง</p>
+<p>还是以上一个小结瞎举的栗子来说, 这个问题是一个很典型的<code>带约束的优化问题</code>, 并且符合<code>KKT</code>条件, 那么就可以利用<code>拉格朗日乘子法</code>转化成<code>无约束优化问题</code>, 进而运用<code>无约束优化问题</code>的一些方法, 如<code>SGD</code>进行解决.</p>
+<p>具体来做的话, 当然可以自己写代码, 也可以调用已有的轮子. 比如<code>scipy</code>中有关于<code>带约束的优化问题</code>的方法, 查阅对应API, 几行代码就可以得到问题的解♪(^∇^*)</p>
+<h1 id="更多尝试-amp-优化"><a href="#更多尝试-amp-优化" class="headerlink" title="更多尝试 &amp; 优化"></a>更多尝试 &amp; 优化</h1><p>通常, 我们在处理一个没怎么做过的问题时, 优先的方法, 一般不是一些特别复杂的办法, 而是一些尽可能简单而有效的方法.</p>
+<p>当我们相对简单的方法奏效后, 后续可以根据对结果的分析, 提出更多的尝试与优化方案, 进行迭代升级.</p>
+<p>比如, 当我们面对一个问题, 数据很少, 甚至没有数据的时候, 就不要生搬硬套一些基于大量数据的机器学习模型. </p>
+<p>结合对数据的分析, 和个人的经验以及业务理解, 提出一些定量的建议或者规则, 就是不错的.</p>
+<p>再比如, 经过一定的积累, 在有了一定数据的基础上, 可以尝试用一些机器学习算法.</p>
+<p>但不同机器学习模型, 对于数据的维度与量的要求是不一样的. 假如数据量少, 或者数据非常稀疏, 或许线性模型是一个很好的选择; 假如数据量大, 同时其中蕴含着很多非线性关系, 可能神经网络这一类模型更加合适.</p>
+<p>总之, 在面对一个新的难题时, 应该先从简单的解决方法入手, 并将其结果表现作为基准, 然后再逐步地尝试优化, 最终得到一个更好的结果.</p>
+]]></content>
+      <categories>
+        <category>数据建模</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Goat Latin</title>
+    <url>/2020/03/24/LeetCode/Goat-Latin/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>A sentence <code>S</code> is given, composed of words separated by spaces. Each word consists of lowercase and uppercase letters only.</p>
+<p>We would like to convert the sentence to “<em>Goat Latin”</em> (a made-up language similar to Pig Latin.)</p>
+<a id="more"></a>
+<p>The rules of Goat Latin are as follows:</p>
+<ul>
+<li><p>If a word begins with a vowel (a, e, i, o, or u), append <code>&quot;ma&quot;</code> to the end of the word.<br> For example, the word ‘apple’ becomes ‘applema’.</p>
+</li>
+<li><p>If a word begins with a consonant (i.e. not a vowel), remove the first letter and append it to the end, then add <code>&quot;ma&quot;</code>.<br> For example, the word <code>&quot;goat&quot;</code> becomes <code>&quot;oatgma&quot;</code>.</p>
+</li>
+<li><p>Add one letter <code>&#39;a&#39;</code> to the end of each word per its word index in the sentence, starting with 1.<br> For example, the first word gets <code>&quot;a&quot;</code> added to the end, the second word gets <code>&quot;aa&quot;</code> added to the end and so on.</p>
+</li>
+</ul>
+<p>Return the final sentence representing the conversion from <code>S</code> to Goat Latin. </p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: &quot;I speak Goat Latin&quot;</span><br><span class="line">Output: &quot;Imaa peaksmaaa oatGmaaaa atinLmaaaaa&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: &quot;The quick brown fox jumped over the lazy dog&quot;</span><br><span class="line">Output: &quot;heTmaa uickqmaaa rownbmaaaa oxfmaaaaa umpedjmaaaaaa overmaaaaaaa hetmaaaaaaaa azylmaaaaaaaaa ogdmaaaaaaaaaa&quot;</span><br></pre></td></tr></table></figure>
+<p>Notes:</p>
+<ul>
+<li><code>S</code> contains only uppercase, lowercase and spaces. Exactly one space between each word.</li>
+<li><code>1 &lt;= S.length &lt;= 150</code>.</li>
+</ul>
+<hr>
+<p>给定一个由空格分割单词的句子 <code>S</code>。每个单词只包含大写或小写字母。</p>
+<p>我们要将句子转换为 <em>“Goat Latin”</em>（一种类似于 猪拉丁文 - Pig Latin 的虚构语言）。</p>
+<p>山羊拉丁文的规则如下：</p>
+<ul>
+<li>如果单词以元音开头（a, e, i, o, u），在单词后添加<code>&quot;ma&quot;</code>。<br> 例如，单词<code>&quot;apple&quot;</code>变为<code>&quot;applema&quot;</code>。</li>
+<li>如果单词以辅音字母开头（即非元音字母），移除第一个字符并将它放到末尾，之后再添加<code>&quot;ma&quot;</code>。<br> 例如，单词<code>&quot;goat&quot;</code>变为<code>&quot;oatgma&quot;</code>。</li>
+<li>根据单词在句子中的索引，在单词最后添加与索引相同数量的字母<code>&#39;a&#39;</code>，索引从1开始。<br> 例如，在第一个单词后添加<code>&quot;a&quot;</code>，在第二个单词后添加<code>&quot;aa&quot;</code>，以此类推。</li>
+</ul>
+<p>返回将 <code>S</code> 转换为山羊拉丁文后的句子。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: &quot;I speak Goat Latin&quot;</span><br><span class="line">输出: &quot;Imaa peaksmaaa oatGmaaaa atinLmaaaaa&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: &quot;The quick brown fox jumped over the lazy dog&quot;</span><br><span class="line">输出: &quot;heTmaa uickqmaaa rownbmaaaa oxfmaaaaa umpedjmaaaaaa overmaaaaaaa hetmaaaaaaaa azylmaaaaaaaaa ogdmaaaaaaaaaa&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>说明:</strong></p>
+<ul>
+<li><code>S</code> 中仅包含大小写字母和空格。单词间有且仅有一个空格。</li>
+<li><code>1 &lt;= S.length &lt;= 150</code>。</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>太简单了, 没啥好说的, 嗯.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">toGoatLatin</span><span class="params">(self, S)</span>:</span></span><br><span class="line">        res_str = <span class="string">''</span></span><br><span class="line">        str_list = S.split(<span class="string">' '</span>)</span><br><span class="line">        str_set = set([<span class="string">'a'</span>, <span class="string">'e'</span>, <span class="string">'i'</span>, <span class="string">'o'</span>, <span class="string">'u'</span>,</span><br><span class="line">                       <span class="string">'A'</span>, <span class="string">'E'</span>, <span class="string">'I'</span>, <span class="string">'O'</span>, <span class="string">'U'</span>])</span><br><span class="line">        <span class="keyword">for</span> i, str_ <span class="keyword">in</span> enumerate(str_list):</span><br><span class="line">            <span class="keyword">if</span> str_[<span class="number">0</span>] <span class="keyword">in</span> str_set:</span><br><span class="line">                res_str += str_ + <span class="string">'ma'</span> + <span class="string">'a'</span> * (i + <span class="number">1</span>) + <span class="string">' '</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                res_str += str_[<span class="number">1</span>:] + str_[<span class="number">0</span>] + <span class="string">'ma'</span> + <span class="string">'a'</span> * (i + <span class="number">1</span>) + <span class="string">' '</span></span><br><span class="line">        <span class="keyword">return</span> res_str[: <span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-24</li>
+<li>击败比例: 63.24%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>String</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Add to Array-Form of Integer</title>
+    <url>/2020/03/22/LeetCode/Add-to-Array-Form-of-Integer/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>For a non-negative integer <code>X</code>, the <strong>array-form of <code>X</code></strong> is an array of its digits in left to right order. For example, if <code>X = 1231</code>, then the array form is <code>[1,2,3,1]</code>.</p>
+<p>Given the array-form <code>A</code> of a non-negative integer <code>X</code>, return the array-form of the integer <code>X+K</code>.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A = [1,2,0,0], K = 34</span><br><span class="line">Output: [1,2,3,4]</span><br><span class="line">Explanation: 1200 + 34 = 1234</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A = [2,7,4], K = 181</span><br><span class="line">Output: [4,5,5]</span><br><span class="line">Explanation: 274 + 181 = 455</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A = [2,1,5], K = 806</span><br><span class="line">Output: [1,0,2,1]</span><br><span class="line">Explanation: 215 + 806 = 1021</span><br></pre></td></tr></table></figure>
+<p><strong>Example 4:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A = [9,9,9,9,9,9,9,9,9,9], K = 1</span><br><span class="line">Output: [1,0,0,0,0,0,0,0,0,0,0]</span><br><span class="line">Explanation: 9999999999 + 1 = 10000000000</span><br></pre></td></tr></table></figure>
+<p><strong>Note：</strong></p>
+<ol>
+<li><code>1 &lt;= A.length &lt;= 10000</code></li>
+<li><code>0 &lt;= A[i] &lt;= 9</code></li>
+<li><code>0 &lt;= K &lt;= 10000</code></li>
+<li>If <code>A.length &gt; 1</code>, then <code>A[0] != 0</code></li>
+</ol>
+<hr>
+<p>对于非负整数 <code>X</code> 而言，<em><code>X</code></em> 的<em>数组形式</em>是每位数字按从左到右的顺序形成的数组。例如，如果 <code>X = 1231</code>，那么其数组形式为 <code>[1,2,3,1]</code>。</p>
+<p>给定非负整数 <code>X</code> 的数组形式 <code>A</code>，返回整数 <code>X+K</code> 的数组形式。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：A = [1,2,0,0], K = 34</span><br><span class="line">输出：[1,2,3,4]</span><br><span class="line">解释：1200 + 34 = 1234</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：A = [2,7,4], K = 181</span><br><span class="line">输出：[4,5,5]</span><br><span class="line">解释：274 + 181 = 455</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：A = [2,1,5], K = 806</span><br><span class="line">输出：[1,0,2,1]</span><br><span class="line">解释：215 + 806 = 1021</span><br></pre></td></tr></table></figure>
+<p><strong>示例 4：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：A = [9,9,9,9,9,9,9,9,9,9], K = 1</span><br><span class="line">输出：[1,0,0,0,0,0,0,0,0,0,0]</span><br><span class="line">解释：9999999999 + 1 = 10000000000</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>1 &lt;= A.length &lt;= 10000</code></li>
+<li><code>0 &lt;= A[i] &lt;= 9</code></li>
+<li><code>0 &lt;= K &lt;= 10000</code></li>
+<li>如果 <code>A.length &gt; 1</code>，那么 <code>A[0] != 0</code></li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p><strong>方法一</strong>: 列表转化成整数, 相加后, 再拆解成列表.</p>
+<p><strong>方法二</strong>: 将<code>K</code>与<code>A</code>的数字(倒序)逐位相加, 将<code>模10的余数</code>留下, <code>整除10的结果</code>继续与<code>A</code>的下一位相加, 循环重复. 若完成对<code>A</code>的循环后, <code>K</code>还不止一位, 则逐位拆解.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> reduce</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addToArrayForm</span><span class="params">(self, A, K)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        :param A: list(int, ...)</span></span><br><span class="line"><span class="string">        :param K: int</span></span><br><span class="line"><span class="string">        :return: list(int, ...)</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">return</span> [int(x) <span class="keyword">for</span> x <span class="keyword">in</span> str(int(reduce(<span class="keyword">lambda</span> x, y: x + y, map(str, A))) + K)]</span><br></pre></td></tr></table></figure>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addToArrayForm</span><span class="params">(self, A, K)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        :param A: list(int, ...)</span></span><br><span class="line"><span class="string">        :param K: int</span></span><br><span class="line"><span class="string">        :return: list(int, ...)</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        res_list = []</span><br><span class="line">        A.reverse()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> A:</span><br><span class="line">            K += i</span><br><span class="line">            res_list.append(K % <span class="number">10</span>)</span><br><span class="line">            K = K // <span class="number">10</span></span><br><span class="line">        <span class="keyword">while</span> K != <span class="number">0</span>:</span><br><span class="line">            res_list.append(K % <span class="number">10</span>)</span><br><span class="line">            K = K //<span class="number">10</span></span><br><span class="line">        res_list.reverse()</span><br><span class="line">        <span class="keyword">return</span> res_list</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-22</li>
+<li>击败比例: 90.67%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Range Sum of BST</title>
+    <url>/2020/03/21/LeetCode/Range-Sum-of-BST/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given the <code>root</code> node of a binary search tree, return the sum of values of all nodes with value between <code>L</code> and <code>R</code> (inclusive).</p>
+<p>The binary search tree is guaranteed to have unique values.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: root = [10,5,15,3,7,null,18], L = 7, R = 15</span><br><span class="line">Output: 32</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10</span><br><span class="line">Output: 23</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li>The number of nodes in the tree is at most <code>10000</code>.</li>
+<li>The final answer is guaranteed to be less than <code>2^31</code>.</li>
+</ol>
+<hr>
+<p>给定二叉搜索树的根结点 <code>root</code>，返回 <code>L</code> 和 <code>R</code>（含）之间的所有结点的值的和。</p>
+<p>二叉搜索树保证具有唯一的值。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：root = [10,5,15,3,7,null,18], L = 7, R = 15</span><br><span class="line">输出：32</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10</span><br><span class="line">输出：23</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li>树中的结点数量最多为 <code>10000</code> 个。</li>
+<li>最终的答案保证小于 <code>2^31</code>。</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p><strong>方法一</strong>: 直接使用递归进行整个树的遍历, 将满足要求的数加和.</p>
+<p><strong>方法二</strong>: 利用<code>BST</code>的特性, 减少搜索时间, 即当遇到不满足要求的节点时, 放弃搜索.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.L = <span class="literal">None</span></span><br><span class="line">        self.R = <span class="literal">None</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rangeSumBST</span><span class="params">(self, root, L, R)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        self.L = L</span><br><span class="line">        self.R = R</span><br><span class="line">        self.helper(root)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> node <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> node.val &gt;= self.L <span class="keyword">and</span> node.val &lt;= self.R:</span><br><span class="line">            self.res += node.val</span><br><span class="line">        self.helper(node.left)</span><br><span class="line">        self.helper(node.right)</span><br></pre></td></tr></table></figure>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.L = <span class="literal">None</span></span><br><span class="line">        self.R = <span class="literal">None</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rangeSumBST</span><span class="params">(self, root, L, R)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        self.L = L</span><br><span class="line">        self.R = R</span><br><span class="line">        self.helper(root)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> node <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> node.val &gt;= self.L <span class="keyword">and</span> node.val &lt;= self.R:</span><br><span class="line">            self.res += node.val</span><br><span class="line">            self.helper(node.left)</span><br><span class="line">            self.helper(node.right)</span><br><span class="line">        <span class="keyword">elif</span> node.val &lt; self.L:</span><br><span class="line">            self.helper(node.right)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.helper(node.left)</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-21</li>
+<li>击败比例: 75.05%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Tree</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>创建属于自己的博客(三)</title>
+    <url>/2020/03/20/%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/%E5%88%9B%E5%BB%BA%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%89/</url>
+    <content><![CDATA[<p>这一篇是本系列的终篇, 主要介绍一个方法.</p>
+<p>问题是这样的, 我在笔记本A上搭建博客, 并进行文章的编辑和推送部署. 现在我换了一台笔记本B, 那如果我想在B上面进行继续创作应该怎么办呢? 以后某一天由需要用A进行创作呢?</p>
+<p>相信很多同学已经想到了, 没错, 还是基于<code>Github</code>来进行操作.</p>
+<a id="more"></a>
+<h1 id="创建一个用于管理博客的仓库"><a href="#创建一个用于管理博客的仓库" class="headerlink" title="创建一个用于管理博客的仓库"></a>创建一个用于管理博客的仓库</h1><p>在篇章一中, 我们创建了一个名为<code>xiaoming.github.io</code>的仓库, 这是我们用来管理博客的仓库吗?</p>
+<p>当然不是啦, 对比一下咱们本地和它的文件布局就知道, 这个仓库存放的, 是我们<code>$ hexo d</code>时, 推送的博客相关文件的仓库, 并不包含其它的文件.</p>
+<p>于是我们还需要创建一个仓库, 比如命名为<code>my_blog</code>.</p>
+<h1 id="本地远端关联"><a href="#本地远端关联" class="headerlink" title="本地远端关联"></a>本地远端关联</h1><p>创建好<code>my_blog</code>以后, 进入到<code>笔记本A</code>本地博客的根目录(假设也叫<code>my_blog</code>), 执行一波如下操作, 经常使用<code>Github</code>的同学应该很熟悉:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd my_blog/</span><br><span class="line">$ git init</span><br><span class="line">$ git remote add origin git@github.com:xiaoming/my_blog.git  # 根据自己实际地址进行修改.</span><br></pre></td></tr></table></figure>
+<p>那这时候可能有同学就说说了, 啊我知道了, 接下来<code>add commit push</code>就完事了.</p>
+<p>但是此时存在一个问题,  在<code>my_blog</code>中, 存在几个<code>Git子模块</code>, 就是一个大的Git仓库里面, 还有小的Git仓库.</p>
+<p>还记得篇章一中, 咱们在<code>theme/</code>中利用clone的<code>Next</code>主题吗, 这是一个子模块; 后来我们在执行<code>$ hexo d</code>时, 是将<code>my_blog/.deploy_git/</code>这个子模块push到了Github.</p>
+<p>子模块的存在, 在一些开发项目中可以带来很多便利, 但是在咱们这里并不需要, 鉴于本宝宝不怎么使用Git子模块(对, 我就不会​​), 所以需要一些额外的操作, 消除子模块的存在, 以此来保证后续<code>add commit push</code>的顺利进行.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 以下操作只用执行一次, 除非以后跟新主题.</span><br><span class="line">$ cd my_blog/theme/</span><br><span class="line">$ rm -rf .git/</span><br></pre></td></tr></table></figure>
+<p>在根目录添加<code>.gitignore</code>文件, 并将<code>.deploy_git/</code>写入.</p>
+<p>Ok, 现在假设已经执行<code>$ hexo d</code>了, 就可以执行如下代码, 推送到远端的<code>my_blog</code>仓库了:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git add -A</span><br><span class="line">$ git commit -m &quot;happy day&quot;</span><br><span class="line">$ git push -u origin master</span><br></pre></td></tr></table></figure>
+<h1 id="在另外一台电脑上"><a href="#在另外一台电脑上" class="headerlink" title="在另外一台电脑上"></a>在另外一台电脑上</h1><p>经过上面的一顿操作, 接下来就是要在<code>笔记本B</code>上写博客了.</p>
+<p>首先我们要保证<code>笔记本B</code>上也有相应的轮子<code>Git &amp; Node.js</code>, 照着篇章一就ok.</p>
+<p>然后, 假设我们也在<code>笔记本B</code>上创建了一个<code>my_blog</code>的文件夹:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd my_blog/</span><br><span class="line">$ git init</span><br><span class="line">$ git remote add origin git@github.com:xiaoming/my_blog.git</span><br><span class="line">$ git pull origin master</span><br></pre></td></tr></table></figure>
+<p>为了验证是否移植成功, 可以在本地看一下效果:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo g</span><br><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
+<p>如果在<code>localhost:4000</code>中看到了自己的博客, 说明一切尽在掌握.</p>
+<p>那接下来, 就可以在<code>笔记本B</code>写博客, 推送部署了.</p>
+]]></content>
+      <categories>
+        <category>流程记录</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>创建属于自己的博客(二)</title>
+    <url>/2020/03/20/%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/%E5%88%9B%E5%BB%BA%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%BA%8C/</url>
+    <content><![CDATA[<p>在上一篇中, 记录了使用<code>Hexo</code>来搭建博客的基础操作, 这一篇紧接上一篇, 来介绍更多的东西.</p>
+<p>因为后续可能为博客添加更多的功能, 所以本篇章后续还会更新.</p>
+<a id="more"></a>
+<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>一般来说都会保留一个页面, 来展示博主的一些信息, <code>about</code>或者<code>关于</code>页面就是用来做这个的.</p>
+<p>其文件路径在<code>source/about/index.md</code>, 按照自己想法, 利用<code>Markdown</code>的语法进行编辑就好.</p>
+<h1 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h1><p>尽管一个良好的博客, 有<code>分类</code>或者<code>标签</code>, 来帮助大家快速找到自己想要看的文章, 但是当文章数量日渐增长, 同时没有找到对应的<code>分类</code>时, 怎么办? </p>
+<p>此时就需要<code>本地搜索</code>.</p>
+<p>感恩大神, 如果没有额外的需求, 我们只需要做如下操作, 就能拥有<code>本地搜索</code>的功能.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-generator-searchdb</span><br></pre></td></tr></table></figure>
+<p>在根目录下的<code>_config.yml</code>中添加如下配置:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  content: true</span><br><span class="line">  format: html</span><br></pre></td></tr></table></figure>
+<p>重新编译博客后, 会发现多了一个<code>搜索</code>的功能, 敲好用!</p>
+<h1 id="流量统计"><a href="#流量统计" class="headerlink" title="流量统计"></a>流量统计</h1><p>我想大部分同学还是想知道, 自己的博客/文章被多少人看过, 被看过多少次这样的信息.</p>
+<p>统计这样的信息有不少方法和途径, 这里我使用的是一款叫做<code>不蒜子</code>的插件.</p>
+<p>使用方法非常简单, 再次感恩大神.</p>
+<p>只需要将主题文件中的<code>_config.yml</code>修改一下就行, 就这么简单.​</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Show Views / Visitors of the website / page with busuanzi.</span><br><span class="line"># Get more information on http://ibruce.info/2015/04/04/busuanzi</span><br><span class="line">busuanzi_count:</span><br><span class="line">  enable: true</span><br><span class="line">  total_visitors: true</span><br><span class="line">  total_visitors_icon: user</span><br><span class="line">  total_views: true</span><br><span class="line">  total_views_icon: eye</span><br><span class="line">  post_views: true</span><br><span class="line">  post_views_icon: eye</span><br></pre></td></tr></table></figure>
+<p>然后在网页的底部会显示整个博客的流量, 文章的开头会显示本篇文章的流量.</p>
+<p>这里再说一句, 在本地测试<code>$ hexo s</code>时看到的流量数据是虚假的.</p>
+<h1 id="插图"><a href="#插图" class="headerlink" title="插图"></a>插图</h1><p>想要在文章中插图, 方式主要有两种: </p>
+<ul>
+<li>将图片放置与网络图床, 然后直接引用就行.</li>
+<li>将图片放置于博客根目录下的某目录中, 然后再用相对路径/绝对路径引用.</li>
+</ul>
+<p>这里介绍相对路径的方法, 这样我认为更加方便管理一些. 方法非常简单, 即在文章存在的文件夹中, 创建一个同文章名的文件夹, 用于存放该文章的图片.</p>
+<p>如文章路径为<code>source/_post/happy_day.md</code>, 放置图片的文件夹路径为<code>source/_post/happy_day/</code></p>
+<p>而在文章中插入图片(假设图片路径为<code>source/_post/happy_day/happy.png</code>)时, 语法为<code>![我是图](happy.png)</code></p>
+<p>如果觉得每次同时创建文章和放置图片的同名文件夹麻烦, 可以修改<code>_config.yml</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">post_asset_folder: true</span><br></pre></td></tr></table></figure>
+<p>以后每次创建文章<code>$ hexo new xxx</code>时, 就会同时出现<code>xxx.md</code>和<code>xxx/</code>.</p>
+<h1 id="数学公式换行"><a href="#数学公式换行" class="headerlink" title="数学公式换行"></a>数学公式换行</h1><p>正常情况下, 使用<code>Latex</code>语法进行公式换行为<code>\\</code>, 但原本默认的渲染引擎<code>hexo-renderer-marked</code>和该语法冲突, 导致不能正常显示换行.</p>
+<p>这个问题比较蛋疼, 试了好些办法, 最后选择的一种办法是更换引擎, 更换为<code>hexo-renderer-kramed</code>这个渲染引擎, 该引擎其实就是在<code>hexo-renderer-marked</code>基础上, 针对<code>mathjax</code>进行了改进, 使其优先支持<code>Latex</code>公式语法.</p>
+<p>更换引擎代码:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm uninstall hexo-renderer-marked --save</span><br><span class="line">$ npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
+<p>若更换过程中报错, 则根据错误信息提示, 进行相应操作即可.</p>
+<p>最后, 若发现浏览器中仍然无法正常显示换行, 尝试更换浏览器. 在Windows系统下, 火狐浏览器即使更换了引擎也不行, 但谷歌浏览器可以.</p>
+<p>Chrome大法好啊(｡･∀･)ﾉﾞ</p>
+<p>可惜我的收藏夹几乎都在火狐上o(TヘTo)</p>
+]]></content>
+      <categories>
+        <category>流程记录</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Self Dividing Numbers</title>
+    <url>/2020/03/20/LeetCode/Self-Dividing-Numbers/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>A <strong>self-dividing number</strong> is a number that is divisible by every digit it contains.</p>
+<p>For example, 128 is a self-dividing number because <code>128 % 1 == 0</code>, <code>128 % 2 == 0</code>, and <code>128 % 8 == 0</code>.</p>
+<p>Also, a self-dividing number is not allowed to contain the digit zero.</p>
+<p>Given a lower and upper number bound, output a list of every possible self dividing number, including the bounds if possible.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: </span><br><span class="line">left = 1, right = 22</span><br><span class="line">Output: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<p>The boundaries of each input argument are <code>1 &lt;= left &lt;= right &lt;= 10000</code>.</p>
+<hr>
+<p><strong>自除数</strong> 是指可以被它包含的每一位数除尽的数。</p>
+<p>例如，128 是一个自除数，因为 <code>128 % 1 == 0</code>，<code>128 % 2 == 0</code>，<code>128 % 8 == 0</code>。</p>
+<p>还有，自除数不允许包含 0 。</p>
+<p>给定上边界和下边界数字，输出一个列表，列表的元素是边界（含边界）内所有的自除数。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入： </span><br><span class="line">上边界left = 1, 下边界right = 22</span><br><span class="line">输出： [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li>每个输入参数的边界满足 <code>1 &lt;= left &lt;= right &lt;= 10000</code>。</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>过于简单, 正常该怎么做就怎么做吧.</p>
+<p>其实鉴于题目给出了范围, 所以在速度上最快的办法是先计算出1000以内所有的数, 然后再根据实际最大范围返回符合要求的就行, 不过没啥必要.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">selfDividingNumbers</span><span class="params">(self, left, right)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type left: int</span></span><br><span class="line"><span class="string">        :type right: int</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        res_list = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(left, right + <span class="number">1</span>):</span><br><span class="line">            str_i = str(i)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">'0'</span> <span class="keyword">in</span> str_i:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            tag = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> str_i:</span><br><span class="line">                <span class="keyword">if</span> i % int(j) == <span class="number">0</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    tag = <span class="literal">False</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> tag:</span><br><span class="line">                res_list.append(i)</span><br><span class="line">        <span class="keyword">return</span> res_list</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-20</li>
+<li>击败比例: 77.42%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Math</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Design HashMap</title>
+    <url>/2020/03/18/LeetCode/Design-HashMap/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Design a HashMap without using any built-in hash table libraries.</p>
+<p>To be specific, your design should include these functions:</p>
+<ul>
+<li><code>put(key, value)</code> : Insert a (key, value) pair into the HashMap. If the value already exists in the HashMap, update the value.</li>
+<li><code>get(key)</code>: Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key.</li>
+<li><code>remove(key)</code> : Remove the mapping for the value key if this map contains the mapping for the key.</li>
+</ul>
+<a id="more"></a>
+<p> <strong>Example:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MyHashMap hashMap = new MyHashMap();</span><br><span class="line">hashMap.put(1, 1);          </span><br><span class="line">hashMap.put(2, 2);         </span><br><span class="line">hashMap.get(1);            // returns 1</span><br><span class="line">hashMap.get(3);            // returns -1 (not found)</span><br><span class="line">hashMap.put(2, 1);          // update the existing value</span><br><span class="line">hashMap.get(2);            // returns 1 </span><br><span class="line">hashMap.remove(2);          // remove the mapping for 2</span><br><span class="line">hashMap.get(2);            // returns -1 (not found)</span><br></pre></td></tr></table></figure>
+<p> <strong>Note:</strong></p>
+<ul>
+<li>All keys and values will be in the range of <code>[0, 1000000]</code>.</li>
+<li>The number of operations will be in the range of <code>[1, 10000]</code>.</li>
+<li>Please do not use the built-in HashMap library.</li>
+</ul>
+<hr>
+<p>不使用任何内建的哈希表库设计一个哈希映射</p>
+<p>具体地说，你的设计应该包含以下的功能</p>
+<ul>
+<li><code>put(key, value)</code>：向哈希映射中插入(键,值)的数值对。如果键对应的值已经存在，更新这个值。</li>
+<li><code>get(key)</code>：返回给定的键所对应的值，如果映射中不包含这个键，返回-1。</li>
+<li><code>remove(key)</code>：如果映射中存在这个键，删除这个数值对。</li>
+</ul>
+<p> <strong>示例：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MyHashMap hashMap = new MyHashMap();</span><br><span class="line">hashMap.put(1, 1);          </span><br><span class="line">hashMap.put(2, 2);         </span><br><span class="line">hashMap.get(1);            // 返回 1</span><br><span class="line">hashMap.get(3);            // 返回 -1 (未找到)</span><br><span class="line">hashMap.put(2, 1);         // 更新已有的值</span><br><span class="line">hashMap.get(2);            // 返回 1 </span><br><span class="line">hashMap.remove(2);         // 删除键为2的数据</span><br><span class="line">hashMap.get(2);            // 返回 -1 (未找到)</span><br></pre></td></tr></table></figure>
+<p> <strong>注意：</strong></p>
+<ul>
+<li>所有的值都在 <code>[1, 1000000]</code>的范围内。</li>
+<li>操作的总数目在<code>[1, 10000]</code>范围内。</li>
+<li>不要使用内建的哈希库。</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>这道题与上一道题, 构造Hash集合非常相似.</p>
+<p>我在上一道链表节点的基础上, 将原本的节点值变成了(key, val)对.</p>
+<p>其余的处理几乎一致.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHashMap</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Initialize your data structure here.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.bucket_list = [Bucket() <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">769</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_hash</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> x % <span class="number">769</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self, key: int, value: int)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        value will always be non-negative.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        hash_val = self._hash(key)</span><br><span class="line">        self.bucket_list[hash_val].put(key, value)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, key: int)</span> -&gt; int:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        hash_val = self._hash(key)</span><br><span class="line">        <span class="keyword">return</span> self.bucket_list[hash_val].get(key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(self, key: int)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Removes the mapping of the specified value key if this map contains a mapping for the key</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        hash_val = self._hash(key)</span><br><span class="line">        self.bucket_list[hash_val].remove(key)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, key, val, next_node=None)</span>:</span></span><br><span class="line">        self.key = key</span><br><span class="line">        self.val = val</span><br><span class="line">        self.next_node = next_node</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bucket</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.first_node = Node(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">        cur_node = self.first_node.next_node</span><br><span class="line">        <span class="keyword">while</span> cur_node <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> cur_node.key == x:</span><br><span class="line">                cur_node.val = y</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            cur_node = cur_node.next_node</span><br><span class="line">        new_node = Node(x, y, self.first_node.next_node)</span><br><span class="line">        self.first_node.next_node = new_node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        pre_node = self.first_node</span><br><span class="line">        cur_node = self.first_node.next_node</span><br><span class="line">        <span class="keyword">while</span> cur_node <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> cur_node.key == x:</span><br><span class="line">                pre_node.next_node = cur_node.next_node</span><br><span class="line">                cur_node.next_node = <span class="literal">None</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            pre_node = cur_node</span><br><span class="line">            cur_node = cur_node.next_node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        cur_node = self.first_node.next_node</span><br><span class="line">        <span class="keyword">while</span> cur_node <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> cur_node.key == x:</span><br><span class="line">                <span class="keyword">return</span> cur_node.val</span><br><span class="line">            cur_node = cur_node.next_node</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-18</li>
+<li>击败比例: 42.56%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Hash</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>创建属于自己的博客(一)</title>
+    <url>/2020/03/17/%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/%E5%88%9B%E5%BB%BA%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%80/</url>
+    <content><![CDATA[<p>这里开始记录自己构建博客的流程, 帮助别人也是帮助自己.</p>
+<p>当然, 每个人的需求是不一样的. 有的人不需要一个自己独有的博客, 因为现在有各种很好的流量平台, 知乎, 微信公众号等. 同时, 不同人的审美是不一样的, 也许我觉得简约明了就很漂亮, 一些人觉得充满各种图案颜色更好看. 对于博客的一些功能, 如社交链接, 打赏, 广告位等, 我暂时是没有啥兴趣的, 而可能一部分人希望加上这些功能, 能够更加充分地展示自己~</p>
+<a id="more"></a>
+<p>所以, 我这里会将重要的, 我自己需要的一些步骤和流程做记录. 我个人更喜欢Linux系统, 但是工作需要与他人交互, 所以现在使用更多的反而是Windows和mac OS. 后面的操作都是基于Windows的, 其它的系统如mac OS, Linux也是类似的.</p>
+<p>如果以后有一天, 你看了我的流程, 发现自己在用的时候出错了, 或者你想添加不一样的更多的东西, 建议谷歌​​.</p>
+<h1 id="借助别人的轮子"><a href="#借助别人的轮子" class="headerlink" title="借助别人的轮子"></a>借助别人的轮子</h1><p>说起来, 搭建博客, 写网页, 最专业的应该是偏开发, 前端的程序员. 而咱们如果从头去学, 成本太高, 也没必要.</p>
+<p>很多大神程序员已经帮我们造好了各种轮子, 我们只要好好利用起来就行了.</p>
+<blockquote>
+<p>合理使用别人的轮子, 是对造轮子的人的一种尊重.</p>
+</blockquote>
+<p>而在搭建博客这块, 有几个(我使用)关键元素:</p>
+<ul>
+<li><strong>Hexo</strong>: 什么是Hexo? Hexo是一个快速, 简洁且高效的博客框架. Hexo使用Markdown(或其它渲染引擎)解析文章, 在几秒内, 即可利用靓丽的主题生成静态页面. <a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">Hexo官网</a>, 中文的哟.</li>
+<li><strong>Next</strong>: 什么是Next? Next是一款可以与Hexo搭配使用的主题风格. <a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">Next主题Github地址</a>.</li>
+<li><strong>Github</strong>: 什么是Github? 啊…这…就不解释了哈哈.</li>
+</ul>
+<p>那么用举栗子的说法, 来解释一下这三个元素, 就是比如你想做一件衣服, 一件能够去参加艺术品展示的衣服. 那么Hexo就是裁缝, 负责将布料做成衣服; Next是设计师, 告诉裁缝怎么做漂亮一些; Github是模特, 将衣服穿上向大家展示.</p>
+<p>需要说的是, 与上述的三个轮子, 具有相似功能的其它轮子也有一些, 不一定非要使用这几个轮子.</p>
+<p>同时需要说明的是我使用的<code>Hexo</code>版本是<code>v3.9.0</code>, <code>Next</code>版本是<code>v7.2.0</code>.</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><ul>
+<li><a href="https://git-scm.com/download" target="_blank" rel="noopener">安装地址</a>.</li>
+</ul>
+<h2 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h2><ul>
+<li><a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">安装地址</a>.</li>
+</ul>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>在Windows下使用PowerShell或者GitBash(更加推荐GitBash), 输入如下代码:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<h1 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h1><h2 id="本地"><a href="#本地" class="headerlink" title="本地"></a>本地</h2><p>安装 Hexo 完成后, 执行下列命令, Hexo 将会在指定文件夹中新建所需要的文件.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>新建完成后, 指定文件夹的目录如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">|   ├── _drafts</span><br><span class="line">|   └── _posts</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>_config.yml</strong></p>
+<p>网站的配置信息, 可以在此配置大部分的参数. 后续再做详细说明.</p>
+</li>
+<li><p><strong>scaffold</strong></p>
+<p>模板文件夹, 文章的布局会根据模板来进行建立.</p>
+</li>
+<li><p><strong>source</strong></p>
+<p>资源文件夹是存放用户资源(文章)的地方. </p>
+<p>除 <code>_posts</code> 文件夹之外, 开头命名为 <code>_</code> (下划线)的文件 / 文件夹和隐藏的文件将会被忽略.</p>
+<p>Markdown 和 HTML 文件会被解析并放到 <code>public</code> 文件夹, 而其他文件会被拷贝过去.</p>
+</li>
+<li><p><strong>themes</strong></p>
+<p>主题文件夹, Hexo根据选定的主题来生成静态页面.</p>
+</li>
+</ul>
+<h2 id="远端"><a href="#远端" class="headerlink" title="远端"></a>远端</h2><p>上文说到, 需要借助Github来帮助我们展示博客, 因此需要在Github上创建对应的仓库.</p>
+<p>用于网站的仓库, 相比普通仓库多了一些限制和操作.</p>
+<ul>
+<li><p><strong>仓库名称</strong></p>
+<p>必须满足如下格式: Github用户名.github.io, 如名字叫xiaoming, 就是xiaoming.github.io.</p>
+</li>
+<li><p><strong>仓库公开</strong></p>
+<p>要给大家伙看的嘛, 自然不能是private的, 必须是public的.</p>
+</li>
+<li><p><strong>Github Pages</strong></p>
+<p>进入到仓库的settings中, 往下面拉到Github Pages的版块, 进行相应配置.</p>
+<p>可以填入自定义域名, 这个后续会加以说明.</p>
+<p>建议勾选<code>Enforce HTTPS</code>, 这样Github会免费把你的网站升级成HTTPS, 更加安全.</p>
+</li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="添加主题"><a href="#添加主题" class="headerlink" title="添加主题"></a>添加主题</h2><p>我有点忘了是否安装Hexo, 建站以后, <code>themes</code>文件夹下会自带<code>Next</code>主题.</p>
+<p>若没有, 需要自己安装主题. 以<code>Next</code>主题为例:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd themes/</span><br><span class="line">$ git init</span><br><span class="line">$ git clone https://github.com/theme-next/hexo-theme-next.git</span><br></pre></td></tr></table></figure>
+<p>主题文件夹的一般布局:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── languages</span><br><span class="line">├── layout</span><br><span class="line">├── scripts</span><br><span class="line">└── source</span><br></pre></td></tr></table></figure>
+<h2 id="Hexo-config-yml"><a href="#Hexo-config-yml" class="headerlink" title="Hexo_config.yml"></a>Hexo_config.yml</h2><p>一下对部分我认为较为重要, 以及基础的参数进行介绍.</p>
+<ul>
+<li><p><strong>网站相关</strong></p>
+<p>|     参数      |                             描述                             |<br>| :—————-: | :—————————————————————————————: |<br>|    <code>title</code>    |                           网站标题                           |<br>|  <code>subtitle</code>   |                          网站副标题                          |<br>| <code>description</code> |                           网站描述                           |<br>|  <code>keywords</code>   |       网站的关键词。使用半角逗号 <code>,</code> 分隔多个关键词。        |<br>|   <code>author</code>    |                           您的名字                           |<br>|  <code>language</code>   |               网站使用的语言, 我使用的zh-Hans                |<br>|  <code>timezone</code>   | 网站时区。Hexo 默认使用您电脑的时区。请参考 <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener">时区列表</a> 进行设置，如 <code>America/New_York</code>, <code>Japan</code>, 和 <code>UTC</code> 。一般的，对于中国大陆地区可以使用 <code>Asia/Shanghai</code>。 |</p>
+</li>
+<li><p><strong>网址相关</strong></p>
+<p>|  参数  |                           描述                            |<br>| :——: | :———————————————————————————-: |<br>| <code>url</code>  | 网址, 修改为Github仓库地址, 如<a href="https://xiaoming.github.io/" target="_blank" rel="noopener">https://xiaoming.github.io/</a> |<br>| <code>root</code> |                    网站根目录, 默认为/                    |</p>
+</li>
+<li><p><strong>主题相关</strong></p>
+<p>指定使用的主题. 如上文中我们在<code>theme</code>文件中安装了<code>Next</code>主题, 则可将其对应文件名进行设置:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theme: hexo-theme-next</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>部署相关</strong></p>
+<p>这一部分的配置, 是告诉Hexo你要用什么方法来将博客部署到服务器上. 当然我是用的Github.</p>
+<p>首先安装hexo-deployer-git:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>然后对应修改配置:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: </span><br><span class="line">    github: git@github.com:xiaoming/xiaoming.github.io.git</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>到这里, 基础的配置就完成了, 接下来进行主题的相关配置.</p>
+<h2 id="主题-config-yml"><a href="#主题-config-yml" class="headerlink" title="主题 _config.yml"></a>主题 _config.yml</h2><p>相比Hexo的_config.yml, 主题文件中的_config.yml有更多的内容, 下面针对部分内容进行修改.</p>
+<ul>
+<li><p><strong>菜单设置</strong></p>
+<p>这里设置你的博客有哪些主要的版块, 我的设置保留了主页, 关于, 分类, 归档.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: / || home</span><br><span class="line">  about: /about/ || user</span><br><span class="line">  #tags: /tags/ || tags</span><br><span class="line">  categories: /categories/ || th</span><br><span class="line">  archives: /archives/ || archive</span><br><span class="line">  #schedule: /schedule/ || calendar</span><br><span class="line">  #sitemap: /sitemap.xml || sitemap</span><br><span class="line">  #commonweal: /404/ || heartbeat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>子主题设置</strong></p>
+<p>可以认为<code>Next</code>主题下包含了4个子主题: <code>Muse</code>, <code>Mist</code>, <code>Pisces</code>, <code>Gemini</code>.</p>
+<p>根据个人喜好进行选择, 不满意可更换. 我选择的<code>Mist</code>.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Schemes</span><br><span class="line">#scheme: Muse</span><br><span class="line">scheme: Mist</span><br><span class="line">#scheme: Pisces</span><br><span class="line">#scheme: Gemini</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>侧边栏设置</strong></p>
+<p>打开侧边栏:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">site_state: true</span><br></pre></td></tr></table></figure>
+<p>目录显示相关:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line">  # Automatically add list number to toc.</span><br><span class="line">  number: true</span><br><span class="line">  # If true, all words will placed on next lines if header width longer then sidebar width.</span><br><span class="line">  wrap: false</span><br><span class="line">  # If true, all level of TOC in a post will be displayed, rather than the activated part of it.</span><br><span class="line">  expand_all: false</span><br><span class="line">  # Maximum heading depth of generated toc. You can set it in one post through `toc_max_depth` in Front-matter.</span><br><span class="line">  max_depth: 6</span><br></pre></td></tr></table></figure>
+<p>在左边还是右边 , 宽度, 是否自动显示:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sidebar:</span><br><span class="line">  # Sidebar Position.</span><br><span class="line">  #position: left</span><br><span class="line">  position: right</span><br><span class="line">  </span><br><span class="line">  # Manual define the sidebar width. If commented, will be default for:</span><br><span class="line">  # Muse | Mist: 320</span><br><span class="line">  # Pisces | Gemini: 240</span><br><span class="line">  #width: 300</span><br><span class="line"></span><br><span class="line">  # Sidebar Display (only for Muse | Mist), available values:</span><br><span class="line">  #  - post    expand on posts automatically. Default.</span><br><span class="line">  #  - always  expand for all pages automatically.</span><br><span class="line">  #  - hide    expand only when click on the sidebar toggle icon.</span><br><span class="line">  #  - remove  totally remove sidebar including sidebar toggle.</span><br><span class="line">  display: hide</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>代码版块设置</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">codeblock:</span><br><span class="line">  # Code Highlight theme</span><br><span class="line">  # Available values: normal | night | night eighties | night blue | night bright</span><br><span class="line">  # See: https://github.com/chriskempson/tomorrow-theme</span><br><span class="line">  highlight_theme: normal</span><br><span class="line">  # Add copy button on codeblock</span><br><span class="line">  copy_button:</span><br><span class="line">    enable: true</span><br><span class="line">    # Show text copy result.</span><br><span class="line">    show_result: true</span><br><span class="line">    # Available values: default | flat | mac</span><br><span class="line">    style:</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>字体设置</strong></p>
+<p>暂时没有进行相关设置, 感觉默认的就还好.</p>
+<p>如果要设置的话, 根据自带的帮助说明应该也能设置.</p>
+<p>设置过多的字体的话, 博客的加载速度会变慢.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">font:</span><br><span class="line">  enable: false</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>数学公式</strong></p>
+<p>如果文章里面包含了数学公式, 需要利用进行如下配置:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">math:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Default (true) will load mathjax / katex script on demand.</span><br><span class="line">  # That is it only render those page which has `mathjax: true` in Front-matter.</span><br><span class="line">  # If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.</span><br><span class="line">  per_page: true</span><br><span class="line"></span><br><span class="line">  engine: mathjax</span><br><span class="line">  #engine: katex</span><br></pre></td></tr></table></figure>
+<p>同时, 在需要解析数学公式的文章前面, 添加<code>mathjax: true</code>.</p>
+</li>
+</ul>
+<p>更多的配置, 以后会进行补充说明.</p>
+<h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><p>现在, 安装了需要的轮子, 并完成了基本的配置, 可以开始写博客了.</p>
+<p>下面介绍几个基础但是够用的操作, 需要说的是以下操作均需要在博客文件夹中进行, 就是<code>hexo init</code>的那个.</p>
+<ul>
+<li><p><strong>新建文章</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure>
+<p>默认会在<code>source/_post/</code>中生成对应的md文件. 我们可以将文章写在里面.</p>
+</li>
+<li><p><strong>生成静态网页</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo g</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>本地查看</strong></p>
+<p>在部署到Github之前, 可以先看看自己的博客, 文章是啥样的, 需不需要修改, 是否满足自己预期.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>部署</strong></p>
+<p>觉得一切OK后, 将其部署到Github上.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>清空历史信息</strong></p>
+<p>类似于删除Git仓库的历史commit, 不会影响当前现有的内容.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>等成功部署之后, 就可以在对应网址下, 看到自己的博客了. </p>
+<p>需要说的是部署是由延时的, 有时候需要十来分钟的时间. 所以如果你是第一次部署, 打开自己的链接, 发现404, 不要慌, 起来喝一杯热水.</p>
+]]></content>
+      <categories>
+        <category>流程记录</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Design HashSet</title>
+    <url>/2020/03/17/LeetCode/Design-HashSet/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Design a HashSet without using any built-in hash table libraries.</p>
+<p>To be specific, your design should include these functions:</p>
+<ul>
+<li><code>add(value)</code>: Insert a value into the HashSet. </li>
+<li><code>contains(value)</code> : Return whether the value exists in the HashSet or not.</li>
+<li><code>remove(value)</code>: Remove a value in the HashSet. If the value does not exist in the HashSet, do nothing.</li>
+</ul>
+<a id="more"></a>
+<p><strong>Example:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MyHashSet hashSet = new MyHashSet();</span><br><span class="line">hashSet.add(1);         </span><br><span class="line">hashSet.add(2);         </span><br><span class="line">hashSet.contains(1);    // returns true</span><br><span class="line">hashSet.contains(3);    // returns false (not found)</span><br><span class="line">hashSet.add(2);          </span><br><span class="line">hashSet.contains(2);    // returns true</span><br><span class="line">hashSet.remove(2);          </span><br><span class="line">hashSet.contains(2);    // returns false (already removed)</span><br><span class="line"> **Note:**</span><br></pre></td></tr></table></figure>
+<ul>
+<li>All values will be in the range of <code>[0, 1000000]</code>.</li>
+<li>The number of operations will be in the range of <code>[1, 10000]</code>.</li>
+<li>Please do not use the built-in HashSet library.</li>
+</ul>
+<hr>
+<p>不使用任何内建的哈希表库设计一个哈希集合</p>
+<p>具体地说，你的设计应该包含以下的功能</p>
+<ul>
+<li><code>add(value)</code>：向哈希集合中插入一个值。</li>
+<li><code>contains(value)</code> ：返回哈希集合中是否存在这个值。</li>
+<li><code>remove(value)</code>：将给定值从哈希集合中删除。如果哈希集合中没有这个值，什么也不做。</li>
+</ul>
+<p> <strong>示例:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MyHashSet hashSet = new MyHashSet();</span><br><span class="line">hashSet.add(1);         </span><br><span class="line">hashSet.add(2);         </span><br><span class="line">hashSet.contains(1);    // 返回 true</span><br><span class="line">hashSet.contains(3);    // 返回 false (未找到)</span><br><span class="line">hashSet.add(2);          </span><br><span class="line">hashSet.contains(2);    // 返回 true</span><br><span class="line">hashSet.remove(2);          </span><br><span class="line">hashSet.contains(2);    // 返回  false (已经被删除)</span><br></pre></td></tr></table></figure>
+<p> <strong>注意：</strong></p>
+<ul>
+<li>所有的值都在 <code>[0, 1000000]</code>的范围内。</li>
+<li>操作的总数目在<code>[1, 10000]</code>范围内。</li>
+<li>不要使用内建的哈希集合库。</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>在Python中, 内置的Hash集合数据结构有集合set.</p>
+<p>一般构建Hash集合, 主要解决两个问题:</p>
+<ul>
+<li>Hash函数, 即将原本的元素映射到一个位置上.</li>
+<li>冲突解决, 可能有多个不同的元素被Hash函数映射到一个位置, 这时候要想办法区分.</li>
+</ul>
+<p>一种简单的解决方法:</p>
+<ul>
+<li>Hash函数, 使用mode函数, 底数一般取一个质数.</li>
+<li>冲突解决, 可以将同一位置的元素放入一个桶中, 进行操作.</li>
+</ul>
+<p>而对于桶的数据结构的选择, 考虑到桶的大小是变动的, 链表相比数组更加合适.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHashSet</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Initialize your data structure here.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.bucket_list = [Bucket() <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">769</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_hash</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> x % <span class="number">769</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type key: int</span></span><br><span class="line"><span class="string">        :rtype: None</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        hash_val = self._hash(key)</span><br><span class="line">        self.bucket_list[hash_val].add(key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type key: int</span></span><br><span class="line"><span class="string">        :rtype: None</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        hash_val = self._hash(key)</span><br><span class="line">        self.bucket_list[hash_val].remove(key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">contains</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Returns true if this set contains the specified element</span></span><br><span class="line"><span class="string">        :type key: int</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        hash_val = self._hash(key)</span><br><span class="line">        <span class="keyword">return</span> self.bucket_list[hash_val].contains(key)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value, next_node=None)</span>:</span></span><br><span class="line">        self.value = value</span><br><span class="line">        self.next_node = next_node</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bucket</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.first_node = Node(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.contains(x):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        new_node = Node(x, self.first_node.next_node)</span><br><span class="line">        self.first_node.next_node = new_node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        pre_node = self.first_node</span><br><span class="line">        cur_node = self.first_node.next_node</span><br><span class="line">        <span class="keyword">while</span> cur_node <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> cur_node.value == x:</span><br><span class="line">                pre_node.next_node = cur_node.next_node</span><br><span class="line">                cur_node.next_node = <span class="literal">None</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            pre_node = cur_node</span><br><span class="line">            cur_node = cur_node.next_node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">contains</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        cur_node = self.first_node.next_node</span><br><span class="line">        <span class="keyword">while</span> cur_node <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> cur_node.value == x:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            cur_node = cur_node.next_node</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Your MyHashSet object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"># obj = MyHashSet()</span></span><br><span class="line"><span class="comment"># obj.add(key)</span></span><br><span class="line"><span class="comment"># obj.remove(key)</span></span><br><span class="line"><span class="comment"># param_3 = obj.contains(key)</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-17</li>
+<li>击败比例: 40.30%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Hash</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>1-bit and 2-bit Characters</title>
+    <url>/2020/03/16/LeetCode/1-bit-and-2-bit-Characters/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>We have two special characters. The first character can be represented by one bit <code>0</code>. The second character can be represented by two bits (<code>10</code> or <code>11</code>).</p>
+<p>Now given a string represented by several bits. Return whether the last character must be a one-bit character or not. The given string will always end with a zero.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: </span><br><span class="line">bits = [1, 0, 0]</span><br><span class="line">Output: True</span><br><span class="line">Explanation: </span><br><span class="line">The only way to decode it is two-bit character and one-bit character. So the last character is one-bit character.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: </span><br><span class="line">bits = [1, 1, 1, 0]</span><br><span class="line">Output: False</span><br><span class="line">Explanation: </span><br><span class="line">The only way to decode it is two-bit character and two-bit character. So the last character is NOT one-bit character.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<p><code>1 &lt;= len(bits) &lt;= 1000</code>.</p>
+<p><code>bits[i]</code> is always <code>0</code> or <code>1</code>.</p>
+<hr>
+<p>有两种特殊字符。第一种字符可以用一比特<code>0</code>来表示。第二种字符可以用两比特(<code>10</code> 或 <code>11</code>)来表示。</p>
+<p>现给一个由若干比特组成的字符串。问最后一个字符是否必定为一个一比特字符。给定的字符串总是由0结束。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: </span><br><span class="line">bits = [1, 0, 0]</span><br><span class="line">输出: True</span><br><span class="line">解释: </span><br><span class="line">唯一的编码方式是一个两比特字符和一个一比特字符。所以最后一个字符是一比特字符。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: </span><br><span class="line">bits = [1, 1, 1, 0]</span><br><span class="line">输出: False</span><br><span class="line">解释: </span><br><span class="line">唯一的编码方式是两比特字符和两比特字符。所以最后一个字符不是一比特字符。</span><br></pre></td></tr></table></figure>
+<p><strong>注意:</strong></p>
+<ul>
+<li><code>1 &lt;= len(bits) &lt;= 1000</code>.</li>
+<li><code>bits[i]</code> 总是<code>0</code> 或 <code>1</code>.</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>首先理解题意, 就是说我们有三个字符<code>0</code>, <code>10</code>, <code>11</code>, 然后对于给定的一个字符串, 最后一个字符串一定是<code>0</code>, 问是否只存在最后的字符是<code>0</code>(而不是<code>10</code>), 由以上三个字符组成字符串.</p>
+<p>首先考虑一些边界条件, 如给定字符长度为1, 2的时候.</p>
+<p>然后利用递归函数, 分布判断以下两种情况是否存在:</p>
+<ul>
+<li>最后的字符是<code>10</code>, 前面的字符串是否合理. 若合理则直接返回false.</li>
+<li>最后的字符是<code>0</code>, 前面的字符串是否合理. 合理则返回true, 否则返回false.</li>
+</ul>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>直接从左往右线性扫描, 若当前位置$i$的数字是<code>1</code>, 则只能是两位比特字符, 将$i$加2.</p>
+<p>若当前位置$i$的数字是<code>0</code>, 则只能是一位比特字符, 将$i$加1.</p>
+<p>根据最后落点的位置, 判断是否最后一个字符只能是<code>0</code>.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isOneBitCharacter</span><span class="params">(self, bits)</span>:</span></span><br><span class="line">        <span class="comment"># 边界情况处理.</span></span><br><span class="line">        n_bits = len(bits)</span><br><span class="line">        <span class="keyword">if</span> n_bits == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        bits.reverse()</span><br><span class="line">        <span class="keyword">if</span> bits == [<span class="number">0</span>, <span class="number">1</span>]:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> bits[: <span class="number">2</span>] == [<span class="number">0</span>, <span class="number">1</span>] <span class="keyword">and</span> self.helper(bits[<span class="number">2</span>:]):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> self.helper(bits[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, list_)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        递归函数.</span></span><br><span class="line"><span class="string">        对于给定序列, 能否由给定字符(0, 01, 11)组成.</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">if</span> len(list_) == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> list_[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> len(list_) == <span class="number">2</span>:</span><br><span class="line">            str_ = str(list_[<span class="number">0</span>]) + str(list_[<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">if</span> str_ <span class="keyword">in</span> [<span class="string">'00'</span>, <span class="string">'01'</span>, <span class="string">'11'</span>]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> list_[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> self.helper(list_[<span class="number">2</span>:]) <span class="keyword">or</span> self.helper(list_[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> list_[<span class="number">0</span>] == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> list_[<span class="number">1</span>] != <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> self.helper(list_[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
+<h2 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isOneBitCharacter</span><span class="params">(self, bits)</span>:</span></span><br><span class="line">        <span class="comment"># 边界情况处理.</span></span><br><span class="line">        n_bits = len(bits)</span><br><span class="line">        <span class="keyword">if</span> n_bits == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> n_bits == <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">if</span> bits[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">        idx = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> idx &lt; n_bits - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> bits[idx] == <span class="number">0</span>:</span><br><span class="line">                idx += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                idx += <span class="number">2</span></span><br><span class="line">        <span class="keyword">return</span> idx == n_bits - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-16</li>
+<li>击败比例: 80.12%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Bulls and Cows</title>
+    <url>/2020/03/15/LeetCode/Bulls-and-Cows/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>You are playing the following <a href="https://en.wikipedia.org/wiki/Bulls_and_Cows" target="_blank" rel="noopener">Bulls and Cows</a> game with your friend: You write down a number and ask your friend to guess what the number is. Each time your friend makes a guess, you provide a hint that indicates how many digits in said guess match your secret number exactly in both digit and position (called “bulls”) and how many digits match the secret number but locate in the wrong position (called “cows”). Your friend will use successive guesses and hints to eventually derive the secret number.</p>
+<p>Write a function to return a hint according to the secret number and friend’s guess, use <code>A</code> to indicate the bulls and <code>B</code> to indicate the cows. </p>
+<p>Please note that both secret number and friend’s guess may contain duplicate digits.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: secret = &quot;1807&quot;, guess = &quot;7810&quot;</span><br><span class="line"></span><br><span class="line">Output: &quot;1A3B&quot;</span><br><span class="line"></span><br><span class="line">Explanation: 1 bull and 3 cows. The bull is 8, the cows are 0, 1 and 7.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: secret = &quot;1123&quot;, guess = &quot;0111&quot;</span><br><span class="line"></span><br><span class="line">Output: &quot;1A1B&quot;</span><br><span class="line"></span><br><span class="line">Explanation: The 1st 1 in friend&apos;s guess is a bull, the 2nd or 3rd 1 is a cow.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong> You may assume that the secret number and your friend’s guess only contain digits, and their lengths are always equal.</p>
+<hr>
+<p>你正在和你的朋友玩 <a href="https://baike.baidu.com/item/猜数字/83200?fromtitle=Bulls+and+Cows&amp;fromid=12003488&amp;fr=aladdin" target="_blank" rel="noopener">猜数字（Bulls and Cows）</a>游戏：你写下一个数字让你的朋友猜。每次他猜测后，你给他一个提示，告诉他有多少位数字和确切位置都猜对了（称为“Bulls”, 公牛），有多少位数字猜对了但是位置不对（称为“Cows”, 奶牛）。你的朋友将会根据提示继续猜，直到猜出秘密数字。</p>
+<p>请写出一个根据秘密数字和朋友的猜测数返回提示的函数，用 <code>A</code> 表示公牛，用 <code>B</code> 表示奶牛。</p>
+<p>请注意秘密数字和朋友的猜测数都可能含有重复数字。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: secret = &quot;1807&quot;, guess = &quot;7810&quot;</span><br><span class="line"></span><br><span class="line">输出: &quot;1A3B&quot;</span><br><span class="line"></span><br><span class="line">解释: 1 公牛和 3 奶牛。公牛是 8，奶牛是 0, 1 和 7。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: secret = &quot;1123&quot;, guess = &quot;0111&quot;</span><br><span class="line"></span><br><span class="line">输出: &quot;1A1B&quot;</span><br><span class="line"></span><br><span class="line">解释: 朋友猜测数中的第一个 1 是公牛，第二个或第三个 1 可被视为奶牛。</span><br></pre></td></tr></table></figure>
+<p><strong>说明:</strong> 你可以假设秘密数字和朋友的猜测数都只包含数字，并且它们的长度永远相等。</p>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>如果不使用hash(在python中通常以字典, 集合数据结构存在), 使用循环遍历的方式来做, 时间复杂度大概在$O(N^2)$这个量级.</p>
+<p>若事先构建好hash表, 对两个字符串分别构建, 则时间复杂度会降低到$O(N)$.</p>
+<p>比如利用字典, 储存每个字符的信息, 其key为字符, value为字符出现的位置的集合.</p>
+<p>对每个字符, 比较两个字符串中, 其共同的位置个数, 将其累加到<code>A</code>上; 并在剩下的不同的位置中, 取个数的较小值, 将其累加到<code>B</code>上.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getHint</span><span class="params">(self, secret, guess)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> len(secret) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'0A0B'</span></span><br><span class="line">        <span class="keyword">if</span> len(secret) == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> secret == guess:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'1A0B'</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'0A0B'</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># create hash table.</span></span><br><span class="line">        secret_hash_table = &#123;&#125;</span><br><span class="line">        guess_hash_table = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(secret)):</span><br><span class="line">            secret_str = secret[i]</span><br><span class="line">            <span class="keyword">if</span> secret_str <span class="keyword">not</span> <span class="keyword">in</span> secret_hash_table:</span><br><span class="line">                secret_hash_table[secret_str] = set([i])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                secret_hash_table[secret_str].add(i)</span><br><span class="line"></span><br><span class="line">            guess_str = guess[i]</span><br><span class="line">            <span class="keyword">if</span> guess_str <span class="keyword">not</span> <span class="keyword">in</span> guess_hash_table:</span><br><span class="line">                guess_hash_table[guess_str] = set([i])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                guess_hash_table[guess_str].add(i)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># search.</span></span><br><span class="line">        n_A = <span class="number">0</span></span><br><span class="line">        n_B = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> guess_hash_table:</span><br><span class="line">            <span class="keyword">if</span> k <span class="keyword">not</span> <span class="keyword">in</span> secret_hash_table:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            intersection = guess_hash_table[k].intersection(secret_hash_table[k])</span><br><span class="line">            <span class="keyword">if</span> len(intersection) != <span class="number">0</span>:</span><br><span class="line">                n_A += len(intersection)</span><br><span class="line">                secret_hash_table[k] = secret_hash_table[k].difference(intersection)</span><br><span class="line">                guess_hash_table[k] = guess_hash_table[k].difference(intersection)</span><br><span class="line">                n_B += min(len(secret_hash_table[k]), len(guess_hash_table[k]))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                n_B += min(len(secret_hash_table[k]), len(guess_hash_table[k]))</span><br><span class="line">        <span class="keyword">return</span> str(int(n_A)) + <span class="string">'A'</span> + str(int(n_B)) + <span class="string">'B'</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-15</li>
+<li>击败比例: 60.86%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Hash</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Kth Largest Element in a Stream</title>
+    <url>/2019/08/13/LeetCode/Kth-Largest-Element-in-a-Stream/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Design a class to find the <strong>k</strong>th largest element in a stream. Note that it is the kth largest element in the sorted order, not the kth distinct element.</p>
+<p>Your <code>KthLargest</code> class will have a constructor which accepts an integer <code>k</code> and an integer array <code>nums</code>, which contains initial elements from the stream. For each call to the method <code>KthLargest.add</code>, return the element representing the kth largest element in the stream.</p>
+<a id="more"></a>
+<p><strong>Example:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int k = 3;</span><br><span class="line">int[] arr = [4,5,8,2];</span><br><span class="line">KthLargest kthLargest = new KthLargest(3, arr);</span><br><span class="line">kthLargest.add(3);   // returns 4</span><br><span class="line">kthLargest.add(5);   // returns 5</span><br><span class="line">kthLargest.add(10);  // returns 5</span><br><span class="line">kthLargest.add(9);   // returns 8</span><br><span class="line">kthLargest.add(4);   // returns 8</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong><br> You may assume that <code>nums</code>‘ length ≥ <code>k-1</code> and <code>k</code> ≥ 1.</p>
+<hr>
+<p>设计一个找到数据流中第K大元素的类（class）。注意是排序后的第K大元素，不是第K个不同的元素。</p>
+<p>你的 <code>KthLargest</code> 类需要一个同时接收整数 <code>k</code> 和整数数组<code>nums</code> 的构造器，它包含数据流中的初始元素。每次调用 <code>KthLargest.add</code>，返回当前数据流中第K大的元素。</p>
+<p><strong>示例:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int k = 3;</span><br><span class="line">int[] arr = [4,5,8,2];</span><br><span class="line">KthLargest kthLargest = new KthLargest(3, arr);</span><br><span class="line">kthLargest.add(3);   // returns 4</span><br><span class="line">kthLargest.add(5);   // returns 5</span><br><span class="line">kthLargest.add(10);  // returns 5</span><br><span class="line">kthLargest.add(9);   // returns 8</span><br><span class="line">kthLargest.add(4);   // returns 8</span><br></pre></td></tr></table></figure>
+<p><strong>说明:</strong><br> 你可以假设 <code>nums</code> 的长度≥ <code>k-1</code> 且<code>k</code> ≥ 1。</p>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>对一堆已经存在的数据, 进行添加新的数, 并每次返回第K大的数. 很明显用堆这种数据结构来处理会比较自然, 关于堆的介绍可以在网上或者&lt;算法导论&gt;之类的书中找到, 这里暂不讨论堆的实现, 以后有空也许会在博客中实现一下堆.</p>
+<p>在Python中, heapq中包含了最小堆(即堆顶是最小元素)的函数, 它是基于列表实现的.</p>
+<p>这里有个小技巧, 就是不需要堆所有数据进行建堆和维护, 只需要排序后的前K个就行.</p>
+<p>同时还有个坑, 即一开始给的元素个数可能没有K个, 需要注意下.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">KthLargest</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, k, nums)</span>:</span></span><br><span class="line">        self.k = k</span><br><span class="line">        <span class="keyword">if</span> len(nums) &lt; k:</span><br><span class="line">            self.nums = nums</span><br><span class="line">            self.k_num = <span class="literal">None</span></span><br><span class="line">            heapq.heapify(self.nums)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            nums.sort(reverse=<span class="literal">True</span>)</span><br><span class="line">            self.nums = nums[: k - <span class="number">1</span>]</span><br><span class="line">            self.k_num = nums[k - <span class="number">1</span>]</span><br><span class="line">            heapq.heapify(self.nums)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(self, val)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.k_num <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            heapq.heappush(self.nums, val)</span><br><span class="line">            self.k_num = heapq.heappop(self.nums)</span><br><span class="line">            <span class="keyword">return</span> self.k_num</span><br><span class="line">        <span class="keyword">if</span> val &lt;= self.k_num:</span><br><span class="line">            <span class="keyword">return</span> self.k_num</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            heapq.heappush(self.nums, val)</span><br><span class="line">            self.k_num = heapq.heappop(self.nums)</span><br><span class="line">            <span class="keyword">return</span> self.k_num</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-13</li>
+<li>击败比例: 53.39%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Heap</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Employee Importance</title>
+    <url>/2019/08/10/LeetCode/Employee-Importance/</url>
+    <content><![CDATA[<h1 id="问题介绍"><a href="#问题介绍" class="headerlink" title="问题介绍"></a>问题介绍</h1><p>You are given a data structure of employee information, which includes the employee’s <strong>unique id</strong>, his <strong>importance value</strong> and his <strong>direct</strong> subordinates’ id.</p>
+<p>For example, employee 1 is the leader of employee 2, and employee 2  is the leader of employee 3. They have importance value 15, 10 and 5,  respectively. Then employee 1 has a data structure like [1, 15, [2]],  and employee 2 has [2, 10, [3]], and employee 3 has [3, 5, []]. Note  that although employee 3 is also a subordinate of employee 1, the  relationship is <strong>not direct</strong>.</p>
+<p>Now given the employee information of a company, and an employee id,  you need to return the total importance value of this employee and all  his subordinates.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1</span><br><span class="line">Output: 11</span><br><span class="line">Explanation:</span><br><span class="line">Employee 1 has importance value 5, and he has two direct subordinates: employee 2 and employee 3. They both have importance value 3. So the total importance value of employee 1 is 5 + 3 + 3 = 11.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li>One employee has at most one <strong>direct</strong> leader and may have several subordinates.</li>
+<li>The maximum number of employees won’t exceed 2000.</li>
+</ol>
+<hr>
+<p>给定一个保存员工信息的数据结构，它包含了员工<strong>唯一的id</strong>，<strong>重要度</strong> 和 <strong>直系下属的id</strong>。</p>
+<p>比如，员工1是员工2的领导，员工2是员工3的领导。他们相应的重要度为15, 10, 5。那么员工1的数据结构是[1, 15,  [2]]，员工2的数据结构是[2, 10, [3]]，员工3的数据结构是[3, 5, []]。注意虽然员工3也是员工1的一个下属，但是由于<strong>并不是直系</strong>下属，因此没有体现在员工1的数据结构中。</p>
+<p>现在输入一个公司的所有员工信息，以及单个员工id，返回这个员工和他所有下属的重要度之和。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1</span><br><span class="line">输出: 11</span><br><span class="line">解释:</span><br><span class="line">员工1自身的重要度是5，他有两个直系下属2和3，而且2和3的重要度均为3。因此员工1的总重要度是 5 + 3 + 3 = 11。</span><br></pre></td></tr></table></figure>
+<p><strong>注意:</strong></p>
+<ol>
+<li>一个员工最多有一个<strong>直系</strong>领导，但是可以有多个<strong>直系</strong>下属</li>
+<li>员工数量不超过2000。</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>今天这道总算稍微难一点点了.</p>
+<p>首先利用Hash Table这种数据结构进行数据转存, 这样在反复查询的时候非常快捷. 在Python中的字典就是一个Hash Table.</p>
+<p>然后就是利用深度优先搜索, 或者广度优先搜索进行遍历.</p>
+<p>这里采用了深度优先搜索, 用到了递归, 也就是那个helper函数来实现遍历. 由于每个员工最多只有一个直属领导, 所以非常简单.</p>
+<p>时间复杂度为$O(n)$, 空间复杂度为$O(m)$, 其中$m$为总员工数量, $n$为该员工对应下属数量.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string"># Employee info</span></span><br><span class="line"><span class="string">class Employee:</span></span><br><span class="line"><span class="string">    def __init__(self, id, importance, subordinates):</span></span><br><span class="line"><span class="string">        # It's the unique id of each node.</span></span><br><span class="line"><span class="string">        # unique id of this employee</span></span><br><span class="line"><span class="string">        self.id = id</span></span><br><span class="line"><span class="string">        # the importance value of this employee</span></span><br><span class="line"><span class="string">        self.importance = importance</span></span><br><span class="line"><span class="string">        # the id of direct subordinates</span></span><br><span class="line"><span class="string">        self.subordinates = subordinates</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getImportance</span><span class="params">(self, employees, id)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type employees: Employee</span></span><br><span class="line"><span class="string">        :type id: int</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.info_dict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> emp <span class="keyword">in</span> employees:</span><br><span class="line">            self.info_dict[emp.id] = (emp.importance, emp.subordinates)</span><br><span class="line">        <span class="keyword">return</span> self.helper(id)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, id)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.info_dict[id][<span class="number">1</span>]:</span><br><span class="line">            <span class="keyword">return</span> self.info_dict[id][<span class="number">0</span>]</span><br><span class="line">        imp = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> sub_id <span class="keyword">in</span> self.info_dict[id][<span class="number">1</span>]:</span><br><span class="line">            imp += self.helper(sub_id)</span><br><span class="line">        <span class="keyword">return</span> imp + self.info_dict[id][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-10</li>
+<li>击败比例: 51.09%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Hash</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Baseball Game</title>
+    <url>/2019/08/09/LeetCode/Baseball-Game/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p> You’re now a baseball game point recorder. </p>
+<p> Given a list of strings, each string can be one of the 4 following types: </p>
+<ol>
+<li><code>Integer</code> (one round’s score): Directly represents the number of points you get in this round.</li>
+<li><code>&quot;+&quot;</code> (one round’s score): Represents that the points you get in this round are the sum of the last two <code>valid</code> round’s points.</li>
+<li><code>&quot;D&quot;</code> (one round’s score): Represents that the points you get in this round are the doubled data of the last <code>valid</code> round’s points.</li>
+<li><code>&quot;C&quot;</code> (an operation, which isn’t a round’s score): Represents the last <code>valid</code> round’s points you get were invalid and should be removed.</li>
+</ol>
+<p>Each round’s operation is permanent and could have an impact on the round before and the round after. </p>
+<p>You need to return the sum of the points you could get in all the rounds. </p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [&quot;5&quot;,&quot;2&quot;,&quot;C&quot;,&quot;D&quot;,&quot;+&quot;]</span><br><span class="line">Output: 30</span><br><span class="line">Explanation: </span><br><span class="line">Round 1: You could get 5 points. The sum is: 5.</span><br><span class="line">Round 2: You could get 2 points. The sum is: 7.</span><br><span class="line">Operation 1: The round 2&apos;s data was invalid. The sum is: 5.  </span><br><span class="line">Round 3: You could get 10 points (the round 2&apos;s data has been removed). The sum is: 15.</span><br><span class="line">Round 4: You could get 5 + 10 = 15 points. The sum is: 30.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [&quot;5&quot;,&quot;-2&quot;,&quot;4&quot;,&quot;C&quot;,&quot;D&quot;,&quot;9&quot;,&quot;+&quot;,&quot;+&quot;]</span><br><span class="line">Output: 27</span><br><span class="line">Explanation: </span><br><span class="line">Round 1: You could get 5 points. The sum is: 5.</span><br><span class="line">Round 2: You could get -2 points. The sum is: 3.</span><br><span class="line">Round 3: You could get 4 points. The sum is: 7.</span><br><span class="line">Operation 1: The round 3&apos;s data is invalid. The sum is: 3.  </span><br><span class="line">Round 4: You could get -4 points (the round 3&apos;s data has been removed). The sum is: -1.</span><br><span class="line">Round 5: You could get 9 points. The sum is: 8.</span><br><span class="line">Round 6: You could get -4 + 9 = 5 points. The sum is 13.</span><br><span class="line">Round 7: You could get 9 + 5 = 14 points. The sum is 27.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<p>The size of the input list will be between 1 and 1000.</p>
+<p>Every integer represented in the list will be between -30000 and 30000.</p>
+<hr>
+<p>你现在是棒球比赛记录员。 </p>
+<p>给定一个字符串列表，每个字符串可以是以下四种类型之一：</p>
+<ol>
+<li><p><code>整数</code>（一轮的得分）：直接表示您在本轮中获得的积分数。</p>
+</li>
+<li><p><code>&quot;+&quot;</code>（一轮的得分）：表示本轮获得的得分是前两轮<code>有效</code> 回合得分的总和。</p>
+</li>
+<li><p><code>&quot;D&quot;</code>（一轮的得分）：表示本轮获得的得分是前一轮<code>有效</code> 回合得分的两倍。</p>
+</li>
+<li><code>&quot;C&quot;</code>（一个操作，这不是一个回合的分数）：表示您获得的最后一个<code>有效</code>回合的分数是无效的，应该被移除。</li>
+</ol>
+<p>每一轮的操作都是永久性的，可能会对前一轮和后一轮产生影响。</p>
+<p>你需要返回你在所有回合中得分的总和。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: [&quot;5&quot;,&quot;2&quot;,&quot;C&quot;,&quot;D&quot;,&quot;+&quot;]</span><br><span class="line">输出: 30</span><br><span class="line">解释: </span><br><span class="line">第1轮：你可以得到5分。总和是：5。</span><br><span class="line">第2轮：你可以得到2分。总和是：7。</span><br><span class="line">操作1：第2轮的数据无效。总和是：5。</span><br><span class="line">第3轮：你可以得到10分（第2轮的数据已被删除）。总数是：15。</span><br><span class="line">第4轮：你可以得到5 + 10 = 15分。总数是：30。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: [&quot;5&quot;,&quot;-2&quot;,&quot;4&quot;,&quot;C&quot;,&quot;D&quot;,&quot;9&quot;,&quot;+&quot;,&quot;+&quot;]</span><br><span class="line">输出: 27</span><br><span class="line">解释: </span><br><span class="line">第1轮：你可以得到5分。总和是：5。</span><br><span class="line">第2轮：你可以得到-2分。总数是：3。</span><br><span class="line">第3轮：你可以得到4分。总和是：7。</span><br><span class="line">操作1：第3轮的数据无效。总数是：3。</span><br><span class="line">第4轮：你可以得到-4分（第三轮的数据已被删除）。总和是：-1。</span><br><span class="line">第5轮：你可以得到9分。总数是：8。</span><br><span class="line">第6轮：你可以得到-4 + 9 = 5分。总数是13。</span><br><span class="line">第7轮：你可以得到9 + 5 = 14分。总数是27。</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li>输入列表的大小将介于1和1000之间。</li>
+<li>列表中的每个整数都将介于-30000和30000之间。</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>一道很简单的用栈这种数据结构进行处理的问题.</p>
+<p>在Python中一般用列表作为一个栈. 剩下的用循环和条件选择就能轻松完成.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calPoints</span><span class="params">(self, ops)</span>:</span></span><br><span class="line">        stack = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> ops:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                stack.append(int(i))</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">if</span> i == <span class="string">'C'</span>:</span><br><span class="line">                    stack.pop()</span><br><span class="line">                <span class="keyword">elif</span> i == <span class="string">'D'</span>:</span><br><span class="line">                    stack.append(stack[<span class="number">-1</span>] * <span class="number">2</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    stack.append(stack[<span class="number">-1</span>] + stack[<span class="number">-2</span>])</span><br><span class="line">        <span class="keyword">return</span> sum(stack)</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-09</li>
+<li>击败比例: 20.90%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Stack</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Fibonacci Number</title>
+    <url>/2019/08/08/LeetCode/Fibonacci-Number/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>The <strong>Fibonacci numbers</strong>, commonly denoted <code>F(n)</code> form a sequence, called the <strong>Fibonacci sequence</strong>, such that each number is the sum of the two preceding ones, starting from <code>0</code> and <code>1</code>. That is,</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">F(0) = 0,   F(1) = 1</span><br><span class="line">F(N) = F(N - 1) + F(N - 2), for N &gt; 1.</span><br></pre></td></tr></table></figure>
+<p>Given <code>N</code>, calculate <code>F(N)</code>.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 2</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: F(2) = F(1) + F(0) = 1 + 0 = 1.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 3</span><br><span class="line">Output: 2</span><br><span class="line">Explanation: F(3) = F(2) + F(1) = 1 + 1 = 2.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: 4</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<p>0 ≤ <code>N</code> ≤ 30.</p>
+<hr>
+<p><strong>斐波那契数</strong>，通常用 <code>F(n)</code> 表示，形成的序列称为<strong>斐波那契数列</strong>。该数列由 <code>0</code> 和 <code>1</code> 开始，后面的每一项数字都是前面两项数字的和。也就是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">F(0) = 0,   F(1) = 1</span><br><span class="line">F(N) = F(N - 1) + F(N - 2), 其中 N &gt; 1.</span><br></pre></td></tr></table></figure>
+<p>给定 <code>N</code>，计算 <code>F(N)</code>。 </p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：2</span><br><span class="line">输出：1</span><br><span class="line">解释：F(2) = F(1) + F(0) = 1 + 0 = 1.</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：3</span><br><span class="line">输出：2</span><br><span class="line">解释：F(3) = F(2) + F(1) = 1 + 1 = 2.</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：4</span><br><span class="line">输出：3</span><br><span class="line">解释：F(4) = F(3) + F(2) = 2 + 1 = 3.</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li>0 ≤ <code>N</code> ≤ 30</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>嗯, 非常轻松的一道题. 肥不拉几数列我们小时候都学过. 这里理论上一个一个挨着求就行了, 需要注意的是没有必要保存历史数列, 也就是说用两个变量记录相邻的肥不拉几数就行.</p>
+<p>时间复杂度$O(n)$, 空间复杂度$O(1)$.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">(self, N)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        first, second = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(N - <span class="number">1</span>):</span><br><span class="line">            third = first + second</span><br><span class="line">            first = second</span><br><span class="line">            second = third</span><br><span class="line">        <span class="keyword">return</span> second</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-08</li>
+<li>击败比例: 90.55%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Powerful Integers</title>
+    <url>/2019/08/07/LeetCode/Powerful-Integers/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given two positive integers <code>x</code> and <code>y</code>, an integer is <em>powerful</em> if it is equal to <code>x^i + y^j</code> for some integers <code>i &gt;= 0</code> and <code>j &gt;= 0</code>.</p>
+<p>Return a list of all powerful integers that have value less than or equal to <code>bound</code>.</p>
+<p>You may return the answer in any order.  In your answer, each value should occur at most once.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: x = 2, y = 3, bound = 10</span><br><span class="line">Output: [2,3,4,5,7,9,10]</span><br><span class="line">Explanation: </span><br><span class="line">2 = 2^0 + 3^0</span><br><span class="line">3 = 2^1 + 3^0</span><br><span class="line">4 = 2^0 + 3^1</span><br><span class="line">5 = 2^1 + 3^1</span><br><span class="line">7 = 2^2 + 3^1</span><br><span class="line">9 = 2^3 + 3^0</span><br><span class="line">10 = 2^0 + 3^2</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: x = 3, y = 5, bound = 15</span><br><span class="line">Output: [2,4,6,8,10,14]</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ul>
+<li><code>1 &lt;= x &lt;= 100</code></li>
+<li><code>1 &lt;= y &lt;= 100</code></li>
+<li><code>0 &lt;= bound &lt;= 10^6</code></li>
+</ul>
+<hr>
+<p>给定两个正整数 <code>x</code> 和 <code>y</code>，如果某一整数等于 <code>x^i + y^j</code>，其中整数 <code>i &gt;= 0</code> 且 <code>j &gt;= 0</code>，那么我们认为该整数是一个<em>强整数</em>。</p>
+<p>返回值小于或等于 <code>bound</code> 的所有<em>强整数</em>组成的列表。</p>
+<p>你可以按任何顺序返回答案。在你的回答中，每个值最多出现一次。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：x = 2, y = 3, bound = 10</span><br><span class="line">输出：[2,3,4,5,7,9,10]</span><br><span class="line">解释： </span><br><span class="line">2 = 2^0 + 3^0</span><br><span class="line">3 = 2^1 + 3^0</span><br><span class="line">4 = 2^0 + 3^1</span><br><span class="line">5 = 2^1 + 3^1</span><br><span class="line">7 = 2^2 + 3^1</span><br><span class="line">9 = 2^3 + 3^0</span><br><span class="line">10 = 2^0 + 3^2</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：x = 3, y = 5, bound = 15</span><br><span class="line">输出：[2,4,6,8,10,14]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= x &lt;= 100</code></li>
+<li><code>1 &lt;= y &lt;= 100</code></li>
+<li><code>0 &lt;= bound &lt;= 10^6</code></li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>没错, 又是一道非常简单的题, “为啥一直做这么简单的题?” 先找下感觉~</p>
+<p>这道题首先注意下边界条件, 即<code>bound</code>可能等于<code>0</code>和<code>1</code>这样的特殊值, 此时直接返回空集.</p>
+<p>然后计算<code>x</code>和<code>y</code>最大可能的幂数, 此时要注意它们可能等于<code>1</code>的特殊情况.</p>
+<p>最后利用二重循环找出所有可能的值, 利用集合去重即可.</p>
+<p>时间复杂度为$O(mn)$, 其中$m$和$n$分别是<code>x</code>和<code>y</code>的最大幂数.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">powerfulIntegers</span><span class="params">(self, x, y, bound)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> bound == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        <span class="keyword">if</span> bound == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        res_list = []</span><br><span class="line">        max_x = int(math.log(bound) / math.log(x)) <span class="keyword">if</span> x != <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        max_y = int(math.log(bound) / math.log(y)) <span class="keyword">if</span> y != <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(max_x + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(max_y + <span class="number">1</span>):</span><br><span class="line">                num = x**i + y**j</span><br><span class="line">                <span class="keyword">if</span> num &lt;= bound:</span><br><span class="line">                    res_list.append(num)</span><br><span class="line">        <span class="keyword">return</span> list(set(res_list))</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-07</li>
+<li>击败比例: 78.57%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Math</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Duplicate Zeros</title>
+    <url>/2019/08/06/LeetCode/Duplicate-Zeros/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a fixed length array <code>arr</code> of integers, duplicate each occurrence of zero, shifting the remaining elements to the right.</p>
+<p>Note that elements beyond the length of the original array are not written.</p>
+<p>Do the above modifications to the input array <strong>in place</strong>, do not return anything from your function.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [1,0,2,3,0,4,5,0]</span><br><span class="line">Output: null</span><br><span class="line">Explanation: After calling your function, the input array is modified to: [1,0,0,2,3,0,0,4]</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [1,2,3]</span><br><span class="line">Output: null</span><br><span class="line">Explanation: After calling your function, the input array is modified to: [1,2,3]</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li><code>1 &lt;= arr.length &lt;= 10000</code></li>
+<li><code>0 &lt;= arr[i] &lt;= 9</code></li>
+</ol>
+<hr>
+<p>给你一个长度固定的整数数组 <code>arr</code>，请你将该数组中出现的每个零都复写一遍，并将其余的元素向右平移。</p>
+<p>注意：请不要在超过该数组长度的位置写入元素。</p>
+<p>要求：请对输入的数组 <strong>就地</strong> 进行上述修改，不要从函数返回任何东西。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[1,0,2,3,0,4,5,0]</span><br><span class="line">输出：null</span><br><span class="line">解释：调用函数后，输入的数组将被修改为：[1,0,0,2,3,0,0,4]</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[1,2,3]</span><br><span class="line">输出：null</span><br><span class="line">解释：调用函数后，输入的数组将被修改为：[1,2,3]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>1 &lt;= arr.length &lt;= 10000</code></li>
+<li><code>0 &lt;= arr[i] &lt;= 9</code></li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>非常简单的一道题, 利用Python数组可以切片, 每次只要将对应的子数组向后复制就行了, 时间复杂度为$O(n)$, 空间复杂度为$O(1)$.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">duplicateZeros</span><span class="params">(self, arr)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Do not return anything, modify arr in-place instead.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        len_arr = len(arr)</span><br><span class="line">        <span class="keyword">if</span> len_arr == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i &lt; len_arr:</span><br><span class="line">            <span class="keyword">if</span> arr[i] == <span class="number">0</span>:</span><br><span class="line">                arr[i + <span class="number">1</span>:] = arr[i:<span class="number">-1</span>]</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-06</li>
+<li>击败比例: 12.56%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Last Stone Weight</title>
+    <url>/2019/08/05/LeetCode/Last-Stone-Weight/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>We have a collection of rocks, each rock has a positive integer weight.</p>
+<p>Each turn, we choose the two <strong>heaviest</strong> rocks and smash them together.  Suppose the stones have weights <code>x</code> and <code>y</code> with <code>x &lt;= y</code>.  The result of this smash is:</p>
+<ul>
+<li>If <code>x == y</code>, both stones are totally destroyed;</li>
+<li>If <code>x != y</code>, the stone of weight <code>x</code> is totally destroyed, and the stone of weight <code>y</code> has new weight <code>y-x</code>.</li>
+</ul>
+<a id="more"></a>
+<p>At the end, there is at most 1 stone left.  Return the weight of this stone (or 0 if there are no stones left.)</p>
+<hr>
+<p>有一堆石头，每块石头的重量都是正整数。</p>
+<p>每一回合，从中选出两块<strong>最重的</strong>石头，然后将它们一起粉碎。假设石头的重量分别为 <code>x</code> 和 <code>y</code>，且 <code>x &lt;= y</code>。那么粉碎的可能结果如下：</p>
+<ul>
+<li>如果 <code>x == y</code>，那么两块石头都会被完全粉碎；</li>
+<li>如果 <code>x != y</code>，那么重量为 <code>x</code> 的石头将会完全粉碎，而重量为 <code>y</code> 的石头新重量为 <code>y-x</code>。</li>
+</ul>
+<p>最后，最多只会剩下一块石头。返回此石头的重量。如果没有石头剩下就返回 <code>0</code>。</p>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>这道题属于一道简单题, 可以直接用贪心法做, 如我这样的做法.</p>
+<p>另外一种是利用堆的数据结构, 构造一个最大堆, 每次能够直接拿出最大的元素.</p>
+<p>理论上利用最大堆可以有更小的时间复杂度, 我的代码的时间复杂度为$O(n^2)$.</p>
+<p>但实际上当元素少的时候, 速度可以更快.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lastStoneWeight</span><span class="params">(self, stones)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> len(stones) &gt;= <span class="number">2</span>:</span><br><span class="line">            stone_0 = max(stones)</span><br><span class="line">            stones.remove(stone_0)</span><br><span class="line">            stone_1 = max(stones)</span><br><span class="line">            stones.remove(stone_1)</span><br><span class="line">            stone_2 = stone_0 - stone_1</span><br><span class="line">            <span class="keyword">if</span> stone_2 &gt; <span class="number">0</span>:</span><br><span class="line">                stones.append(stone_2)</span><br><span class="line">        <span class="keyword">if</span> stones:</span><br><span class="line">            <span class="keyword">return</span> int(stones[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2019-08-05</li>
+<li>击败比例: 81.62%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Greedy</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>写在最前面的</title>
+    <url>/2019/07/29/%E6%91%86%E9%BE%99%E9%97%A8%E9%98%B5/%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2%E7%9A%84/</url>
+    <content><![CDATA[<h1 id="写博客的目的"><a href="#写博客的目的" class="headerlink" title="写博客的目的"></a>写博客的目的</h1><p>写博客这件事情, 是我从很久以前就想要做的, 但是一直拖到现在, 我想一来是我有点拖延症, 二来是没有找到合适的网站/网站外观.</p>
+<p>现在国内一般可以用来写博客的并不多, 比较好的有简书, 博客园, 剩下的一些比如CSDN, 知乎…虽然它们在其它一些方面很有用, 但是就写博客来说叭太行. 而简书和博客园的外观以及功能可以一定程度上地定制, 但是终究不是很喜欢(没错我看脸的), 还有一点是有广告…</p>
+<a id="more"></a>
+<p>所以, 有一个自己相对独立的博客就有必要了, 但是完全独立对我来说并不那么需要, 于是依托于github的免费服务器, 再利用Hexo的定制功能就是比较理想的选择.</p>
+<p>关于怎么用上面那个方法搭建博客以后也许我会写一下, 步骤正确以后非常简单. 而对于博客的定制我也还在慢慢摸索, 现在我的博客很简洁, 以后会逐渐加入搜索, 评论等功能, 这样能更好地方便读者, 以及和读者进行互动.</p>
+<p>Ok, 有了写博客的地方, 那我接下来要写一些什么样的文章呢?</p>
+<p>首先我想写一写一些类似于聊天一样的文章, 我把这类文章的分类定为”摆龙门阵”, 嘿嘿, 因为我是巴渝的人.</p>
+<p>然后我的工作是需要用到统计分析, 机器学习这些东西的, 所以也会写一些关于这方面的文章. 如果写我特别熟悉的部分, 算是一种对知识结构的梳理; 如果写我也刚接触的知识, 那能够让我尽可能去搞明白其前因后果, 自己大概懂了和写出来想让别人也懂是两码事, 至少…能够顺利地import, 做一个快乐的调包侠对吧~</p>
+<p>还有一些东西比如图算法, 自然语言处理, 这些我暂时用不到但是以后很可能会用到的技能, 我会一边学习, 一边总结分享.</p>
+<p>最后还有数据结构和算法题, 我估计我会两三天做一道. 刷题可以同时锻炼思维能力和代码能力, 无论是一个合格的程序员, 还是以后有一天不靠码代码维生了, 我认为都是很有用的. 而且, 当在LeetCode上提交代码, 得到一个大大的绿色的Accept的时候, 大脑会分泌多巴胺!</p>
+<p>此外, 写博客还有一个目的, 大概是在两年以前, 我接触并逐渐开始理解”开源”这个词, 一开始我并不理解它的意思, 而作为一个一路自学过来的人, 现在可以说如果没有”开源”, 就不会有现在的我. </p>
+<blockquote>
+<p>我相信, 一定程度上的开源, 可以让世界变得更加美好!</p>
+</blockquote>
+<p>当你要主动去学习一些东西的时候, 那么就去找资料, 可以谷歌(大伙懂的…), 可以去一些社区寻求答案. ApacheCN, github, 知乎, kaggle, YouTube等等, 很多的人在分享他们的代码, 他们的经验, 无数的知识躺在那里, 等着想要学习的人去学习. 而现在, 我受益于开源, 也想要回报开源, 这也是我写博客的一大原因之一.</p>
+<p>总结下就是:</p>
+<ul>
+<li>觉得写博客很酷!</li>
+<li>写博客可以帮我更好地理解知识(自己都不懂还来教别人???)</li>
+<li>可以和世界各地的人(理论上)的人交流问题.</li>
+<li>回报开源.</li>
+</ul>
+<h1 id="我的黄金三年"><a href="#我的黄金三年" class="headerlink" title="我的黄金三年"></a>我的黄金三年</h1><p>趁我刚毕业没多久, 一些东西还没有忘记, 把一些对我人生改变很大的事情记录下来.</p>
+<p>一直一来很多事情都能对一个人的人生产生影响, 有好有坏, 有大有小, 而我之所以要写下了, 如小标题所言, 我认为这些事情是有意义的. 它们也许改变了我的世界线, 也许世界线会收束, 它们的影响其实很小, 但都是我的黄金三年.</p>
+<h2 id="放弃了物理"><a href="#放弃了物理" class="headerlink" title="放弃了物理."></a>放弃了物理.</h2><p>说出来可能你不信, 我当初是想成为一名物流学家的, 可以拿诺贝尔奖的那种, 爱因斯坦是我的偶像.</p>
+<p>我以前物理学得应该还算好吧, 其次我对这个世界感兴趣, 但这些并不是让我学物理的全部原因, 还有一个很重要的原因, 我想要时光机, 我想要长生不老. 而我认为达成这两样, 或者就时光机来说, 正确的路径, 就是物理.</p>
+<p>我想要时光机, 回到过去, 改变一些东西.</p>
+<p>而后的一段时间, 我没有好好学习, 是的, 和大多数大学生一样, 翘课, 考试临时抱佛脚, 打游戏. 还好我打游戏比较厉害, 相比玩得菜的能获得更多的快乐哈哈哈. 本来没好好学习想甩锅的, 想想还是算了, 脑子长自己头上, 别人把你关起来不让你学了?</p>
+<p>再到后来, 经过大概一个假期的纠结, 我决定放弃当初那个要成为物理学家的想法. </p>
+<p>当时我哭了吗? 应该没有吧.</p>
+<blockquote>
+<p>这个世界, 所有世界线, 都不可能存在时光机!</p>
+</blockquote>
+<h2 id="谈了场恋爱"><a href="#谈了场恋爱" class="headerlink" title="谈了场恋爱?"></a>谈了场恋爱?</h2><p><code>自我A</code>: 痛苦吗?</p>
+<p><code>自我B</code>: 很痛苦!</p>
+<p><code>自我A</code>: 问心无愧吗?</p>
+<p><code>自我B</code>: 问心无愧!</p>
+<p><code>自我A</code>: 浪费的时间可惜吗?</p>
+<p><code>自我B</code>: 可惜! 但也许是我必须经历的, 我对世界的认知还太少, 我的自控能力还太差.</p>
+<p><code>自我A</code>: 熬夜, 暴饮暴食, 不锻炼, 现在你的身体素质不太好啊.</p>
+<p><code>自我B</code>: 是的, 不过一切都在慢慢好转. 我现在没有暴饮暴食, 不会过度熬夜, 偶尔会进行室内运动. 等春暖花开, 我会去跑步的.</p>
+<p><code>自我A</code>: 有总结过经验吗?</p>
+<p><code>自我B</code>: 哈哈哈, 非要说的话, “不做舔狗”吧.</p>
+<p><code>自我A</code>: 你还记得多少?</p>
+<p><code>自我B</code>: 时间自然会帮我忘记.</p>
+<p><code>自我A</code>: 那个小男孩还活着吗?</p>
+<p><code>自我B</code>: 这你直接问<code>自我C</code>了啊…小C很好, 现在睡得很香, 还说睡醒了一起开黑呢.</p>
+<h2 id="交了群朋友"><a href="#交了群朋友" class="headerlink" title="交了群朋友!"></a>交了群朋友!</h2><p>在研究生期间, 室友, 同学, 师兄师姐对我都挺好的, 不知道从哪说起, 就想到啥说啥吧.</p>
+<p>先说室友A, 我的Linux大门是他帮忙打开的, 还记得当时我的小黑在win7上卡的快成PPT了, 他向我安利了Ubuntu, 并帮我用U盘进行了安装, 从此过后(直到毕业)再没用win系统做过正事(除了玩游戏).</p>
+<p>再说室友B, 在我放弃物理后, 都是能混就混了, 没错我就是个混子嗷. 室友B学习比较扎实, 关键是他乐于传教, 有不懂的知识可以问, 不会的题可以抄…某种意义上, 要是没他帮我, 我可能毕不了业.</p>
+<p>还有室友C, 接下来就亲切的称呼他为宝子哥好了, 宝子哥乃教育学某大师关门弟子, 造诣自不必多言. 精通心理学, 心理暗示, 传销…啊不没传销, 反正就是很厉害的一个人. 我还记得他对我的谆谆教诲:</p>
+<blockquote>
+<p>没人对你说过, 你很帅吗?</p>
+<p>诶, 你真的觉得我帅吗?</p>
+<p>当年本科的时候, 大伙来的时候就我一个有女朋友, 毕业的时候基本上都有女朋友了.</p>
+<p>老哥, 你废了.</p>
+<p>你有没有听说过…PXX(少儿不宜, 手动屏蔽).</p>
+</blockquote>
+<p>除了室友, 好几个同学人都很好, 能遇到这么好的一群人实属幸事!</p>
+]]></content>
+      <categories>
+        <category>摆龙门阵</category>
+      </categories>
+  </entry>
+</search>
