@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Cousins in Binary Tree</title>
+    <url>/2020/03/30/LeetCode/Cousins-in-Binary-Tree/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>In a binary tree, the root node is at depth <code>0</code>, and children of each depth <code>k</code> node are at depth <code>k+1</code>.</p>
+<p>Two nodes of a binary tree are <em>cousins</em> if they have the same depth, but have <strong>different parents</strong>.</p>
+<p>We are given the <code>root</code> of a binary tree with unique values, and the values <code>x</code> and <code>y</code> of two different nodes in the tree.</p>
+<p>Return <code>true</code> if and only if the nodes corresponding to the values <code>x</code> and <code>y</code> are cousins.</p>
+ <a id="more"></a>
+<p><strong>Example 1:<br><img src="https://assets.leetcode.com/uploads/2019/02/12/q1248-01.png" alt="img"></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: root = [1,2,3,4], x = 4, y = 3</span><br><span class="line">Output: false</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:<br><img src="https://assets.leetcode.com/uploads/2019/02/12/q1248-02.png" alt="img"></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: root = [1,2,3,null,4,null,5], x = 5, y = 4</span><br><span class="line">Output: true</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3:</strong></p>
+<p><strong><img src="https://assets.leetcode.com/uploads/2019/02/13/q1248-03.png" alt="img"></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: root = [1,2,3,null,4], x = 2, y = 3</span><br><span class="line">Output: false</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li>The number of nodes in the tree will be between <code>2</code> and <code>100</code>.</li>
+<li>Each node has a unique integer value from <code>1</code> to <code>100</code>.</li>
+</ol>
+<hr>
+<p>在二叉树中，根节点位于深度 <code>0</code> 处，每个深度为 <code>k</code> 的节点的子节点位于深度 <code>k+1</code> 处。</p>
+<p>如果二叉树的两个节点深度相同，但<strong>父节点不同</strong>，则它们是一对<em>堂兄弟节点</em>。</p>
+<p>我们给出了具有唯一值的二叉树的根节点 <code>root</code>，以及树中两个不同节点的值 <code>x</code> 和 <code>y</code>。</p>
+<p>只有与值 <code>x</code> 和 <code>y</code> 对应的节点是堂兄弟节点时，才返回 <code>true</code>。否则，返回 <code>false</code>。</p>
+<p><strong>示例 1：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/02/16/q1248-01.png" alt="img"></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：root = [1,2,3,4], x = 4, y = 3</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/02/16/q1248-02.png" alt="img"></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：root = [1,2,3,null,4,null,5], x = 5, y = 4</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<p><strong><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/02/16/q1248-03.png" alt="img"></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：root = [1,2,3,null,4], x = 2, y = 3</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li>二叉树的节点数介于 <code>2</code> 到 <code>100</code> 之间。</li>
+<li>每个节点的值都是唯一的、范围为 <code>1</code> 到 <code>100</code> 的整数。</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>比较简单的一道题了, 最直接的方法, 是按某种方式遍历, 然后记录目标值节点的层数以及父节点, 最后做比较.</p>
+<p>一种相对更快的方式, 不用遍历整棵树, 而是逐层搜索. </p>
+<ol>
+<li><p>当某一个节电的两个子节点不为空, 且值正好是两个目标值时, 返回false.</p>
+</li>
+<li><p>当一层中所有节点的值包含两个目标值, 返回true.</p>
+</li>
+<li>当一层中所有节点的值仅包含其中一个值时, 返回false.</li>
+</ol>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isCousins</span><span class="params">(self, root, x, y)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        root: 根结点.</span></span><br><span class="line"><span class="string">        x: int.</span></span><br><span class="line"><span class="string">        y: int.</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        x_y_tuple = (x, y)</span><br><span class="line">        node_list = [root]</span><br><span class="line">        <span class="keyword">while</span> len(node_list) &gt; <span class="number">0</span>:</span><br><span class="line">            next_node_list = []</span><br><span class="line">            next_node_val_list = []</span><br><span class="line">            <span class="keyword">for</span> node <span class="keyword">in</span> node_list:</span><br><span class="line">                left_val, right_val = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> node.left <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    next_node_list.append(node.left)</span><br><span class="line">                    next_node_val_list.append(node.left.val)</span><br><span class="line">                    left_val = node.left.val</span><br><span class="line">                <span class="keyword">if</span> node.right <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    next_node_list.append(node.right)</span><br><span class="line">                    next_node_val_list.append(node.right.val)</span><br><span class="line">                    right_val = node.right.val</span><br><span class="line">                <span class="keyword">if</span> left_val <span class="keyword">in</span> x_y_tuple <span class="keyword">and</span> right_val <span class="keyword">in</span> x_y_tuple:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> x <span class="keyword">in</span> next_node_val_list <span class="keyword">and</span> y <span class="keyword">in</span> next_node_val_list:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> x <span class="keyword">in</span> next_node_val_list <span class="keyword">and</span> y <span class="keyword">not</span> <span class="keyword">in</span> next_node_val_list:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> x <span class="keyword">in</span> next_node_val_list <span class="keyword">and</span> y <span class="keyword">not</span> <span class="keyword">in</span> next_node_val_list:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            node_list = next_node_list</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-03-30</li>
+<li>击败比例: 81.92%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Tree</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Mac配置优化</title>
     <url>/2020/03/27/%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/Mac%E9%85%8D%E7%BD%AE%E4%BC%98%E5%8C%96/</url>
     <content><![CDATA[<p>话说为啥会用到Mac Pro呢, 原本我用的小黑, 原因是近期为了搭梯子, 使得连接公司的VPN损坏Σ(っ °Д °;)っ</p>
@@ -195,6 +252,61 @@
       <categories>
         <category>LeetCode</category>
         <category>Tree</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据建模(三)-数据清洗</title>
+    <url>/2020/03/24/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1-%E4%B8%89-%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97/</url>
+    <content><![CDATA[<p>关于数据清洗, 若拿到手的是已经整理好的结构化数据, 是非常轻松且简单的; 而若是拿到了比较原始的, 杂乱的数据, 那可能要在这一步耗费不少时间. 总体来说, 数据清洗是简单的, 可能繁琐的, 但也是很重要的一步.</p>
+<a id="more"></a>
+<h1 id="整理数据"><a href="#整理数据" class="headerlink" title="整理数据"></a>整理数据</h1><p>这里主要以平时用到的最多的表格型数据来说, 使用<code>Pytohn</code>的<code>pandas</code>包, 可以进行有效地处理.</p>
+<p>若原文件时<code>excel</code>或者<code>csv</code>等格式, 则直接读取即可; 若原文件是<code>json</code>这样的格式或类似的格式, 一般是先将其转变为标准的形式, 然后利用如<code>pd.read_json(string)</code>的方式进行读取.</p>
+<p>我们要明确, 一份数据中, 哪些是<strong>ID相关特征</strong>, 这些特征可用于多份数据之间的关联, 但对于分析以及建模来说, 就没有额外帮助了. 同时, 还有一些<strong>基础信息特征</strong>, 如日期等, 这些可以用来分析数据, 也可以考虑参与建模. 这两大类的特征, 一般来说有一个特点, 即100%的覆盖率, 没有缺失.</p>
+<p>除开以上两类特征, 总体来说还剩下<strong>标签列</strong>和<strong>建模特征</strong>. 标签列不必多说, 对于监督学习来说是必要的. 对于建模特征, 如果按数据类型来进行一些细分的话, 大致可以包含以下一些形式:</p>
+<ul>
+<li>无序类别特征.</li>
+<li>有序类别特征.</li>
+<li>离散数值特征.</li>
+<li>连续数值特征.</li>
+<li>日期时间特征.</li>
+</ul>
+<p>对于类别特征, 原始数据大概率是<code>object</code>或者<code>string</code>形式, 考虑到后续入模需要数值型特征, 一种简单的方式, 就是将类别型特征直接进行数值编码, 从字符串映射到整数. 但是这种方式, 除非该类别特征属性的数量很少(比如5个以下), 否则不太适合直接入模. 关于类别特征编码, 我准备在<strong>特征工程</strong>篇章详细叙述.</p>
+<p>对于日期时间类的特征, 在整理数据时, 将其整理成统一的格式即可(如<code>%Y-%m-%D %H:%M:%S</code>), 可用于后续分析之用. 若要作为入模特征, 需要考虑<code>特征抽取</code>的方式, 同样也会在<strong>特征工程</strong>篇章说明.</p>
+<p>此外, 对于<strong>缺失值</strong>的处理也是非常重要的. 不同的原始数据, 对缺失值的表示是不一样的. 常见的缺失值表示方式可能有:</p>
+<ul>
+<li>空值.</li>
+<li>null, NaN等字符串.</li>
+<li>-9999999等特殊数值.</li>
+</ul>
+<p>同时有些时候一份数据是由多份数据拼接而成, 其中可能有多种缺失值的表示, 要留意一下. 处理的方式, 一般来说统一转化成<code>pandas</code>默认的缺失形式就行.</p>
+<h1 id="了解数据"><a href="#了解数据" class="headerlink" title="了解数据"></a>了解数据</h1><p>虽然有别于专门的数据分析, 最终目的是为了建模, 但是早期的对数据尽可能地了解, 是对后续的一些工作有帮助的, 并且可能指导后续的一些尝试和方向, 这个过程一般也可以被称为<strong>EDA</strong>(Exploratory Data Analysis).</p>
+<p>我们可以查看以及了解的东西有哪些呢?</p>
+<ul>
+<li>数据集有多少样本, 多少列.</li>
+<li>样本集随时间的分布, 即各个时间段的样本数量.</li>
+<li>特征中有多少类别特征, 数值特征, 日期…</li>
+<li><p>特征是否具有可解释性(知道特征含义), 是刻画什么维度的数据.</p>
+</li>
+<li><p>各特征的覆盖率.</p>
+<script type="math/tex; mode=display">
+覆盖率=1-缺失率</script></li>
+<li><p>标签列的分布(如均值).</p>
+</li>
+<li><p>标签列在各个组群(如类别特征)上的分布.</p>
+</li>
+<li><p>……</p>
+</li>
+</ul>
+<p>通过对数据进行EDA, 可以了解手里这份数据整体的内容, 可以据此来制定一些尝试. </p>
+<p>比如发现数据随时间分布有较长的跨度, 可以样本按时间切分, 查看前后样本的一些差异. </p>
+<p>比如发现部分特征覆盖率极低(低于10%), 可以考虑在建模前, 直接先删除这部分特征. </p>
+<p>比如根据业务理解, 认为某些特征的组合(如两两相除)可以表示更强的信息, 则可据此衍生特征. </p>
+<p>比如发现标签列分布不均匀(如1多0少), 此时可以考虑对0进行上采样, 或者增加样本权重等方式</p>
+<p>……</p>
+<p>总之, 数据清洗这一步, 慢慢做就好了, 将原始数据进行统一化的整理, 并进行查看与分析, 为后续建模做一个良好的开端.</p>
+]]></content>
+      <categories>
+        <category>数据建模</category>
       </categories>
   </entry>
   <entry>
