@@ -156,6 +156,15 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 插件中的zsh-autosuggestions 和 zsh-syntax-highlighting 是自定义安装的插件, 需要用 git 将插件 clone 到指定插件目录下：</span><br><span class="line"># 自动提示插件</span><br><span class="line">git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions</span><br><span class="line"># 语法高亮插件</span><br><span class="line">git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<h1 id="DS-Store"><a href="#DS-Store" class="headerlink" title=".DS_Store"></a>.DS_Store</h1><p><code>.DS_Store</code>这个文件没什么用, 但是却会在很多传输文件的时候带来不必要的问题. 比如在使用<code>Git</code>的时候.</p>
+<p>有没有什么办法能够完全禁止呢? 暂时没找到.</p>
+<p>删除所有目录下的<code>.DS_Store</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo find / -name &quot;.DS_Store&quot; -depth -exec rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+<p>这条命令可以临时删除, 但后续只要文件夹有一些改动, 又回自动生成.</p>
+<p>针对<code>Git</code>, 可以设定全局的<code>.gitignore_global</code>进行一定程度上的帮助. 创建<code>~/.gitignore_global</code>, 其中写入:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># .gitignore_global</span><br><span class="line">####################################</span><br><span class="line">######## OS generated files ########</span><br><span class="line">####################################</span><br><span class="line">.DS_Store</span><br><span class="line">.DS_Store?</span><br></pre></td></tr></table></figure>
+<p>同时在<code>~./gitconfig</code>中引入设置:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[user]</span><br><span class="line">	name = xxx</span><br><span class="line">	email = xxx</span><br><span class="line">[core]</span><br><span class="line">	excludesfile = /Users/shy/.gitignore_global</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>流程记录</category>
