@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="阿枂蛋糕店">
 <meta property="og:description" content="话说为啥会用到Mac Pro呢, 原本我用的小黑, 原因是近期为了搭梯子, 使得连接公司的VPN损坏Σ(っ °Д °;)っ 然后经过一番原因排查, 知道了是因为这个梯子和Windows下的EC会起冲突. 其实如果排除玩游戏, Office, 以及一些必要的社交工具如微信, 钉钉(这排除的有点多啊喂), 我个人是更喜欢Ubuntu的, WIndows系统实在一言难尽つ﹏⊂ 于是我将目光投向了Mac">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-30T13:54:26.077Z">
+<meta property="og:updated_time" content="2020-04-01T07:16:30.486Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mac配置优化">
 <meta name="twitter:description" content="话说为啥会用到Mac Pro呢, 原本我用的小黑, 原因是近期为了搭梯子, 使得连接公司的VPN损坏Σ(っ °Д °;)っ 然后经过一番原因排查, 知道了是因为这个梯子和Windows下的EC会起冲突. 其实如果排除玩游戏, Office, 以及一些必要的社交工具如微信, 钉钉(这排除的有点多啊喂), 我个人是更喜欢Ubuntu的, WIndows系统实在一言难尽つ﹏⊂ 于是我将目光投向了Mac">
@@ -406,7 +406,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-30 21:54:26" itemprop="dateModified" datetime="2020-03-30T21:54:26+08:00">2020-03-30</time>
+                <time title="修改时间：2020-04-01 15:16:30" itemprop="dateModified" datetime="2020-04-01T15:16:30+08:00">2020-04-01</time>
               </span>
             
           
@@ -473,10 +473,12 @@
 <p>其实如果排除玩游戏, Office, 以及一些必要的社交工具如微信, 钉钉(这排除的有点多啊喂), 我个人是更喜欢Ubuntu的, WIndows系统实在一言难尽つ﹏⊂</p>
 <p>于是我将目光投向了Mac OS, 买Mac Pro, 是的我看中的是苹果系统. 但在人生第一次开箱后, 我被震惊了, 这一眼看过去就很高级的做工, 这低调内敛, 精益求精的态度, 我甚至想下一部手机也换Iphone好了(｡･∀･)ﾉﾞ</p>
 <a id="more"></a>
-<h1 id="一些基本操作"><a href="#一些基本操作" class="headerlink" title="一些基本操作"></a>一些基本操作</h1><ul>
-<li><p>Home: fn left or command left</p>
+<h1 id="键盘"><a href="#键盘" class="headerlink" title="键盘"></a>键盘</h1><p>有一说一, 对于习惯了常规键盘布局的我来说, 已经形成了肌肉记忆, 在编辑文字或者写代码的时候, 效率还行. 而Mac的键盘布局发生了变化, 一开始用得真的不习惯, 希望后面慢慢适应吧.</p>
+<p>同时, Mac上有些常规的键没有, 比如<code>Home</code>, <code>End</code>, <code>PageUp</code>, <code>PageDown</code>等等, 这些可以由组合键完成.</p>
+<ul>
+<li><p>Home: fn left or cmd left</p>
 </li>
-<li><p>End: fn right or command right</p>
+<li><p>End: fn right or cmd right</p>
 </li>
 <li><p>PageUp: fn up</p>
 </li>
@@ -500,20 +502,20 @@
 </li>
 <li><p>整行删除:</p>
 <p>Preferences &gt; Keys</p>
-<p>command backspace Send Hex Codes 0x15</p>
+<p>cmd backspace Send Hex Codes 0x15</p>
 </li>
 <li><p>移动到句首/尾:</p>
 <p>Preferences &gt; Keys</p>
-<p>command left/right Send Hex Codes 0x01/0x05</p>
+<p>cmd left/right Send Hex Codes 0x01/0x05</p>
 </li>
 <li><p>撤销:</p>
 <p>Preferences &gt; Profiles &gt; Keys</p>
-<p>command z Send Hex Codes 0x01/0x1f</p>
+<p>cmd z Send Hex Codes 0x01/0x1f</p>
 </li>
 </ul>
 </li>
 </ul>
-<h1 id="一些必要的APP"><a href="#一些必要的APP" class="headerlink" title="一些必要的APP"></a>一些必要的APP</h1><p>包含但不限于:</p>
+<h1 id="基础APP"><a href="#基础APP" class="headerlink" title="基础APP"></a>基础APP</h1><p>包含但不限于:</p>
 <ul>
 <li>钉钉</li>
 <li>微信</li>
@@ -546,7 +548,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在~/.zsh_profile中添加如下, 使其可在终端快速启动.</span><br><span class="line">alias typora=&quot;open -a typora&quot;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h1 id="终端相关"><a href="#终端相关" class="headerlink" title="终端相关"></a>终端相关</h1><ul>
+<h1 id="终端"><a href="#终端" class="headerlink" title="终端"></a>终端</h1><ul>
 <li><p>homebrew</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br></pre></td></tr></table></figure>
 </li>
@@ -575,6 +577,18 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[user]</span><br><span class="line">	name = xxx</span><br><span class="line">	email = xxx</span><br><span class="line">[core]</span><br><span class="line">	excludesfile = /Users/shy/.gitignore_global</span><br></pre></td></tr></table></figure>
 <p>或者输入如下命令(推荐):</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
+<h1 id="TouchBar"><a href="#TouchBar" class="headerlink" title="TouchBar"></a>TouchBar</h1><p>最开始我觉得Mac的TouchBar是鸡肋, 花里胡哨的, 还我<code>F1~F12</code>(ﾟДﾟ*)ﾉ</p>
+<p>比如Pycharm里面的<code>运行</code>快捷键是<code>shift F10</code>, 你这都没有这个键怎么办啊? 哦…变成<code>cmd shift R</code>了啊, 那没事了…</p>
+<p>TouchBar的存在, 可以在系统层面, 或者一些APP上, 将一些功能直接放上去, 只要设置合理, 在熟练使用以后, 我相信效率是会提高的.</p>
+<p>系统层面的TouchBar设置, 这个根据自己喜好就行. 我是将<code>调度管理</code>,<code>截屏</code>, <code>静音</code>设置成默认, 同时将<code>调度管理</code>, <code>截屏</code>, <code>音量调节</code>, <code>亮度调节</code>, <code>锁屏</code>, <code>睡眠</code>放到详细页.</p>
+<p>一些APP, 比如PyCharm是支持定制TouchBar的. 对PyCharm来说, 可以在<code>Preferences &gt; Appearance &amp; Behavior &gt; Menus and Tollbars &gt; Touch Bar</code>中进行设置.</p>
+<p>但是关于显示图标, 需要自己指定图案. 我在谷歌上搜索<code>touchbar icon download</code>这个关键词, 找到了<a href="https://community.folivora.ai/t/v3-update-native-apple-touch-bar-icon-pack-for-btt/3310/18" target="_blank" rel="noopener">这个网站</a>, 提供了TouchBar图标的下载地址.</p>
+<p>然鹅, 直接使用里面的图标, 仍然会觉得有些蛋疼(* ￣︿￣), 因为你看自带的TouchBar图标, 都是亮亮的, 咱这图标是黑黑的, 白天用着还行, 光线不好的时候用着一片黑啊…</p>
+<p>于是, 我想到了利用Python来修改图标颜色, 经过一番尝试, 成功了（＃￣～￣＃）</p>
+<p>代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line">path=<span class="string">'image.png'</span></span><br><span class="line">im = Image.open(path)</span><br><span class="line">im.show()</span><br><span class="line"></span><br><span class="line">print(im.format)</span><br><span class="line">print(im.mode)</span><br><span class="line">print(im.size)</span><br><span class="line"></span><br><span class="line">source = im.split()</span><br><span class="line">source = (source[<span class="number">0</span>].point(<span class="keyword">lambda</span> i: <span class="number">255</span>), source[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">im = Image.merge(im.mode, source)</span><br><span class="line"></span><br><span class="line">im.show()</span><br><span class="line">im.save(<span class="string">'new_image.png'</span>)</span><br></pre></td></tr></table></figure>
+<p>这段代码的思路, 是咱们手里的原始图片, 是<code>LA</code>格式的, 众所周知<code>RGB</code>格式有三个通道, 而这种格式呢有两个通道. 第一个通道控制颜色, 0 ~ 255, 其中0是黑色, 255是白色; 第二个通道控制是否透明, 0 ~ 255, 0表示透明, 255表示不透明. 所以我们只要将第一个通道的数值, 全部改为255即可o(≧口≦)o</p>
+<p>由此, 我在PyCharm的TouchBar上, 配置了<code>Home</code>, <code>End</code>等功能, 某种程度上加快了编辑效率.</p>
 
       
     </div>
@@ -691,7 +705,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -769,7 +783,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一些基本操作"><span class="nav-number">1.</span> <span class="nav-text">一些基本操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些必要的APP"><span class="nav-number">2.</span> <span class="nav-text">一些必要的APP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生产工具"><span class="nav-number">3.</span> <span class="nav-text">生产工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#终端相关"><span class="nav-number">4.</span> <span class="nav-text">终端相关</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DS-Store"><span class="nav-number">5.</span> <span class="nav-text">.DS_Store</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#键盘"><span class="nav-number">1.</span> <span class="nav-text">键盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础APP"><span class="nav-number">2.</span> <span class="nav-text">基础APP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生产工具"><span class="nav-number">3.</span> <span class="nav-text">生产工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#终端"><span class="nav-number">4.</span> <span class="nav-text">终端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DS-Store"><span class="nav-number">5.</span> <span class="nav-text">.DS_Store</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TouchBar"><span class="nav-number">6.</span> <span class="nav-text">TouchBar</span></a></li></ol></div>
             
 
           </div>

@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Find Common Characters</title>
+    <url>/2020/04/01/LeetCode/Find-Common-Characters/</url>
+    <content><![CDATA[<h1 id="问题介绍"><a href="#问题介绍" class="headerlink" title="问题介绍"></a>问题介绍</h1><p>Given an array <code>A</code> of strings made only from lowercase letters, return a list of all characters that show up in all strings within the list <strong>(including duplicates)</strong>. For example, if a character occurs 3 times in all strings but not 4 times, you need to include that character three times in the final answer.</p>
+<p>You may return the answer in any order.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [&quot;bella&quot;,&quot;label&quot;,&quot;roller&quot;]</span><br><span class="line">Output: [&quot;e&quot;,&quot;l&quot;,&quot;l&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [&quot;cool&quot;,&quot;lock&quot;,&quot;cook&quot;]</span><br><span class="line">Output: [&quot;c&quot;,&quot;o&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li><code>1 &lt;= A.length &lt;= 100</code></li>
+<li><code>1 &lt;= A[i].length &lt;= 100</code></li>
+<li><code>A[i][j]</code> is a lowercase letter</li>
+</ol>
+<hr>
+<p>给定仅有小写字母组成的字符串数组 <code>A</code>，返回列表中的每个字符串中都显示的全部字符（<strong>包括重复字符</strong>）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。</p>
+<p>你可以按任意顺序返回答案。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[&quot;bella&quot;,&quot;label&quot;,&quot;roller&quot;]</span><br><span class="line">输出：[&quot;e&quot;,&quot;l&quot;,&quot;l&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[&quot;cool&quot;,&quot;lock&quot;,&quot;cook&quot;]</span><br><span class="line">输出：[&quot;c&quot;,&quot;o&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>1 &lt;= A.length &lt;= 100</code></li>
+<li><code>1 &lt;= A[i].length &lt;= 100</code></li>
+<li><code>A[i][j]</code> 是小写字母</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>这道题目就是要求找出列表中, 所有字符串都有的公共字符串, 且同时要计算其最小数量.</p>
+<p>可以利用一个字典来统计字符的数量, 以列表的第一个字符串(或者以列表最短字符串)来初始化字典. 然后对后续列表的每个字符串做如下操作:</p>
+<ul>
+<li>遍历字典的key(没有在字典中的, 肯定不是公有的),统计其在字符串中的数量.</li>
+<li>若数量为0, 则删除字典的这个key.</li>
+<li>若数量不为0, 则改变字典的value, 取值为value和数量的较小值.</li>
+</ul>
+<p>最后根据字典的信息, 表示成列表返回就行.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">commonChars</span><span class="params">(self, A)</span>:</span></span><br><span class="line">        info_dict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> A[<span class="number">0</span>]:</span><br><span class="line">            <span class="keyword">if</span> s <span class="keyword">not</span> <span class="keyword">in</span> info_dict:</span><br><span class="line">                info_dict[s] = <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                info_dict[s] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> string <span class="keyword">in</span> A[<span class="number">1</span>:]:</span><br><span class="line">            drop_list = []</span><br><span class="line">            <span class="keyword">for</span> s <span class="keyword">in</span> info_dict:</span><br><span class="line">                n_s = string.count(s)</span><br><span class="line">                <span class="keyword">if</span> n_s == <span class="number">0</span>:</span><br><span class="line">                    drop_list.append(s)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    info_dict[s] = min(n_s, info_dict[s])</span><br><span class="line">            <span class="keyword">for</span> s <span class="keyword">in</span> drop_list:</span><br><span class="line">                info_dict.pop(s)</span><br><span class="line">        res_list = []</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> info_dict:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(info_dict[s]):</span><br><span class="line">                res_list.append(s)</span><br><span class="line">        <span class="keyword">return</span> res_list</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-04-01</li>
+<li>击败比例: 91.10%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Cousins in Binary Tree</title>
     <url>/2020/03/30/LeetCode/Cousins-in-Binary-Tree/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>In a binary tree, the root node is at depth <code>0</code>, and children of each depth <code>k</code> node are at depth <code>k+1</code>.</p>
@@ -65,10 +113,12 @@
 <p>其实如果排除玩游戏, Office, 以及一些必要的社交工具如微信, 钉钉(这排除的有点多啊喂), 我个人是更喜欢Ubuntu的, WIndows系统实在一言难尽つ﹏⊂</p>
 <p>于是我将目光投向了Mac OS, 买Mac Pro, 是的我看中的是苹果系统. 但在人生第一次开箱后, 我被震惊了, 这一眼看过去就很高级的做工, 这低调内敛, 精益求精的态度, 我甚至想下一部手机也换Iphone好了(｡･∀･)ﾉﾞ</p>
 <a id="more"></a>
-<h1 id="一些基本操作"><a href="#一些基本操作" class="headerlink" title="一些基本操作"></a>一些基本操作</h1><ul>
-<li><p>Home: fn left or command left</p>
+<h1 id="键盘"><a href="#键盘" class="headerlink" title="键盘"></a>键盘</h1><p>有一说一, 对于习惯了常规键盘布局的我来说, 已经形成了肌肉记忆, 在编辑文字或者写代码的时候, 效率还行. 而Mac的键盘布局发生了变化, 一开始用得真的不习惯, 希望后面慢慢适应吧.</p>
+<p>同时, Mac上有些常规的键没有, 比如<code>Home</code>, <code>End</code>, <code>PageUp</code>, <code>PageDown</code>等等, 这些可以由组合键完成.</p>
+<ul>
+<li><p>Home: fn left or cmd left</p>
 </li>
-<li><p>End: fn right or command right</p>
+<li><p>End: fn right or cmd right</p>
 </li>
 <li><p>PageUp: fn up</p>
 </li>
@@ -92,20 +142,20 @@
 </li>
 <li><p>整行删除:</p>
 <p>Preferences &gt; Keys</p>
-<p>command backspace Send Hex Codes 0x15</p>
+<p>cmd backspace Send Hex Codes 0x15</p>
 </li>
 <li><p>移动到句首/尾:</p>
 <p>Preferences &gt; Keys</p>
-<p>command left/right Send Hex Codes 0x01/0x05</p>
+<p>cmd left/right Send Hex Codes 0x01/0x05</p>
 </li>
 <li><p>撤销:</p>
 <p>Preferences &gt; Profiles &gt; Keys</p>
-<p>command z Send Hex Codes 0x01/0x1f</p>
+<p>cmd z Send Hex Codes 0x01/0x1f</p>
 </li>
 </ul>
 </li>
 </ul>
-<h1 id="一些必要的APP"><a href="#一些必要的APP" class="headerlink" title="一些必要的APP"></a>一些必要的APP</h1><p>包含但不限于:</p>
+<h1 id="基础APP"><a href="#基础APP" class="headerlink" title="基础APP"></a>基础APP</h1><p>包含但不限于:</p>
 <ul>
 <li>钉钉</li>
 <li>微信</li>
@@ -138,7 +188,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 在~/.zsh_profile中添加如下, 使其可在终端快速启动.</span><br><span class="line">alias typora=&quot;open -a typora&quot;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h1 id="终端相关"><a href="#终端相关" class="headerlink" title="终端相关"></a>终端相关</h1><ul>
+<h1 id="终端"><a href="#终端" class="headerlink" title="终端"></a>终端</h1><ul>
 <li><p>homebrew</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br></pre></td></tr></table></figure>
 </li>
@@ -167,6 +217,18 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[user]</span><br><span class="line">	name = xxx</span><br><span class="line">	email = xxx</span><br><span class="line">[core]</span><br><span class="line">	excludesfile = /Users/shy/.gitignore_global</span><br></pre></td></tr></table></figure>
 <p>或者输入如下命令(推荐):</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
+<h1 id="TouchBar"><a href="#TouchBar" class="headerlink" title="TouchBar"></a>TouchBar</h1><p>最开始我觉得Mac的TouchBar是鸡肋, 花里胡哨的, 还我<code>F1~F12</code>(ﾟДﾟ*)ﾉ</p>
+<p>比如Pycharm里面的<code>运行</code>快捷键是<code>shift F10</code>, 你这都没有这个键怎么办啊? 哦…变成<code>cmd shift R</code>了啊, 那没事了…</p>
+<p>TouchBar的存在, 可以在系统层面, 或者一些APP上, 将一些功能直接放上去, 只要设置合理, 在熟练使用以后, 我相信效率是会提高的.</p>
+<p>系统层面的TouchBar设置, 这个根据自己喜好就行. 我是将<code>调度管理</code>,<code>截屏</code>, <code>静音</code>设置成默认, 同时将<code>调度管理</code>, <code>截屏</code>, <code>音量调节</code>, <code>亮度调节</code>, <code>锁屏</code>, <code>睡眠</code>放到详细页.</p>
+<p>一些APP, 比如PyCharm是支持定制TouchBar的. 对PyCharm来说, 可以在<code>Preferences &gt; Appearance &amp; Behavior &gt; Menus and Tollbars &gt; Touch Bar</code>中进行设置.</p>
+<p>但是关于显示图标, 需要自己指定图案. 我在谷歌上搜索<code>touchbar icon download</code>这个关键词, 找到了<a href="https://community.folivora.ai/t/v3-update-native-apple-touch-bar-icon-pack-for-btt/3310/18" target="_blank" rel="noopener">这个网站</a>, 提供了TouchBar图标的下载地址.</p>
+<p>然鹅, 直接使用里面的图标, 仍然会觉得有些蛋疼(* ￣︿￣), 因为你看自带的TouchBar图标, 都是亮亮的, 咱这图标是黑黑的, 白天用着还行, 光线不好的时候用着一片黑啊…</p>
+<p>于是, 我想到了利用Python来修改图标颜色, 经过一番尝试, 成功了（＃￣～￣＃）</p>
+<p>代码如下:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line">path=<span class="string">'image.png'</span></span><br><span class="line">im = Image.open(path)</span><br><span class="line">im.show()</span><br><span class="line"></span><br><span class="line">print(im.format)</span><br><span class="line">print(im.mode)</span><br><span class="line">print(im.size)</span><br><span class="line"></span><br><span class="line">source = im.split()</span><br><span class="line">source = (source[<span class="number">0</span>].point(<span class="keyword">lambda</span> i: <span class="number">255</span>), source[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">im = Image.merge(im.mode, source)</span><br><span class="line"></span><br><span class="line">im.show()</span><br><span class="line">im.save(<span class="string">'new_image.png'</span>)</span><br></pre></td></tr></table></figure>
+<p>这段代码的思路, 是咱们手里的原始图片, 是<code>LA</code>格式的, 众所周知<code>RGB</code>格式有三个通道, 而这种格式呢有两个通道. 第一个通道控制颜色, 0 ~ 255, 其中0是黑色, 255是白色; 第二个通道控制是否透明, 0 ~ 255, 0表示透明, 255表示不透明. 所以我们只要将第一个通道的数值, 全部改为255即可o(≧口≦)o</p>
+<p>由此, 我在PyCharm的TouchBar上, 配置了<code>Home</code>, <code>End</code>等功能, 某种程度上加快了编辑效率.</p>
 ]]></content>
       <categories>
         <category>流程记录</category>
