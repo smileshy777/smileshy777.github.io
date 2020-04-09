@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Mac配置优化</title>
+    <url>/2020/04/09/Mac%E9%85%8D%E7%BD%AE%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Day of the Week</title>
     <url>/2020/04/08/LeetCode/Day-of-the-Week/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a date, return the corresponding day of the week for that date.</p>
@@ -199,10 +204,10 @@
 </li>
 </ul>
 <h1 id="触控板"><a href="#触控板" class="headerlink" title="触控板"></a>触控板</h1><p>系统偏好设置 &gt; 触控板</p>
-<p><img src="触控板0.png" alt="触控板0"></p>
-<p><img src="触控板1.png" alt="触控板1"></p>
+<p><img src="chukongban_0.png" alt="触控板0"></p>
+<p><img src="chukongban_1.png" alt="触控板1"></p>
 <p>系统偏好设置 &gt; 辅助功能 &gt; 鼠标与触控板 &gt; 触控板选项</p>
-<p><img src="触控板2.png" alt="触控板2"></p>
+<p><img src="chukongban_2.png" alt="触控板2"></p>
 <h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><p>原本Mac自带的输入法有如下一些问题:</p>
 <ul>
 <li>智能输入体验差.</li>
