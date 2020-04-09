@@ -94,18 +94,18 @@
   };
 </script>
 
-  <meta name="description" content="题目介绍The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. That is, 12F(0) = 0,">
+  <meta name="description" content="题目介绍Given a date, return the corresponding day of the week for that date. The input is given as three integers representing the day, month and year respectively. Return the answer as one of the follow">
 <meta name="keywords" content="统计分析, 机器学习, 资源分享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Fibonacci Number">
-<meta property="og:url" content="https://smileshy777.github.io/2019/08/08/LeetCode/Fibonacci-Number/index.html">
+<meta property="og:title" content="Day of the Week">
+<meta property="og:url" content="https://smileshy777.github.io/2020/04/08/LeetCode/Day-of-the-Week/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
-<meta property="og:description" content="题目介绍The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. That is, 12F(0) = 0,">
+<meta property="og:description" content="题目介绍Given a date, return the corresponding day of the week for that date. The input is given as three integers representing the day, month and year respectively. Return the answer as one of the follow">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-28T09:33:25.288Z">
+<meta property="og:updated_time" content="2020-04-08T12:33:03.281Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fibonacci Number">
-<meta name="twitter:description" content="题目介绍The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. That is, 12F(0) = 0,">
+<meta name="twitter:title" content="Day of the Week">
+<meta name="twitter:description" content="题目介绍Given a date, return the corresponding day of the week for that date. The input is given as three integers representing the day, month and year respectively. Return the answer as one of the follow">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2019/08/08/LeetCode/Fibonacci-Number/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/04/08/LeetCode/Day-of-the-Week/">
 
 
 
@@ -124,7 +124,7 @@
 </script>
 
   
-  <title>Fibonacci Number | 阿枂蛋糕店</title>
+  <title>Day of the Week | 阿枂蛋糕店</title>
   
 
 
@@ -348,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2019/08/08/LeetCode/Fibonacci-Number/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/04/08/LeetCode/Day-of-the-Week/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -365,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Fibonacci Number
+          <h1 class="post-title" itemprop="name headline">Day of the Week
 
               
             
@@ -391,23 +391,13 @@
                 
               
 
-              <time title="创建时间：2019-08-08 20:41:00" itemprop="dateCreated datePublished" datetime="2019-08-08T20:41:00+08:00">2019-08-08</time>
+              <time title="创建时间：2020-04-08 20:14:59 / 修改时间：20:33:03" itemprop="dateCreated datePublished" datetime="2020-04-08T20:14:59+08:00">2020-04-08</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-03-28 17:33:25" itemprop="dateModified" datetime="2020-03-28T17:33:25+08:00">2020-03-28</time>
-              </span>
             
           
 
@@ -475,38 +465,39 @@
       
 
       
-        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>The <strong>Fibonacci numbers</strong>, commonly denoted <code>F(n)</code> form a sequence, called the <strong>Fibonacci sequence</strong>, such that each number is the sum of the two preceding ones, starting from <code>0</code> and <code>1</code>. That is,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">F(0) = 0,   F(1) = 1</span><br><span class="line">F(N) = F(N - 1) + F(N - 2), for N &gt; 1.</span><br></pre></td></tr></table></figure>
-<p>Given <code>N</code>, calculate <code>F(N)</code>.</p>
-<a id="more"></a>
+        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a date, return the corresponding day of the week for that date.</p>
+<p>The input is given as three integers representing the <code>day</code>, <code>month</code> and <code>year</code> respectively.</p>
+<p>Return the answer as one of the following values <code>{&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;}</code>.</p>
+ <a id="more"></a>
 <p><strong>Example 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: 2</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: F(2) = F(1) + F(0) = 1 + 0 = 1.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: day = 31, month = 8, year = 2019</span><br><span class="line">Output: &quot;Saturday&quot;</span><br></pre></td></tr></table></figure>
 <p><strong>Example 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: 3</span><br><span class="line">Output: 2</span><br><span class="line">Explanation: F(3) = F(2) + F(1) = 1 + 1 = 2.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: day = 18, month = 7, year = 1999</span><br><span class="line">Output: &quot;Sunday&quot;</span><br></pre></td></tr></table></figure>
 <p><strong>Example 3:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: 4</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong></p>
-<p>0 ≤ <code>N</code> ≤ 30.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: day = 15, month = 8, year = 1993</span><br><span class="line">Output: &quot;Sunday&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>The given dates are valid dates between the years <code>1971</code> and <code>2100</code>.</li>
+</ul>
 <hr>
-<p><strong>斐波那契数</strong>，通常用 <code>F(n)</code> 表示，形成的序列称为<strong>斐波那契数列</strong>。该数列由 <code>0</code> 和 <code>1</code> 开始，后面的每一项数字都是前面两项数字的和。也就是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">F(0) = 0,   F(1) = 1</span><br><span class="line">F(N) = F(N - 1) + F(N - 2), 其中 N &gt; 1.</span><br></pre></td></tr></table></figure>
-<p>给定 <code>N</code>，计算 <code>F(N)</code>。 </p>
+<p>给你一个日期，请你设计一个算法来判断它是对应一周中的哪一天。</p>
+<p>输入为三个整数：<code>day</code>、<code>month</code> 和 <code>year</code>，分别表示日、月、年。</p>
+<p>您返回的结果必须是这几个值中的一个 <code>{&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;}</code>。</p>
 <p><strong>示例 1：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：2</span><br><span class="line">输出：1</span><br><span class="line">解释：F(2) = F(1) + F(0) = 1 + 0 = 1.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：day = 31, month = 8, year = 2019</span><br><span class="line">输出：&quot;Saturday&quot;</span><br></pre></td></tr></table></figure>
 <p><strong>示例 2：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：3</span><br><span class="line">输出：2</span><br><span class="line">解释：F(3) = F(2) + F(1) = 1 + 1 = 2.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：day = 18, month = 7, year = 1999</span><br><span class="line">输出：&quot;Sunday&quot;</span><br></pre></td></tr></table></figure>
 <p><strong>示例 3：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：4</span><br><span class="line">输出：3</span><br><span class="line">解释：F(4) = F(3) + F(2) = 2 + 1 = 3.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：day = 15, month = 8, year = 1993</span><br><span class="line">输出：&quot;Sunday&quot;</span><br></pre></td></tr></table></figure>
 <p><strong>提示：</strong></p>
 <ul>
-<li>0 ≤ <code>N</code> ≤ 30</li>
+<li>给出的日期一定是在 <code>1971</code> 到 <code>2100</code> 年之间的有效日期。</li>
 </ul>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>嗯, 非常轻松的一道题. 肥不拉几数列我们小时候都学过. 这里理论上一个一个挨着求就行了, 需要注意的是没有必要保存历史数列, 也就是说用两个变量记录相邻的肥不拉几数就行.</p>
-<p>时间复杂度$O(n)$, 空间复杂度$O(1)$.</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">(self, N)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        first, second = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(N - <span class="number">1</span>):</span><br><span class="line">            third = first + second</span><br><span class="line">            first = second</span><br><span class="line">            second = third</span><br><span class="line">        <span class="keyword">return</span> second</span><br></pre></td></tr></table></figure>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>可以自己实现一个时间转化功能, 但是作为python的默认自带包<code>datetime</code>, 用来做这个题目就很简单了, 根据<code>年份</code>, <code>月份</code>, <code>天</code>来创建一个时间对象, 然后从对象中取<code>星期</code>就行.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dayOfTheWeek</span><span class="params">(self, day, month, year)</span>:</span></span><br><span class="line">        dt = datetime(year, month, day)</span><br><span class="line">        <span class="keyword">return</span> [<span class="string">"Monday"</span>, <span class="string">"Tuesday"</span>, <span class="string">"Wednesday"</span>, <span class="string">"Thursday"</span>, <span class="string">"Friday"</span>, <span class="string">"Saturday"</span>, <span class="string">"Sunday"</span>][dt.weekday()]</span><br></pre></td></tr></table></figure>
 <h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
-<li>时间节点: 2019-08-08</li>
-<li>击败比例: 90.55%</li>
+<li>时间节点: 2020-04-08</li>
+<li>击败比例: 85.33%</li>
 </ul>
 
       
@@ -542,8 +533,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/07/LeetCode/Powerful-Integers/" rel="next" title="Powerful Integers">
-                <i class="fa fa-chevron-left"></i> Powerful Integers
+              <a href="/2020/04/01/LeetCode/Find-Common-Characters/" rel="next" title="Find Common Characters">
+                <i class="fa fa-chevron-left"></i> Find Common Characters
               </a>
             
           </div>
@@ -551,10 +542,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/09/LeetCode/Baseball-Game/" rel="prev" title="Baseball Game">
-                Baseball Game <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -879,46 +866,6 @@
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
