@@ -4,6 +4,7 @@
     <title>License Key Formatting</title>
     <url>/2020/04/15/LeetCode/License-Key-Formatting/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>You are given a license key represented as a string S which consists only alphanumeric character and dashes. The string is separated into N+1 groups by N dashes.</p>
+<a id="more"></a>
 <p>Given a number K, we would want to reformat the strings such that each group contains <em>exactly</em> K characters, except for the first group which could be shorter than K, but still must contain at least one character. Furthermore, there must be a dash inserted between two groups and all lowercase letters should be converted to uppercase.</p>
 <p>Given a non-empty string S and a number K, format the string according to the rules described above.</p>
 <p><strong>Example 1:</strong></p>
@@ -47,7 +48,7 @@
   </entry>
   <entry>
     <title>Binary Number with Alternating Bits</title>
-    <url>/2020/04/14/Binary-Number-with-Alternating-Bits/</url>
+    <url>/2020/04/14/LeetCode/Binary-Number-with-Alternating-Bits/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a positive integer, check whether it has alternating bits: namely, if two adjacent bits will always have different values.</p>
 <a id="more"></a>
 <p><strong>Example 1:</strong></p>
@@ -139,6 +140,7 @@
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a binary tree, each node has value <code>0</code> or <code>1</code>. Each root-to-leaf path represents a binary number starting with the most significant bit. For example, if the path is <code>0 -&gt; 1 -&gt; 1 -&gt; 0 -&gt; 1</code>, then this could represent <code>01101</code> in binary, which is <code>13</code>.</p>
 <p>For all leaves in the tree, consider the numbers represented by the path from the root to that leaf.</p>
 <p>Return the sum of these numbers.</p>
+ <a id="more"></a>
 <p><strong>Example 1:</strong></p>
 <p><img src="https://assets.leetcode.com/uploads/2019/04/04/sum-of-root-to-leaf-binary-numbers.png" alt="img"></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: [1,0,1,0,1,0,1]</span><br><span class="line">Output: 22</span><br><span class="line">Explanation: (100) + (101) + (110) + (111) = 4 + 5 + 6 + 7 = 22</span><br></pre></td></tr></table></figure>

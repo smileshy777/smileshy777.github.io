@@ -393,7 +393,7 @@
                 
               
 
-              <time title="创建时间：2020-04-15 20:29:03 / 修改时间：20:47:57" itemprop="dateCreated datePublished" datetime="2020-04-15T20:29:03+08:00">2020-04-15</time>
+              <time title="创建时间：2020-04-15 20:29:03 / 修改时间：21:46:53" itemprop="dateCreated datePublished" datetime="2020-04-15T20:29:03+08:00">2020-04-15</time>
             </span>
           
 
@@ -460,45 +460,16 @@
 
       
         
+          <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>You are given a license key represented as a string S which consists only alphanumeric character and dashes. The string is separated into N+1 groups by N dashes.</p>
+          <!--noindex-->
           
-            <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>You are given a license key represented as a string S which consists only alphanumeric character and dashes. The string is separated into N+1 groups by N dashes.</p>
-<p>Given a number K, we would want to reformat the strings such that each group contains <em>exactly</em> K characters, except for the first group which could be shorter than K, but still must contain at least one character. Furthermore, there must be a dash inserted between two groups and all lowercase letters should be converted to uppercase.</p>
-<p>Given a non-empty string S and a number K, format the string according to the rules described above.</p>
-<p><strong>Example 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Input: S = &quot;5F3Z-2e-9-w&quot;, K = 4</span><br><span class="line"></span><br><span class="line">Output: &quot;5F3Z-2E9W&quot;</span><br><span class="line"></span><br><span class="line">Explanation: The string S has been split into two parts, each part has 4 characters.</span><br><span class="line">Note that the two extra dashes are not needed and can be removed.</span><br></pre></td></tr></table></figure>
-<p><strong>Example 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: S = &quot;2-5g-3-J&quot;, K = 2</span><br><span class="line"></span><br><span class="line">Output: &quot;2-5G-3J&quot;</span><br><span class="line"></span><br><span class="line">Explanation: The string S has been split into three parts, each part has 2 characters except the first part as it could be shorter as mentioned above.</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong></p>
-<ol>
-<li>The length of string S will not exceed 12,000, and K is a positive integer.</li>
-<li>String S consists only of alphanumerical characters (a-z and/or A-Z and/or 0-9) and dashes(-).</li>
-<li>String S is non-empty.</li>
-</ol>
-<hr>
-<p>有一个密钥字符串 S ，只包含字母，数字以及 ‘-‘（破折号）。其中， N 个 ‘-‘ 将字符串分成了 N+1 组。</p>
-<p>给你一个数字 K，请你重新格式化字符串，除了第一个分组以外，每个分组要包含 K 个字符；而第一个分组中，至少要包含 1 个字符。两个分组之间需要用 ‘-‘（破折号）隔开，并且将所有的小写字母转换为大写字母。</p>
-<p>给定非空字符串 S 和数字 K，按照上面描述的规则进行格式化。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入：S = &quot;5F3Z-2e-9-w&quot;, K = 4</span><br><span class="line">输出：&quot;5F3Z-2E9W&quot;</span><br><span class="line">解释：字符串 S 被分成了两个部分，每部分 4 个字符；</span><br><span class="line">     注意，两个额外的破折号需要删掉。</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：S = &quot;2-5g-3-J&quot;, K = 2</span><br><span class="line">输出：&quot;2-5G-3J&quot;</span><br><span class="line">解释：字符串 S 被分成了 3 个部分，按照前面的规则描述，第一部分的字符可以少于给定的数量，其余部分皆为 2 个字符。</span><br></pre></td></tr></table></figure>
-<p><strong>提示:</strong></p>
-<ol>
-<li>S 的长度可能很长，请按需分配大小。K 为正整数。</li>
-<li>S 只包含字母数字（a-z，A-Z，0-9）以及破折号’-‘</li>
-<li>S 非空</li>
-</ol>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>这道题应该是假设了<code>K</code>小于<code>S</code>的长度.</p>
-<p>由于第一部分的长度可变, 所以利用求余, 得到第一部分.</p>
-<p>然后根据<code>K</code>值得到后续每部分的字符串, 利用破折符<code>-</code>连接即可.</p>
-<p>注意首尾不能有破折符, 以及大写转换.</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">licenseKeyFormatting</span><span class="params">(self, S, K)</span>:</span></span><br><span class="line">        S = S.replace(<span class="string">'-'</span>, <span class="string">''</span>)</span><br><span class="line">        init_i = len(S) % K</span><br><span class="line">        res = S[: init_i] + <span class="string">'-'</span></span><br><span class="line">        S = S[init_i:]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(S) // K):</span><br><span class="line">            res += S[i * K: (i + <span class="number">1</span>) * K] + <span class="string">'-'</span></span><br><span class="line">        <span class="keyword">return</span> res.strip(<span class="string">'-'</span>).upper()</span><br></pre></td></tr></table></figure>
-<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
-<li>时间节点: 2020-04-15</li>
-<li>击败比例: 85.67%</li>
-</ul>
-
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/04/15/LeetCode/License-Key-Formatting/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
     </div>
@@ -555,7 +526,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/04/14/Binary-Number-with-Alternating-Bits/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/04/14/LeetCode/Binary-Number-with-Alternating-Bits/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -575,7 +546,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/04/14/Binary-Number-with-Alternating-Bits/" class="post-title-link" itemprop="url">Binary Number with Alternating Bits</a>
+                <a href="/2020/04/14/LeetCode/Binary-Number-with-Alternating-Bits/" class="post-title-link" itemprop="url">Binary Number with Alternating Bits</a>
               
             
           </h1>
@@ -671,7 +642,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2020/04/14/Binary-Number-with-Alternating-Bits/#more" rel="contents">
+              <a class="btn" href="/2020/04/14/LeetCode/Binary-Number-with-Alternating-Bits/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -968,13 +939,23 @@
                 
               
 
-              <time title="创建时间：2020-04-10 20:11:08 / 修改时间：20:35:54" itemprop="dateCreated datePublished" datetime="2020-04-10T20:11:08+08:00">2020-04-10</time>
+              <time title="创建时间：2020-04-10 20:11:08" itemprop="dateCreated datePublished" datetime="2020-04-10T20:11:08+08:00">2020-04-10</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-04-15 21:47:23" itemprop="dateModified" datetime="2020-04-15T21:47:23+08:00">2020-04-15</time>
+              </span>
             
           
 
@@ -1035,41 +1016,18 @@
 
       
         
-          
-            <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a binary tree, each node has value <code>0</code> or <code>1</code>. Each root-to-leaf path represents a binary number starting with the most significant bit. For example, if the path is <code>0 -&gt; 1 -&gt; 1 -&gt; 0 -&gt; 1</code>, then this could represent <code>01101</code> in binary, which is <code>13</code>.</p>
+          <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given a binary tree, each node has value <code>0</code> or <code>1</code>. Each root-to-leaf path represents a binary number starting with the most significant bit. For example, if the path is <code>0 -&gt; 1 -&gt; 1 -&gt; 0 -&gt; 1</code>, then this could represent <code>01101</code> in binary, which is <code>13</code>.</p>
 <p>For all leaves in the tree, consider the numbers represented by the path from the root to that leaf.</p>
 <p>Return the sum of these numbers.</p>
-<p><strong>Example 1:</strong></p>
-<p><img src="https://assets.leetcode.com/uploads/2019/04/04/sum-of-root-to-leaf-binary-numbers.png" alt="img"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: [1,0,1,0,1,0,1]</span><br><span class="line">Output: 22</span><br><span class="line">Explanation: (100) + (101) + (110) + (111) = 4 + 5 + 6 + 7 = 22</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong></p>
-<ol>
-<li>The number of nodes in the tree is between <code>1</code> and <code>1000</code>.</li>
-<li>node.val is <code>0</code> or <code>1</code>.</li>
-<li>The answer will not exceed <code>2^31 - 1</code>.</li>
-</ol>
-<hr>
-<p>给出一棵二叉树，其上每个结点的值都是 <code>0</code> 或 <code>1</code> 。每一条从根到叶的路径都代表一个从最高有效位开始的二进制数。例如，如果路径为 <code>0 -&gt; 1 -&gt; 1 -&gt; 0 -&gt; 1</code>，那么它表示二进制数 <code>01101</code>，也就是 <code>13</code> 。</p>
-<p>对树上的每一片叶子，我们都要找出从根到该叶子的路径所表示的数字。</p>
-<p>以 <strong><code>10^9 + 7</code></strong> 为<strong>模</strong>，返回这些数字之和。</p>
-<p><strong>示例：</strong></p>
-<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/04/05/sum-of-root-to-leaf-binary-numbers.png" alt="img"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[1,0,1,0,1,0,1]</span><br><span class="line">输出：22</span><br><span class="line">解释：(100) + (101) + (110) + (111) = 4 + 5 + 6 + 7 = 22</span><br></pre></td></tr></table></figure>
-<p><strong>提示：</strong></p>
-<ol>
-<li>树中的结点数介于 <code>1</code> 和 <code>1000</code> 之间。</li>
-<li>node.val 为 <code>0</code> 或 <code>1</code> 。</li>
-</ol>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>利用某种方式遍历树, 这里采用深度优先法遍历.</p>
-<p>在遍历途中, 记录沿途节点值, 并在遇到叶子节点后, 保存该二进制值.</p>
-<p>最后将二进制进行转换求和, 返回结果.</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.str_list = []</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sumRootToLeaf</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        self.helper(root, <span class="string">''</span>)</span><br><span class="line">        <span class="keyword">return</span> sum([int(x, <span class="number">2</span>) <span class="keyword">for</span> x <span class="keyword">in</span> self.str_list])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, node, str_)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> node.left <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> node.right <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.str_list.append(str_ + str(node.val))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> node.left <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.helper(node.left, str_ + str(node.val))</span><br><span class="line">        <span class="keyword">if</span> node.right <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.helper(node.right, str_ + str(node.val))</span><br></pre></td></tr></table></figure>
-<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
-<li>时间节点: 2020-04-10</li>
-<li>击败比例: 50.43%</li>
-</ul>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/04/10/LeetCode/Sum-of-Root-To-Leaf-Binary-Numbers/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
