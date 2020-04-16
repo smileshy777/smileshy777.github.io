@@ -94,18 +94,18 @@
   };
 </script>
 
-  <meta name="description" content="题目介绍We have two special characters. The first character can be represented by one bit 0. The second character can be represented by two bits (10 or 11). Now given a string represented by several bits.">
+  <meta name="description" content="题目介绍In a town, there are N people labelled from 1 to N. There is a rumor that one of these people is secretly the town judge. If the town judge exists, then:  The town judge trusts nobody. Everybody (">
 <meta name="keywords" content="统计分析, 机器学习, 资源分享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="1-bit and 2-bit Characters">
-<meta property="og:url" content="https://smileshy777.github.io/2020/03/16/LeetCode/1-bit-and-2-bit-Characters/index.html">
+<meta property="og:title" content="Find the Town Judge">
+<meta property="og:url" content="https://smileshy777.github.io/2020/04/16/LeetCode/Find-the-Town-Judge/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
-<meta property="og:description" content="题目介绍We have two special characters. The first character can be represented by one bit 0. The second character can be represented by two bits (10 or 11). Now given a string represented by several bits.">
+<meta property="og:description" content="题目介绍In a town, there are N people labelled from 1 to N. There is a rumor that one of these people is secretly the town judge. If the town judge exists, then:  The town judge trusts nobody. Everybody (">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-28T09:33:25.286Z">
+<meta property="og:updated_time" content="2020-04-16T09:43:46.644Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="1-bit and 2-bit Characters">
-<meta name="twitter:description" content="题目介绍We have two special characters. The first character can be represented by one bit 0. The second character can be represented by two bits (10 or 11). Now given a string represented by several bits.">
+<meta name="twitter:title" content="Find the Town Judge">
+<meta name="twitter:description" content="题目介绍In a town, there are N people labelled from 1 to N. There is a rumor that one of these people is secretly the town judge. If the town judge exists, then:  The town judge trusts nobody. Everybody (">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2020/03/16/LeetCode/1-bit-and-2-bit-Characters/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/04/16/LeetCode/Find-the-Town-Judge/">
 
 
 
@@ -124,7 +124,7 @@
 </script>
 
   
-  <title>1-bit and 2-bit Characters | 阿枂蛋糕店</title>
+  <title>Find the Town Judge | 阿枂蛋糕店</title>
   
 
 
@@ -348,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/03/16/LeetCode/1-bit-and-2-bit-Characters/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/04/16/LeetCode/Find-the-Town-Judge/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -365,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">1-bit and 2-bit Characters
+          <h1 class="post-title" itemprop="name headline">Find the Town Judge
 
               
             
@@ -391,23 +391,13 @@
                 
               
 
-              <time title="创建时间：2020-03-16 18:19:56" itemprop="dateCreated datePublished" datetime="2020-03-16T18:19:56+08:00">2020-03-16</time>
+              <time title="创建时间：2020-04-16 17:19:06 / 修改时间：17:43:46" itemprop="dateCreated datePublished" datetime="2020-04-16T17:19:06+08:00">2020-04-16</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-03-28 17:33:25" itemprop="dateModified" datetime="2020-03-28T17:33:25+08:00">2020-03-28</time>
-              </span>
             
           
 
@@ -427,7 +417,7 @@
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Array/" itemprop="url" rel="index"><span itemprop="name">Array</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Graph/" itemprop="url" rel="index"><span itemprop="name">Graph</span></a></span>
 
                 
                 
@@ -475,43 +465,74 @@
       
 
       
-        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>We have two special characters. The first character can be represented by one bit <code>0</code>. The second character can be represented by two bits (<code>10</code> or <code>11</code>).</p>
-<p>Now given a string represented by several bits. Return whether the last character must be a one-bit character or not. The given string will always end with a zero.</p>
-<a id="more"></a>
+        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>In a town, there are <code>N</code> people labelled from <code>1</code> to <code>N</code>. There is a rumor that one of these people is secretly the town judge.</p>
+<p>If the town judge exists, then:</p>
+<ol>
+<li>The town judge trusts nobody.</li>
+<li>Everybody (except for the town judge) trusts the town judge.</li>
+<li>There is exactly one person that satisfies properties 1 and 2.</li>
+</ol>
+<p>You are given <code>trust</code>, an array of pairs <code>trust[i] = [a, b]</code> representing that the person labelled <code>a</code> trusts the person labelled <code>b</code>.</p>
+<p>If the town judge exists and can be identified, return the label of the town judge. Otherwise, return <code>-1</code>.</p>
 <p><strong>Example 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: </span><br><span class="line">bits = [1, 0, 0]</span><br><span class="line">Output: True</span><br><span class="line">Explanation: </span><br><span class="line">The only way to decode it is two-bit character and one-bit character. So the last character is one-bit character.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: N = 2, trust = [[1,2]]</span><br><span class="line">Output: 2</span><br></pre></td></tr></table></figure>
 <p><strong>Example 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: </span><br><span class="line">bits = [1, 1, 1, 0]</span><br><span class="line">Output: False</span><br><span class="line">Explanation: </span><br><span class="line">The only way to decode it is two-bit character and two-bit character. So the last character is NOT one-bit character.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: N = 3, trust = [[1,3],[2,3]]</span><br><span class="line">Output: 3</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: N = 3, trust = [[1,3],[2,3],[3,1]]</span><br><span class="line">Output: -1</span><br></pre></td></tr></table></figure>
+<p><strong>Example 4:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: N = 3, trust = [[1,2],[2,3]]</span><br><span class="line">Output: -1</span><br></pre></td></tr></table></figure>
+<p><strong>Example 5:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: N = 4, trust = [[1,3],[1,4],[2,3],[2,4],[4,3]]</span><br><span class="line">Output: 3</span><br></pre></td></tr></table></figure>
 <p><strong>Note:</strong></p>
-<p><code>1 &lt;= len(bits) &lt;= 1000</code>.</p>
-<p><code>bits[i]</code> is always <code>0</code> or <code>1</code>.</p>
+<ol>
+<li><code>1 &lt;= N &lt;= 1000</code></li>
+<li><code>trust.length &lt;= 10000</code></li>
+<li><code>trust[i]</code> are all different</li>
+<li><code>trust[i][0] != trust[i][1]</code></li>
+<li><code>1 &lt;= trust[i][0], trust[i][1] &lt;= N</code></li>
+</ol>
 <hr>
-<p>有两种特殊字符。第一种字符可以用一比特<code>0</code>来表示。第二种字符可以用两比特(<code>10</code> 或 <code>11</code>)来表示。</p>
-<p>现给一个由若干比特组成的字符串。问最后一个字符是否必定为一个一比特字符。给定的字符串总是由0结束。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line">bits = [1, 0, 0]</span><br><span class="line">输出: True</span><br><span class="line">解释: </span><br><span class="line">唯一的编码方式是一个两比特字符和一个一比特字符。所以最后一个字符是一比特字符。</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line">bits = [1, 1, 1, 0]</span><br><span class="line">输出: False</span><br><span class="line">解释: </span><br><span class="line">唯一的编码方式是两比特字符和两比特字符。所以最后一个字符不是一比特字符。</span><br></pre></td></tr></table></figure>
-<p><strong>注意:</strong></p>
+<p>在一个小镇里，按从 <code>1</code> 到 <code>N</code> 标记了 <code>N</code> 个人。传言称，这些人中有一个是小镇上的秘密法官。</p>
+<p>如果小镇的法官真的存在，那么：</p>
+<ol>
+<li>小镇的法官不相信任何人。</li>
+<li>每个人（除了小镇法官外）都信任小镇的法官。</li>
+<li>只有一个人同时满足属性 1 和属性 2 。</li>
+</ol>
+<p>给定数组 <code>trust</code>，该数组由信任对 <code>trust[i] = [a, b]</code> 组成，表示标记为 <code>a</code> 的人信任标记为 <code>b</code> 的人。</p>
+<p>如果小镇存在秘密法官并且可以确定他的身份，请返回该法官的标记。否则，返回 <code>-1</code>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：N = 2, trust = [[1,2]]</span><br><span class="line">输出：2</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：N = 3, trust = [[1,3],[2,3]]</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：N = 3, trust = [[1,3],[2,3],[3,1]]</span><br><span class="line">输出：-1</span><br></pre></td></tr></table></figure>
+<p><strong>示例 4：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：N = 3, trust = [[1,2],[2,3]]</span><br><span class="line">输出：-1</span><br></pre></td></tr></table></figure>
+<p><strong>示例 5：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：N = 4, trust = [[1,3],[1,4],[2,3],[2,4],[4,3]]</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>1 &lt;= N &lt;= 1000</code></li>
+<li><code>trust.length &lt;= 10000</code></li>
+<li><code>trust[i]</code> 是完全不同的</li>
+<li><code>trust[i][0] != trust[i][1]</code></li>
+<li><code>1 &lt;= trust[i][0], trust[i][1] &lt;= N</code></li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>利用图论的方法来理解这道题, 如果一个人信任另外一个人, 那么可以看成一个节点连接向另外个节点. 这样所有节点构成了一个有向无自环网络.</p>
+<p>题目要求判断是否存在这样一个节点, 即其它节点均连接向他, 而他不连接向其它节点, 这样的节点若存在, 必然只有一个.</p>
+<p>具体做法, 可以遍历列表中的二元组:</p>
 <ul>
-<li><code>1 &lt;= len(bits) &lt;= 1000</code>.</li>
-<li><code>bits[i]</code> 总是<code>0</code> 或 <code>1</code>.</li>
+<li>若一个人信任另外一个人, 那么这个人必然不是法官.</li>
+<li>若一个可能是法官的人被别人信任, 那么将其信任人数加一.</li>
 </ul>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>首先理解题意, 就是说我们有三个字符<code>0</code>, <code>10</code>, <code>11</code>, 然后对于给定的一个字符串, 最后一个字符串一定是<code>0</code>, 问是否只存在最后的字符是<code>0</code>(而不是<code>10</code>), 由以上三个字符组成字符串.</p>
-<p>首先考虑一些边界条件, 如给定字符长度为1, 2的时候.</p>
-<p>然后利用递归函数, 分布判断以下两种情况是否存在:</p>
-<ul>
-<li>最后的字符是<code>10</code>, 前面的字符串是否合理. 若合理则直接返回false.</li>
-<li>最后的字符是<code>0</code>, 前面的字符串是否合理. 合理则返回true, 否则返回false.</li>
-</ul>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>直接从左往右线性扫描, 若当前位置$i$的数字是<code>1</code>, 则只能是两位比特字符, 将$i$加2.</p>
-<p>若当前位置$i$的数字是<code>0</code>, 则只能是一位比特字符, 将$i$加1.</p>
-<p>根据最后落点的位置, 判断是否最后一个字符只能是<code>0</code>.</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isOneBitCharacter</span><span class="params">(self, bits)</span>:</span></span><br><span class="line">        <span class="comment"># 边界情况处理.</span></span><br><span class="line">        n_bits = len(bits)</span><br><span class="line">        <span class="keyword">if</span> n_bits == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        bits.reverse()</span><br><span class="line">        <span class="keyword">if</span> bits == [<span class="number">0</span>, <span class="number">1</span>]:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> bits[: <span class="number">2</span>] == [<span class="number">0</span>, <span class="number">1</span>] <span class="keyword">and</span> self.helper(bits[<span class="number">2</span>:]):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> self.helper(bits[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, list_)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        递归函数.</span></span><br><span class="line"><span class="string">        对于给定序列, 能否由给定字符(0, 01, 11)组成.</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">if</span> len(list_) == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> list_[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> len(list_) == <span class="number">2</span>:</span><br><span class="line">            str_ = str(list_[<span class="number">0</span>]) + str(list_[<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">if</span> str_ <span class="keyword">in</span> [<span class="string">'00'</span>, <span class="string">'01'</span>, <span class="string">'11'</span>]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> list_[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> self.helper(list_[<span class="number">2</span>:]) <span class="keyword">or</span> self.helper(list_[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> list_[<span class="number">0</span>] == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> list_[<span class="number">1</span>] != <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> self.helper(list_[<span class="number">2</span>:])</span><br></pre></td></tr></table></figure>
-<h2 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isOneBitCharacter</span><span class="params">(self, bits)</span>:</span></span><br><span class="line">        <span class="comment"># 边界情况处理.</span></span><br><span class="line">        n_bits = len(bits)</span><br><span class="line">        <span class="keyword">if</span> n_bits == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> n_bits == <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">if</span> bits[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">        idx = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> idx &lt; n_bits - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> bits[idx] == <span class="number">0</span>:</span><br><span class="line">                idx += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                idx += <span class="number">2</span></span><br><span class="line">        <span class="keyword">return</span> idx == n_bits - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>最后, 可以统计可能是法官的人的信任人数是否符合要求来返回结果.</p>
+<p>主要一些边界条件, 如只有一个人的时候, 这个人满足法官要求.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findJudge</span><span class="params">(self, N, trust)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        res_dict = defaultdict(int)</span><br><span class="line">        drop_set = set()</span><br><span class="line">        <span class="keyword">for</span> i, j <span class="keyword">in</span> trust:</span><br><span class="line">            drop_set.add(i)</span><br><span class="line">            <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> drop_set:</span><br><span class="line">                res_dict[j] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> i <span class="keyword">in</span> res_dict:</span><br><span class="line">                res_dict.pop(i)</span><br><span class="line">        <span class="keyword">if</span> len(drop_set) == N:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> res_dict:</span><br><span class="line">            <span class="keyword">if</span> res_dict[k] == N - <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> k</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
 <h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
-<li>时间节点: 2020-03-16</li>
-<li>击败比例: 80.12%</li>
+<li>时间节点: 2020-04-16</li>
+<li>击败比例: 97.19%</li>
 </ul>
 
       
@@ -547,8 +568,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/15/LeetCode/Bulls-and-Cows/" rel="next" title="Bulls and Cows">
-                <i class="fa fa-chevron-left"></i> Bulls and Cows
+              <a href="/2020/04/15/LeetCode/License-Key-Formatting/" rel="next" title="License Key Formatting">
+                <i class="fa fa-chevron-left"></i> License Key Formatting
               </a>
             
           </div>
@@ -556,10 +577,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/17/LeetCode/Design-HashSet/" rel="prev" title="Design HashSet">
-                Design HashSet <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -713,7 +730,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一"><span class="nav-number">2.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二"><span class="nav-number">2.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一-1"><span class="nav-number">3.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二-1"><span class="nav-number">3.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
             
 
           </div>
@@ -890,46 +907,6 @@
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
