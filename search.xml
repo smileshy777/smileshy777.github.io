@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Walking Robot Simulation</title>
+    <url>/2020/04/23/LeetCode/Walking-Robot-Simulation/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>A robot on an infinite grid starts at point (0, 0) and faces north. The robot can receive one of three possible types of commands:</p>
+<ul>
+<li><code>-2</code>: turn left 90 degrees</li>
+<li><code>-1</code>: turn right 90 degrees</li>
+<li><code>1 &lt;= x &lt;= 9</code>: move forward <code>x</code> units</li>
+</ul>
+<p>Some of the grid squares are obstacles. </p>
+<a id="more"></a>
+<p>The <code>i</code>-th obstacle is at grid point <code>(obstacles[i][0], obstacles[i][1])</code></p>
+<p>If the robot would try to move onto them, the robot stays on the previous grid square instead (but still continues following the rest of the route.)</p>
+<p>Return the <strong>square</strong> of the maximum Euclidean distance that the robot will be from the origin.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: commands = [4,-1,3], obstacles = []</span><br><span class="line">Output: 25</span><br><span class="line">Explanation: robot will go to (3, 4)</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: commands = [4,-1,4,-2,4], obstacles = [[2,4]]</span><br><span class="line">Output: 65</span><br><span class="line">Explanation: robot will be stuck at (1, 4) before turning left and going to (1, 8)</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li><code>0 &lt;= commands.length &lt;= 10000</code></li>
+<li><code>0 &lt;= obstacles.length &lt;= 10000</code></li>
+<li><code>-30000 &lt;= obstacle[i][0] &lt;= 30000</code></li>
+<li><code>-30000 &lt;= obstacle[i][1] &lt;= 30000</code></li>
+<li>The answer is guaranteed to be less than <code>2 ^ 31</code>.</li>
+</ol>
+<hr>
+<p>机器人在一个无限大小的网格上行走，从点 (0, 0) 处开始出发，面向北方。该机器人可以接收以下三种类型的命令：</p>
+<ul>
+<li><code>-2</code>：向左转 90 度</li>
+<li><code>-1</code>：向右转 90 度</li>
+<li><code>1 &lt;= x &lt;= 9</code>：向前移动 <code>x</code> 个单位长度</li>
+</ul>
+<p>在网格上有一些格子被视为障碍物。</p>
+<p>第 <code>i</code> 个障碍物位于网格点  <code>(obstacles[i][0], obstacles[i][1])</code></p>
+<p>机器人无法走到障碍物上，它将会停留在障碍物的前一个网格方块上，但仍然可以继续该路线的其余部分。</p>
+<p>返回从原点到机器人的最大欧式距离的<strong>平方</strong>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: commands = [4,-1,3], obstacles = []</span><br><span class="line">输出: 25</span><br><span class="line">解释: 机器人将会到达 (3, 4)</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: commands = [4,-1,4,-2,4], obstacles = [[2,4]]</span><br><span class="line">输出: 65</span><br><span class="line">解释: 机器人在左转走到 (1, 8) 之前将被困在 (1, 4) 处</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>0 &lt;= commands.length &lt;= 10000</code></li>
+<li><code>0 &lt;= obstacles.length &lt;= 10000</code></li>
+<li><code>-30000 &lt;= obstacle[i][0] &lt;= 30000</code></li>
+<li><code>-30000 &lt;= obstacle[i][1] &lt;= 30000</code></li>
+<li>答案保证小于 <code>2 ^ 31</code></li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>一个提速的方法是将障碍物转化成集合的形式, 这样每次查询时很快.</p>
+<p>同时还要注意, 最后的问题是过程中的最大距离, 而非最后终点的最大距离.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># turn right.</span></span><br><span class="line">        self.direction_map_0 = &#123;<span class="string">'up'</span>: <span class="string">'right'</span>,</span><br><span class="line">                                <span class="string">'right'</span>: <span class="string">'down'</span>,</span><br><span class="line">                                <span class="string">'down'</span>: <span class="string">'left'</span>,</span><br><span class="line">                                <span class="string">'left'</span>: <span class="string">'up'</span>&#125;</span><br><span class="line">        <span class="comment"># turn left.</span></span><br><span class="line">        self.direction_map_1 = &#123;<span class="string">'up'</span>: <span class="string">'left'</span>,</span><br><span class="line">                                <span class="string">'left'</span>: <span class="string">'down'</span>,</span><br><span class="line">                                <span class="string">'down'</span>: <span class="string">'right'</span>,</span><br><span class="line">                                <span class="string">'right'</span>: <span class="string">'up'</span>&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># direction.</span></span><br><span class="line">        self.direction = <span class="string">'up'</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># location.</span></span><br><span class="line">        self.location = (<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        self.obstacles = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">robotSim</span><span class="params">(self, commands, obstacles)</span>:</span></span><br><span class="line">        self.obstacles = set([(x[<span class="number">0</span>], x[<span class="number">1</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> obstacles])</span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cmd <span class="keyword">in</span> commands:</span><br><span class="line">            <span class="keyword">if</span> cmd &lt; <span class="number">0</span>:</span><br><span class="line">                self.change_direction(cmd)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(cmd):</span><br><span class="line">                    <span class="keyword">if</span> self.direction == <span class="string">'up'</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>], self.location[<span class="number">1</span>] + <span class="number">1</span>)</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">                    <span class="keyword">elif</span> self.direction == <span class="string">'down'</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>], self.location[<span class="number">1</span>] - <span class="number">1</span>)</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">                    <span class="keyword">elif</span> self.direction == <span class="string">'left'</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>] - <span class="number">1</span>, self.location[<span class="number">1</span>])</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>] + <span class="number">1</span>, self.location[<span class="number">1</span>])</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">change_direction</span><span class="params">(self, turn)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> turn == <span class="number">-2</span>:</span><br><span class="line">            self.direction = self.direction_map_1[self.direction]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.direction = self.direction_map_0[self.direction]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_obstacle</span><span class="params">(self, loc)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> loc <span class="keyword">in</span> self.obstacles:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-04-23</li>
+<li>击败比例: 20.88%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Greedy</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Divisor Game</title>
     <url>/2020/04/22/LeetCode/Divisor-Game/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Alice and Bob take turns playing a game, with Alice starting first.</p>
@@ -136,6 +198,7 @@
 <li>There is exactly one person that satisfies properties 1 and 2.</li>
 </ol>
 <p>You are given <code>trust</code>, an array of pairs <code>trust[i] = [a, b]</code> representing that the person labelled <code>a</code> trusts the person labelled <code>b</code>.</p>
+<a id="more"></a>
 <p>If the town judge exists and can be identified, return the label of the town judge. Otherwise, return <code>-1</code>.</p>
 <p><strong>Example 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: N = 2, trust = [[1,2]]</span><br><span class="line">Output: 2</span><br></pre></td></tr></table></figure>

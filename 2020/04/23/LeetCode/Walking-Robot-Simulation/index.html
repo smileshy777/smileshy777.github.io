@@ -94,18 +94,18 @@
   };
 </script>
 
-  <meta name="description" content="生活中, 工作中我们会遇到很多问题, 其中大部分问题是我们以前遇到过的, 我们可以凭借经验进行解决. 然而当我们遇到一个之前没有遇到过的问题时, 我们应该怎么做呢? 作为一个菜鸟小白, 其实自知没有水平写关于这个讨论的文章, 毕竟现在自己遇到问题的时候几乎都是去搬别人的方法. 我个人认为这项能力, 即分析问题 &amp;amp; 转化问题的能力, 是非常重要的, 这也是为什么把这个话题放到了数据建模的第一">
+  <meta name="description" content="题目介绍A robot on an infinite grid starts at point (0, 0) and faces north. The robot can receive one of three possible types of commands:  -2: turn left 90 degrees -1: turn right 90 degrees 1 &amp;lt;= x &amp;lt">
 <meta name="keywords" content="统计分析, 机器学习, 资源分享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="数据建模(一)-解决问题流程">
-<meta property="og:url" content="https://smileshy777.github.io/2020/03/24/数据建模/数据建模-一-解决问题流程/index.html">
+<meta property="og:title" content="Walking Robot Simulation">
+<meta property="og:url" content="https://smileshy777.github.io/2020/04/23/LeetCode/Walking-Robot-Simulation/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
-<meta property="og:description" content="生活中, 工作中我们会遇到很多问题, 其中大部分问题是我们以前遇到过的, 我们可以凭借经验进行解决. 然而当我们遇到一个之前没有遇到过的问题时, 我们应该怎么做呢? 作为一个菜鸟小白, 其实自知没有水平写关于这个讨论的文章, 毕竟现在自己遇到问题的时候几乎都是去搬别人的方法. 我个人认为这项能力, 即分析问题 &amp;amp; 转化问题的能力, 是非常重要的, 这也是为什么把这个话题放到了数据建模的第一">
+<meta property="og:description" content="题目介绍A robot on an infinite grid starts at point (0, 0) and faces north. The robot can receive one of three possible types of commands:  -2: turn left 90 degrees -1: turn right 90 degrees 1 &amp;lt;= x &amp;lt">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-28T09:33:25.290Z">
+<meta property="og:updated_time" content="2020-04-23T13:05:23.509Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="数据建模(一)-解决问题流程">
-<meta name="twitter:description" content="生活中, 工作中我们会遇到很多问题, 其中大部分问题是我们以前遇到过的, 我们可以凭借经验进行解决. 然而当我们遇到一个之前没有遇到过的问题时, 我们应该怎么做呢? 作为一个菜鸟小白, 其实自知没有水平写关于这个讨论的文章, 毕竟现在自己遇到问题的时候几乎都是去搬别人的方法. 我个人认为这项能力, 即分析问题 &amp;amp; 转化问题的能力, 是非常重要的, 这也是为什么把这个话题放到了数据建模的第一">
+<meta name="twitter:title" content="Walking Robot Simulation">
+<meta name="twitter:description" content="题目介绍A robot on an infinite grid starts at point (0, 0) and faces north. The robot can receive one of three possible types of commands:  -2: turn left 90 degrees -1: turn right 90 degrees 1 &amp;lt;= x &amp;lt">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2020/03/24/数据建模/数据建模-一-解决问题流程/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/04/23/LeetCode/Walking-Robot-Simulation/">
 
 
 
@@ -124,7 +124,7 @@
 </script>
 
   
-  <title>数据建模(一)-解决问题流程 | 阿枂蛋糕店</title>
+  <title>Walking Robot Simulation | 阿枂蛋糕店</title>
   
 
 
@@ -348,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/03/24/数据建模/数据建模-一-解决问题流程/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/04/23/LeetCode/Walking-Robot-Simulation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -365,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">数据建模(一)-解决问题流程
+          <h1 class="post-title" itemprop="name headline">Walking Robot Simulation
 
               
             
@@ -391,23 +391,13 @@
                 
               
 
-              <time title="创建时间：2020-03-24 19:58:53" itemprop="dateCreated datePublished" datetime="2020-03-24T19:58:53+08:00">2020-03-24</time>
+              <time title="创建时间：2020-04-23 20:12:51 / 修改时间：21:05:23" itemprop="dateCreated datePublished" datetime="2020-04-23T20:12:51+08:00">2020-04-23</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-03-28 17:33:25" itemprop="dateModified" datetime="2020-03-28T17:33:25+08:00">2020-03-28</time>
-              </span>
             
           
 
@@ -420,7 +410,14 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据建模/" itemprop="url" rel="index"><span itemprop="name">数据建模</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Greedy/" itemprop="url" rel="index"><span itemprop="name">Greedy</span></a></span>
 
                 
                 
@@ -468,67 +465,59 @@
       
 
       
-        <p>生活中, 工作中我们会遇到很多问题, 其中大部分问题是我们以前遇到过的, 我们可以凭借经验进行解决. 然而当我们遇到一个之前没有遇到过的问题时, 我们应该怎么做呢?</p>
-<p>作为一个菜鸟小白, 其实自知没有水平写关于这个讨论的文章, 毕竟现在自己遇到问题的时候几乎都是去搬别人的方法. 我个人认为这项能力, 即<code>分析问题 &amp; 转化问题</code>的能力, 是非常重要的, 这也是为什么把这个话题放到了<code>数据建模</code>的第一篇.</p>
+        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>A robot on an infinite grid starts at point (0, 0) and faces north. The robot can receive one of three possible types of commands:</p>
+<ul>
+<li><code>-2</code>: turn left 90 degrees</li>
+<li><code>-1</code>: turn right 90 degrees</li>
+<li><code>1 &lt;= x &lt;= 9</code>: move forward <code>x</code> units</li>
+</ul>
+<p>Some of the grid squares are obstacles. </p>
 <a id="more"></a>
-<p>如果, 能够在一开始遇到问题的时候, 明确想要达到的目的, 然后用合理的思路, 将其转化为数学语言, 或者定量的描述, 或者优化目标, 后续的工作大概率是有意义的. 反之, 一开始就错误理解了问题, 或者没有很好地描述问题, 则后续很可能做无用功.</p>
-<h1 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h1><p>一开始遇到一个问题的时候, 最好先按某种顺序进行梳理, 如从前往后, 或者从整体到局部.</p>
-<p>重点在于明确我们要做什么, 可利用的资源有哪些, 难点可能在哪.</p>
-<p>这里我就胡扯一个栗子吧, 真的是胡扯ヾ(´･ω･｀)ﾉ</p>
-<p>比如我想财富自由, 或者目标放低点, 我想躺着赚钱, 请问有没有什么法子?</p>
-<p>有的, 只要买对了股票, 就可以躺着赚钱(。・・)ノ</p>
-<p>那怎么买股票呢? 这就是一个模糊的问题, 我们先把模糊的问题具体化.</p>
-<p>首先我能用来买股票的钱是有限的.</p>
-<p>其次股市有风险, 可能躺着赚钱, 也可能被别人躺着赚钱.</p>
-<p>对于散户来说, 一般牛市的时候, 容易赚钱, 熊市的时候, 容易亏钱.</p>
-<p>别把鸡蛋都放在一个篮子里.</p>
-<p>收益越大, 风险越大.</p>
-<p>…</p>
-<p>大概这些就是我的一些经验信息, 结合这些信息, 我想做的事情就是:</p>
-<blockquote>
-<p>用有限的钱, 去买一种股票组合, 使得期望收益最大化.</p>
-</blockquote>
-<h1 id="转化问题"><a href="#转化问题" class="headerlink" title="转化问题"></a>转化问题</h1><p>有了这个明确的目标, 那下一步考虑是否可以转化成一些定量描述, 或者数学模型.</p>
-<p>这一看应该是可以的, <code>最大化</code>就是一个优化问题, <code>有限的钱</code>就是限制条件.</p>
-<p>假设咱们有收集数据的能力, 收集到了几种股票的历史长期表现, 再经过一些简单的算法, 可以定量得到每个股票的<code>收益</code>与<code>风险</code>.</p>
-<p>现在我们要最大化如下目标函数:</p>
-<script type="math/tex; mode=display">
-arg\ max(\sum_i资金_i(收益_i-风险_i))\\
-s.t.\ 资金_i\ge0\quad i\in I\\
-\sum_i资金_i=总资金</script><p>相信聪明的同学已经发现了, 这个优化问题根本不需要所谓的优化o(〃’▽’〃)o</p>
-<p>只要把钱全部拿来买<code>收益-风险</code>最大的这一个股票, 就行了.</p>
-<p>啊…完美解决问题, （＾∀＾●）ﾉｼ</p>
-<p>但是有些不太对劲, 咱们其实并没有完全用到上一节中咱们梳理得到的经验或者知识:</p>
-<blockquote>
-<p>别把鸡蛋放在一个篮子里.</p>
-<p>牛市容易赚钱, 熊市容易亏钱.</p>
-</blockquote>
-<p>能不能把这些经验或者知识也加入到模型中呢? 试试吧(o゜▽゜)o☆</p>
-<p>对于第一条经验, 其实是让我们尽量分散投资, 那我们可以在目标函数中添加一个惩罚机制, 如果越集中购买, 就惩罚越重, <code>L2</code>正则在这里可以达到这样的效果.</p>
-<p>对于第二条经验, 可以通过根据当前大盘的局势判断, 来选择<code>总资金</code>的量, 牛市的时候用更多的资金投资, 熊市的时候用少量的资金投资.</p>
-<p>总结起来, 现在的目标函数变成了下面这个样子:</p>
-<script type="math/tex; mode=display">
-arg\ max(\sum_i资金_i(收益_i-风险_i))-\lambda\sum_i资金_i^2\\
-s.t.\ 资金_i\ge0\quad i\in I\\
-\sum_i资金_i=总资金\times\beta</script><p>其中的$\lambda$是<code>L2</code>正则参数, 越大, 则资金越分散, 越小则越集中.</p>
-<p>$\beta$是大盘局势, 牛市时值大, 熊市时值小.</p>
-<p>通过调节以上两个超参数, 可以控制<code>购买总金额</code>以及<code>资金分散程度</code>.</p>
-<h1 id="寻找相似问题"><a href="#寻找相似问题" class="headerlink" title="寻找相似问题"></a>寻找相似问题</h1><p>现在我们有了具体的数学优化函数, 那如合进一步去解决这个问题呢?</p>
-<p>我认为最好的方法, 仍然是首先借鉴前人的智慧. 如果存在一个类似的问题, 前人已经解决过, 那这时候我们可以借鉴, 甚至直接照搬其中的做法. 这样可以达到事半功倍的效果（。＾▽＾）</p>
-<p>那有的同学就要问了, 我怎么知道哪里有相似的问题呢, 别人的办法我看不懂怎么办, 看懂了也不会做怎么办</p>
-<p>摸摸头 (。・・)ノ</p>
-<p>确实是这样的, 所以这就涉及到一个平时积累的过程了. </p>
-<p>一些问题的解法, 或许我们平时生活工作中是没有用到过的, 但是出于好奇心感兴趣, 或者就是认为以后某一天这个会派上用场, 而去学习理解, 并归纳消化.</p>
-<p>如此, 有了一定的知识库作为支撑, 才能够看得更远(ง •_•)ง</p>
-<p>还是以上一个小结瞎举的栗子来说, 这个问题是一个很典型的<code>带约束的优化问题</code>, 并且符合<code>KKT</code>条件, 那么就可以利用<code>拉格朗日乘子法</code>转化成<code>无约束优化问题</code>, 进而运用<code>无约束优化问题</code>的一些方法, 如<code>SGD</code>进行解决.</p>
-<p>具体来做的话, 当然可以自己写代码, 也可以调用已有的轮子. 比如<code>scipy</code>中有关于<code>带约束的优化问题</code>的方法, 查阅对应API, 几行代码就可以得到问题的解♪(^∇^*)</p>
-<h1 id="更多尝试-amp-优化"><a href="#更多尝试-amp-优化" class="headerlink" title="更多尝试 &amp; 优化"></a>更多尝试 &amp; 优化</h1><p>通常, 我们在处理一个没怎么做过的问题时, 优先的方法, 一般不是一些特别复杂的办法, 而是一些尽可能简单而有效的方法.</p>
-<p>当我们相对简单的方法奏效后, 后续可以根据对结果的分析, 提出更多的尝试与优化方案, 进行迭代升级.</p>
-<p>比如, 当我们面对一个问题, 数据很少, 甚至没有数据的时候, 就不要生搬硬套一些基于大量数据的机器学习模型. </p>
-<p>结合对数据的分析, 和个人的经验以及业务理解, 提出一些定量的建议或者规则, 就是不错的.</p>
-<p>再比如, 经过一定的积累, 在有了一定数据的基础上, 可以尝试用一些机器学习算法.</p>
-<p>但不同机器学习模型, 对于数据的维度与量的要求是不一样的. 假如数据量少, 或者数据非常稀疏, 或许线性模型是一个很好的选择; 假如数据量大, 同时其中蕴含着很多非线性关系, 可能神经网络这一类模型更加合适.</p>
-<p>总之, 在面对一个新的难题时, 应该先从简单的解决方法入手, 并将其结果表现作为基准, 然后再逐步地尝试优化, 最终得到一个更好的结果.</p>
+<p>The <code>i</code>-th obstacle is at grid point <code>(obstacles[i][0], obstacles[i][1])</code></p>
+<p>If the robot would try to move onto them, the robot stays on the previous grid square instead (but still continues following the rest of the route.)</p>
+<p>Return the <strong>square</strong> of the maximum Euclidean distance that the robot will be from the origin.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: commands = [4,-1,3], obstacles = []</span><br><span class="line">Output: 25</span><br><span class="line">Explanation: robot will go to (3, 4)</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: commands = [4,-1,4,-2,4], obstacles = [[2,4]]</span><br><span class="line">Output: 65</span><br><span class="line">Explanation: robot will be stuck at (1, 4) before turning left and going to (1, 8)</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li><code>0 &lt;= commands.length &lt;= 10000</code></li>
+<li><code>0 &lt;= obstacles.length &lt;= 10000</code></li>
+<li><code>-30000 &lt;= obstacle[i][0] &lt;= 30000</code></li>
+<li><code>-30000 &lt;= obstacle[i][1] &lt;= 30000</code></li>
+<li>The answer is guaranteed to be less than <code>2 ^ 31</code>.</li>
+</ol>
+<hr>
+<p>机器人在一个无限大小的网格上行走，从点 (0, 0) 处开始出发，面向北方。该机器人可以接收以下三种类型的命令：</p>
+<ul>
+<li><code>-2</code>：向左转 90 度</li>
+<li><code>-1</code>：向右转 90 度</li>
+<li><code>1 &lt;= x &lt;= 9</code>：向前移动 <code>x</code> 个单位长度</li>
+</ul>
+<p>在网格上有一些格子被视为障碍物。</p>
+<p>第 <code>i</code> 个障碍物位于网格点  <code>(obstacles[i][0], obstacles[i][1])</code></p>
+<p>机器人无法走到障碍物上，它将会停留在障碍物的前一个网格方块上，但仍然可以继续该路线的其余部分。</p>
+<p>返回从原点到机器人的最大欧式距离的<strong>平方</strong>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: commands = [4,-1,3], obstacles = []</span><br><span class="line">输出: 25</span><br><span class="line">解释: 机器人将会到达 (3, 4)</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: commands = [4,-1,4,-2,4], obstacles = [[2,4]]</span><br><span class="line">输出: 65</span><br><span class="line">解释: 机器人在左转走到 (1, 8) 之前将被困在 (1, 4) 处</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>0 &lt;= commands.length &lt;= 10000</code></li>
+<li><code>0 &lt;= obstacles.length &lt;= 10000</code></li>
+<li><code>-30000 &lt;= obstacle[i][0] &lt;= 30000</code></li>
+<li><code>-30000 &lt;= obstacle[i][1] &lt;= 30000</code></li>
+<li>答案保证小于 <code>2 ^ 31</code></li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>一个提速的方法是将障碍物转化成集合的形式, 这样每次查询时很快.</p>
+<p>同时还要注意, 最后的问题是过程中的最大距离, 而非最后终点的最大距离.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># turn right.</span></span><br><span class="line">        self.direction_map_0 = &#123;<span class="string">'up'</span>: <span class="string">'right'</span>,</span><br><span class="line">                                <span class="string">'right'</span>: <span class="string">'down'</span>,</span><br><span class="line">                                <span class="string">'down'</span>: <span class="string">'left'</span>,</span><br><span class="line">                                <span class="string">'left'</span>: <span class="string">'up'</span>&#125;</span><br><span class="line">        <span class="comment"># turn left.</span></span><br><span class="line">        self.direction_map_1 = &#123;<span class="string">'up'</span>: <span class="string">'left'</span>,</span><br><span class="line">                                <span class="string">'left'</span>: <span class="string">'down'</span>,</span><br><span class="line">                                <span class="string">'down'</span>: <span class="string">'right'</span>,</span><br><span class="line">                                <span class="string">'right'</span>: <span class="string">'up'</span>&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># direction.</span></span><br><span class="line">        self.direction = <span class="string">'up'</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># location.</span></span><br><span class="line">        self.location = (<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        self.obstacles = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">robotSim</span><span class="params">(self, commands, obstacles)</span>:</span></span><br><span class="line">        self.obstacles = set([(x[<span class="number">0</span>], x[<span class="number">1</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> obstacles])</span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cmd <span class="keyword">in</span> commands:</span><br><span class="line">            <span class="keyword">if</span> cmd &lt; <span class="number">0</span>:</span><br><span class="line">                self.change_direction(cmd)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(cmd):</span><br><span class="line">                    <span class="keyword">if</span> self.direction == <span class="string">'up'</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>], self.location[<span class="number">1</span>] + <span class="number">1</span>)</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">                    <span class="keyword">elif</span> self.direction == <span class="string">'down'</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>], self.location[<span class="number">1</span>] - <span class="number">1</span>)</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">                    <span class="keyword">elif</span> self.direction == <span class="string">'left'</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>] - <span class="number">1</span>, self.location[<span class="number">1</span>])</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        tmp_loc = (self.location[<span class="number">0</span>] + <span class="number">1</span>, self.location[<span class="number">1</span>])</span><br><span class="line">                        <span class="keyword">if</span> self.is_obstacle(tmp_loc):</span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            self.location = tmp_loc</span><br><span class="line">                            res = max(res, abs(self.location[<span class="number">0</span>])**<span class="number">2</span> + abs(self.location[<span class="number">1</span>])**<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">change_direction</span><span class="params">(self, turn)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> turn == <span class="number">-2</span>:</span><br><span class="line">            self.direction = self.direction_map_1[self.direction]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.direction = self.direction_map_0[self.direction]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_obstacle</span><span class="params">(self, loc)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> loc <span class="keyword">in</span> self.obstacles:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-04-23</li>
+<li>击败比例: 20.88%</li>
+</ul>
 
       
     </div>
@@ -563,8 +552,8 @@ s.t.\ 资金_i\ge0\quad i\in I\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/24/LeetCode/Goat-Latin/" rel="next" title="Goat Latin">
-                <i class="fa fa-chevron-left"></i> Goat Latin
+              <a href="/2020/04/22/LeetCode/Divisor-Game/" rel="next" title="Divisor Game">
+                <i class="fa fa-chevron-left"></i> Divisor Game
               </a>
             
           </div>
@@ -572,10 +561,6 @@ s.t.\ 资金_i\ge0\quad i\in I\\
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/24/数据建模/数据建模-二-样本设计/" rel="prev" title="数据建模(二)-样本设计">
-                数据建模(二)-样本设计 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -731,7 +716,7 @@ s.t.\ 资金_i\ge0\quad i\in I\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分析问题"><span class="nav-number">1.</span> <span class="nav-text">分析问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转化问题"><span class="nav-number">2.</span> <span class="nav-text">转化问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#寻找相似问题"><span class="nav-number">3.</span> <span class="nav-text">寻找相似问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更多尝试-amp-优化"><span class="nav-number">4.</span> <span class="nav-text">更多尝试 &amp; 优化</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
             
 
           </div>
@@ -908,46 +893,6 @@ s.t.\ 资金_i\ge0\quad i\in I\\
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
