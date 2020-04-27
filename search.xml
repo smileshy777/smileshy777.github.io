@@ -1,6 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Split a String in Balanced Strings</title>
+    <url>/2020/04/27/LeetCode/Split-a-String-in-Balanced-Strings/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p><em>Balanced</em> strings are those who have equal quantity of ‘L’ and ‘R’ characters.</p>
+<p>Given a balanced string <code>s</code> split it in the maximum amount of balanced strings.</p>
+<p>Return the maximum amount of splitted balanced strings.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: s = &quot;RLRRLLRLRL&quot;</span><br><span class="line">Output: 4</span><br><span class="line">Explanation: s can be split into &quot;RL&quot;, &quot;RRLL&quot;, &quot;RL&quot;, &quot;RL&quot;, each substring contains same number of &apos;L&apos; and &apos;R&apos;.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: s = &quot;RLLLLRRRLR&quot;</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: s can be split into &quot;RL&quot;, &quot;LLLRRR&quot;, &quot;LR&quot;, each substring contains same number of &apos;L&apos; and &apos;R&apos;.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: s = &quot;LLLLRRRR&quot;</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: s can be split into &quot;LLLLRRRR&quot;.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 4:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: s = &quot;RLRRRLLRLL&quot;</span><br><span class="line">Output: 2</span><br><span class="line">Explanation: s can be split into &quot;RL&quot;, &quot;RRRLLRLL&quot;, since each substring contains an equal number of &apos;L&apos; and &apos;R&apos;</span><br></pre></td></tr></table></figure>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+<li><code>s[i] = &#39;L&#39; or &#39;R&#39;</code></li>
+</ul>
+<hr>
+<p>在一个「平衡字符串」中，’L’ 和 ‘R’ 字符的数量是相同的。</p>
+<p>给出一个平衡字符串 <code>s</code>，请你将它分割成尽可能多的平衡字符串。</p>
+<p>返回可以通过分割得到的平衡字符串的最大数量<strong>。</strong></p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：s = &quot;RLRRLLRLRL&quot;</span><br><span class="line">输出：4</span><br><span class="line">解释：s 可以分割为 &quot;RL&quot;, &quot;RRLL&quot;, &quot;RL&quot;, &quot;RL&quot;, 每个子字符串中都包含相同数量的 &apos;L&apos; 和 &apos;R&apos;。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：s = &quot;RLLLLRRRLR&quot;</span><br><span class="line">输出：3</span><br><span class="line">解释：s 可以分割为 &quot;RL&quot;, &quot;LLLRRR&quot;, &quot;LR&quot;, 每个子字符串中都包含相同数量的 &apos;L&apos; 和 &apos;R&apos;。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：s = &quot;LLLLRRRR&quot;</span><br><span class="line">输出：1</span><br><span class="line">解释：s 只能保持原样 &quot;LLLLRRRR&quot;.</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+<li><code>s[i] = &#39;L&#39; 或 &#39;R&#39;</code></li>
+<li>分割得到的每个字符串都必须是平衡字符串。</li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>按照题意, 原本的字符串中<code>L</code>和<code>R</code>的数量是相等的, 现在要拆分成尽可能多的子字符串, 使其仍然相等.</p>
+<p>使用贪心的方法, 从左往右遍历字符串, 同时记录<code>L</code>和<code>R</code>的数量. 当两者的数量大于1且相等时, 算作一个有效地划分, 此时将返回结果加1, 同时将记录数量清零.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balancedStringSplit</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        num_L = <span class="number">0</span></span><br><span class="line">        num_R = <span class="number">0</span></span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> i == <span class="string">'L'</span>:</span><br><span class="line">                num_L += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                num_R += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> num_L &gt; <span class="number">0</span> <span class="keyword">and</span> num_L == num_R:</span><br><span class="line">                res += <span class="number">1</span></span><br><span class="line">                num_L = <span class="number">0</span></span><br><span class="line">                num_R = <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-04-27</li>
+<li>击败比例: 75.27%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>String</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Reorder Data in Log Files</title>
+    <url>/2020/04/25/LeetCode/Reorder-Data-in-Log-Files/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>You have an array of <code>logs</code>. Each log is a space delimited string of words.</p>
+<p>For each log, the first word in each log is an alphanumeric <em>identifier</em>. Then, either:</p>
+<ul>
+<li>Each word after the identifier will consist only of lowercase letters, or;</li>
+<li>Each word after the identifier will consist only of digits.</li>
+</ul>
+<p>We will call these two varieties of logs <em>letter-logs</em> and <em>digit-logs</em>. It is guaranteed that each log has at least one word after its identifier.</p>
+<a id="more"></a>
+<p>Reorder the logs so that all of the letter-logs come before any digit-log. The letter-logs are ordered lexicographically ignoring identifier, with the identifier used in case of ties. The digit-logs should be put in their original order.</p>
+<p>Return the final order of the logs.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: logs = [&quot;dig1 8 1 5 1&quot;,&quot;let1 art can&quot;,&quot;dig2 3 6&quot;,&quot;let2 own kit dig&quot;,&quot;let3 art zero&quot;]</span><br><span class="line">Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit dig&quot;,&quot;dig1 8 1 5 1&quot;,&quot;dig2 3 6&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>Constraints:</strong></p>
+<ol>
+<li><code>0 &lt;= logs.length &lt;= 100</code></li>
+<li><code>3 &lt;= logs[i].length &lt;= 100</code></li>
+<li><code>logs[i]</code> is guaranteed to have an identifier, and a word after the identifier.</li>
+</ol>
+<hr>
+<p>你有一个日志数组 <code>logs</code>。每条日志都是以空格分隔的字串。</p>
+<p>对于每条日志，其第一个字为字母数字<em>标识符</em>。然后，要么：</p>
+<ul>
+<li>标识符后面的每个字将仅由小写字母组成，或；</li>
+<li>标识符后面的每个字将仅由数字组成。</li>
+</ul>
+<p>我们将这两种日志分别称为字母日志和数字日志。保证每个日志在其标识符后面至少有一个字。</p>
+<p>将日志重新排序，使得所有字母日志都排在数字日志之前。字母日志按内容字母顺序排序，忽略标识符；在内容相同时，按标识符排序。数字日志应该按原来的顺序排列。</p>
+<p>返回日志的最终顺序。</p>
+<p><strong>示例 ：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[&quot;a1 9 2 3 1&quot;,&quot;g1 act car&quot;,&quot;zo4 4 7&quot;,&quot;ab1 off key dog&quot;,&quot;a8 act zoo&quot;]</span><br><span class="line">输出：[&quot;g1 act car&quot;,&quot;a8 act zoo&quot;,&quot;ab1 off key dog&quot;,&quot;a1 9 2 3 1&quot;,&quot;zo4 4 7&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>0 &lt;= logs.length &lt;= 100</code></li>
+<li><code>3 &lt;= logs[i].length &lt;= 100</code></li>
+<li><code>logs[i]</code> 保证有一个标识符，并且标识符后面有一个字。</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>首先理解题意中关于大小比较的规则, 其中<code>按内容字母顺序排序</code>在Python3中可以直接使用<code>&lt; or &gt;</code>进行比较.</p>
+<p>考虑到排序的速度, 尽量使用内置的排序方法<code>sorted</code>. 同时指定其比较方法就行. 由于Python3的改动, 需要借助<code>cmp_to_key</code>将比较函数赋予<code>key</code>.</p>
+<p>同时<code>sorted</code>函数默认是较小的排前面, 同时在比较函数中, 传入<code>a, b</code>:</p>
+<ul>
+<li>若<code>a &lt; b</code>, 返回-1.</li>
+<li>若<code>a &gt; b</code>, 返回1.</li>
+<li>相等返回0.</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> cmp_to_key</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reorderLogFiles</span><span class="params">(self, logs)</span>:</span></span><br><span class="line">        alpha_dict = &#123;&#125;</span><br><span class="line">        digit_list = []</span><br><span class="line">        <span class="keyword">for</span> log <span class="keyword">in</span> logs:</span><br><span class="line">            log_list = log.split(<span class="string">' '</span>)</span><br><span class="line">            <span class="keyword">if</span> log_list[<span class="number">1</span>].isnumeric():</span><br><span class="line">                digit_list.append(log)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                alpha_dict[log] = log_list</span><br><span class="line">        alpha_list = sorted(alpha_dict.items(), key=cmp_to_key(self.helper))</span><br><span class="line">        alpha_list = [x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> alpha_list]</span><br><span class="line">        <span class="keyword">return</span> alpha_list + digit_list</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(a, b)</span>:</span></span><br><span class="line">        a = a[<span class="number">1</span>]</span><br><span class="line">        b = b[<span class="number">1</span>]</span><br><span class="line">        id_a = a[<span class="number">0</span>]</span><br><span class="line">        id_b = b[<span class="number">0</span>]</span><br><span class="line">        a_str = <span class="string">' '</span>.join(a[<span class="number">1</span>:])</span><br><span class="line">        b_str = <span class="string">' '</span>.join(b[<span class="number">1</span>:])</span><br><span class="line">        <span class="keyword">if</span> a_str &lt; b_str:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">        <span class="keyword">elif</span> a_str &gt; b_str:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        <span class="keyword">elif</span> id_a &lt; id_b:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">        <span class="keyword">elif</span> id_a &gt; id_b:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-04-25</li>
+<li>击败比例: 62.15%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>String</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Shortest Completing Word</title>
+    <url>/2020/04/24/LeetCode/Shortest-Completing-Word/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Find the minimum length word from a given dictionary <code>words</code>, which has all the letters from the string <code>licensePlate</code>. Such a word is said to <em>complete</em> the given string <code>licensePlate</code></p>
+<p>Here, for letters we ignore case. For example, <code>&quot;P&quot;</code> on the <code>licensePlate</code> still matches <code>&quot;p&quot;</code> on the word.</p>
+<p>It is guaranteed an answer exists. If there are multiple answers, return the one that occurs first in the array.</p>
+<p>The license plate might have the same letter occurring multiple times. For example, given a <code>licensePlate</code> of <code>&quot;PP&quot;</code>, the word <code>&quot;pair&quot;</code> does not complete the <code>licensePlate</code>, but the word <code>&quot;supper&quot;</code> does.</p>
+<a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: licensePlate = &quot;1s3 PSt&quot;, words = [&quot;step&quot;, &quot;steps&quot;, &quot;stripe&quot;, &quot;stepple&quot;]</span><br><span class="line">Output: &quot;steps&quot;</span><br><span class="line">Explanation: The smallest length word that contains the letters &quot;S&quot;, &quot;P&quot;, &quot;S&quot;, and &quot;T&quot;.</span><br><span class="line">Note that the answer is not &quot;step&quot;, because the letter &quot;s&quot; must occur in the word twice.</span><br><span class="line">Also note that we ignored case for the purposes of comparing whether a letter exists in the word.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: licensePlate = &quot;1s3 456&quot;, words = [&quot;looks&quot;, &quot;pest&quot;, &quot;stew&quot;, &quot;show&quot;]</span><br><span class="line">Output: &quot;pest&quot;</span><br><span class="line">Explanation: There are 3 smallest length words that contains the letters &quot;s&quot;.</span><br><span class="line">We return the one that occurred first.</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li><code>licensePlate</code> will be a string with length in range <code>[1, 7]</code>.</li>
+<li><code>licensePlate</code> will contain digits, spaces, or letters (uppercase or lowercase).</li>
+<li><code>words</code> will have a length in the range <code>[10, 1000]</code>.</li>
+<li>Every <code>words[i]</code> will consist of lowercase letters, and have length in range <code>[1, 15]</code>.</li>
+</ol>
+<hr>
+<p>如果单词列表（<code>words</code>）中的一个单词包含牌照（<code>licensePlate</code>）中所有的字母，那么我们称之为完整词。在所有完整词中，最短的单词我们称之为最短完整词。</p>
+<p>单词在匹配牌照中的字母时不区分大小写，比如牌照中的 <code>&quot;P&quot;</code> 依然可以匹配单词中的 <code>&quot;p&quot;</code> 字母。</p>
+<p>我们保证一定存在一个最短完整词。当有多个单词都符合最短完整词的匹配条件时取单词列表中最靠前的一个。</p>
+<p>牌照中可能包含多个相同的字符，比如说：对于牌照 <code>&quot;PP&quot;</code>，单词 <code>&quot;pair&quot;</code> 无法匹配，但是 <code>&quot;supper&quot;</code> 可以匹配。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：licensePlate = &quot;1s3 PSt&quot;, words = [&quot;step&quot;, &quot;steps&quot;, &quot;stripe&quot;, &quot;stepple&quot;]</span><br><span class="line">输出：&quot;steps&quot;</span><br><span class="line">说明：最短完整词应该包括 &quot;s&quot;、&quot;p&quot;、&quot;s&quot; 以及 &quot;t&quot;。对于 &quot;step&quot; 它只包含一个 &quot;s&quot; 所以它不符合条件。同时在匹配过程中我们忽略牌照中的大小写。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：licensePlate = &quot;1s3 456&quot;, words = [&quot;looks&quot;, &quot;pest&quot;, &quot;stew&quot;, &quot;show&quot;]</span><br><span class="line">输出：&quot;pest&quot;</span><br><span class="line">说明：存在 3 个包含字母 &quot;s&quot; 且有着最短长度的完整词，但我们返回最先出现的完整词。</span><br></pre></td></tr></table></figure>
+<p><strong>注意:</strong></p>
+<ol>
+<li>牌照<code>（licensePlate）</code>的长度在区域<code>[1, 7]</code>中。</li>
+<li>牌照<code>（licensePlate）</code>将会包含数字、空格、或者字母（大写和小写）。</li>
+<li>单词列表<code>（words）</code>长度在区间 <code>[10, 1000]</code> 中。</li>
+<li>每一个单词 <code>words[i]</code> 都是小写，并且长度在区间 <code>[1, 15]</code> 中。</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>利用一个字典, 存储需要匹配的字符与数量. 对于每个字符串, 同样得到其每个字符的数量, 与目标字典对比. 若符合要求, 则再比较是否最短.</p>
+<p>若在循环过程中, 发现有单词长度等于目标字符串长度的, 停止循环, 直接返回.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">shortestCompletingWord</span><span class="params">(self, licensePlate, words)</span>:</span></span><br><span class="line">        short_len = <span class="number">999</span></span><br><span class="line">        short_word = <span class="literal">None</span></span><br><span class="line">        license_len = <span class="number">0</span></span><br><span class="line">        info_dict = defaultdict(int)</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> licensePlate.lower():</span><br><span class="line">            <span class="keyword">if</span> s.isalpha():</span><br><span class="line">                info_dict[s] += <span class="number">1</span></span><br><span class="line">                license_len += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            is_fit = <span class="literal">True</span></span><br><span class="line">            tmp_dict = defaultdict(int)</span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> word:</span><br><span class="line">                tmp_dict[w] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> info_dict:</span><br><span class="line">                <span class="keyword">if</span> tmp_dict.get(k, <span class="number">-1</span>) &gt;= info_dict[k]:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    is_fit = <span class="literal">False</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> is_fit:</span><br><span class="line">                <span class="keyword">if</span> len(word) == license_len:</span><br><span class="line">                    <span class="keyword">return</span> word</span><br><span class="line">                <span class="keyword">if</span> len(word) &lt; short_len:</span><br><span class="line">                    short_len = len(word)</span><br><span class="line">                    short_word = word</span><br><span class="line">        <span class="keyword">return</span> short_word</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-04-24</li>
+<li>击败比例: 78.52%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Hash</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Walking Robot Simulation</title>
     <url>/2020/04/23/LeetCode/Walking-Robot-Simulation/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>A robot on an infinite grid starts at point (0, 0) and faces north. The robot can receive one of three possible types of commands:</p>
