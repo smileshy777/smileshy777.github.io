@@ -102,14 +102,14 @@
 <meta property="og:site_name" content="阿枂蛋糕店">
 <meta property="og:description" content="题目介绍Given a non-empty array of integers, every element appears three times except for one, which appears exactly once. Find that single one. Note: Your algorithm should have a linear runtime complexit">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_0">
-<meta property="og:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_1">
-<meta property="og:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_2">
-<meta property="og:updated_time" content="2020-05-03T07:36:40.948Z">
+<meta property="og:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_1.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_2.jpg">
+<meta property="og:updated_time" content="2020-05-04T06:05:00.329Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Single Number II">
 <meta name="twitter:description" content="题目介绍Given a non-empty array of integers, every element appears three times except for one, which appears exactly once. Find that single one. Note: Your algorithm should have a linear runtime complexit">
-<meta name="twitter:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_0">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/05/03/LeetCode/Single-Number-II/fig_0.png">
 
 
 
@@ -395,13 +395,23 @@
                 
               
 
-              <time title="创建时间：2020-05-03 12:57:05 / 修改时间：15:36:40" itemprop="dateCreated datePublished" datetime="2020-05-03T12:57:05+08:00">2020-05-03</time>
+              <time title="创建时间：2020-05-03 12:57:05" itemprop="dateCreated datePublished" datetime="2020-05-03T12:57:05+08:00">2020-05-03</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-05-04 14:05:00" itemprop="dateModified" datetime="2020-05-04T14:05:00+08:00">2020-05-04</time>
+              </span>
             
           
 
@@ -489,12 +499,12 @@
 <p>时间复杂度$O(N)$, 空间复杂度$O(N)$.</p>
 <h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>结合位运算, 使用状态自动机.</p>
 <p>在二进制的表示下, 某一位上的变化可以用下图表示:</p>
-<p><img src="fig_0" alt="fig_0"></p>
+<p><img src="fig_0.png" alt="fig_0"></p>
 <p>起始状态为0, 根据输入的不同情况进行对应的状态变换.</p>
 <p>同时可以看到状态0与状态3是等价的, 因此进行合并:</p>
-<p><img src="fig_1" alt="fig_1"></p>
+<p><img src="fig_1.jpg" alt="fig_1"></p>
 <p>这里有3个状态, 可以用两个0, 1变量来进行表示, 如下图:</p>
-<p><img src="fig_2" alt="fig_2"></p>
+<p><img src="fig_2.jpg" alt="fig_2"></p>
 <p>进一步分析状态的变化, 对于<code>once</code>由0转变为1的情况有两种:</p>
 <ul>
 <li><code>once=0, twice=0, x=1</code></li>

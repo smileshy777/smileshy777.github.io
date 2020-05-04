@@ -64,12 +64,12 @@
 <p>时间复杂度$O(N)$, 空间复杂度$O(N)$.</p>
 <h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>结合位运算, 使用状态自动机.</p>
 <p>在二进制的表示下, 某一位上的变化可以用下图表示:</p>
-<p><img src="fig_0" alt="fig_0"></p>
+<p><img src="fig_0.png" alt="fig_0"></p>
 <p>起始状态为0, 根据输入的不同情况进行对应的状态变换.</p>
 <p>同时可以看到状态0与状态3是等价的, 因此进行合并:</p>
-<p><img src="fig_1" alt="fig_1"></p>
+<p><img src="fig_1.jpg" alt="fig_1"></p>
 <p>这里有3个状态, 可以用两个0, 1变量来进行表示, 如下图:</p>
-<p><img src="fig_2" alt="fig_2"></p>
+<p><img src="fig_2.jpg" alt="fig_2"></p>
 <p>进一步分析状态的变化, 对于<code>once</code>由0转变为1的情况有两种:</p>
 <ul>
 <li><code>once=0, twice=0, x=1</code></li>
@@ -566,7 +566,7 @@
 ]]></content>
       <categories>
         <category>LeetCode</category>
-        <category>Dynamic Programming</category>
+        <category>Dynamic</category>
       </categories>
   </entry>
   <entry>
