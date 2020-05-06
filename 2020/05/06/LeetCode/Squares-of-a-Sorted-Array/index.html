@@ -94,18 +94,18 @@
   };
 </script>
 
-  <meta name="description" content="问题介绍You are given a data structure of employee information, which includes the employee’s unique id, his importance value and his direct subordinates’ id. For example, employee 1 is the leader of empl">
+  <meta name="description" content="题目介绍Given an array of integers A sorted in non-decreasing order, return an array of the squares of each number, also in sorted non-decreasing order.">
 <meta name="keywords" content="统计分析, 机器学习, 资源分享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Employee Importance">
-<meta property="og:url" content="https://smileshy777.github.io/2019/08/10/LeetCode/Employee-Importance/index.html">
+<meta property="og:title" content="Squares of a Sorted Array">
+<meta property="og:url" content="https://smileshy777.github.io/2020/05/06/LeetCode/Squares-of-a-Sorted-Array/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
-<meta property="og:description" content="问题介绍You are given a data structure of employee information, which includes the employee’s unique id, his importance value and his direct subordinates’ id. For example, employee 1 is the leader of empl">
+<meta property="og:description" content="题目介绍Given an array of integers A sorted in non-decreasing order, return an array of the squares of each number, also in sorted non-decreasing order.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-28T09:33:25.288Z">
+<meta property="og:updated_time" content="2020-05-06T12:48:00.290Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Employee Importance">
-<meta name="twitter:description" content="问题介绍You are given a data structure of employee information, which includes the employee’s unique id, his importance value and his direct subordinates’ id. For example, employee 1 is the leader of empl">
+<meta name="twitter:title" content="Squares of a Sorted Array">
+<meta name="twitter:description" content="题目介绍Given an array of integers A sorted in non-decreasing order, return an array of the squares of each number, also in sorted non-decreasing order.">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2019/08/10/LeetCode/Employee-Importance/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/05/06/LeetCode/Squares-of-a-Sorted-Array/">
 
 
 
@@ -124,7 +124,7 @@
 </script>
 
   
-  <title>Employee Importance | 阿枂蛋糕店</title>
+  <title>Squares of a Sorted Array | 阿枂蛋糕店</title>
   
 
 
@@ -348,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2019/08/10/LeetCode/Employee-Importance/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/05/06/LeetCode/Squares-of-a-Sorted-Array/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -365,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Employee Importance
+          <h1 class="post-title" itemprop="name headline">Squares of a Sorted Array
 
               
             
@@ -391,23 +391,13 @@
                 
               
 
-              <time title="创建时间：2019-08-10 23:26:27" itemprop="dateCreated datePublished" datetime="2019-08-10T23:26:27+08:00">2019-08-10</time>
+              <time title="创建时间：2020-05-06 20:07:57 / 修改时间：20:48:00" itemprop="dateCreated datePublished" datetime="2020-05-06T20:07:57+08:00">2020-05-06</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-03-28 17:33:25" itemprop="dateModified" datetime="2020-03-28T17:33:25+08:00">2020-03-28</time>
-              </span>
             
           
 
@@ -427,7 +417,7 @@
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Hash/" itemprop="url" rel="index"><span itemprop="name">Hash</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Array/" itemprop="url" rel="index"><span itemprop="name">Array</span></a></span>
 
                 
                 
@@ -475,37 +465,43 @@
       
 
       
-        <h1 id="问题介绍"><a href="#问题介绍" class="headerlink" title="问题介绍"></a>问题介绍</h1><p>You are given a data structure of employee information, which includes the employee’s <strong>unique id</strong>, his <strong>importance value</strong> and his <strong>direct</strong> subordinates’ id.</p>
-<p>For example, employee 1 is the leader of employee 2, and employee 2  is the leader of employee 3. They have importance value 15, 10 and 5,  respectively. Then employee 1 has a data structure like [1, 15, [2]],  and employee 2 has [2, 10, [3]], and employee 3 has [3, 5, []]. Note  that although employee 3 is also a subordinate of employee 1, the  relationship is <strong>not direct</strong>.</p>
-<p>Now given the employee information of a company, and an employee id,  you need to return the total importance value of this employee and all  his subordinates.</p>
-<a id="more"></a>
+        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given an array of integers <code>A</code> sorted in non-decreasing order, return an array of the squares of each number, also in sorted non-decreasing order.</p>
+ <a id="more"></a>
 <p><strong>Example 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1</span><br><span class="line">Output: 11</span><br><span class="line">Explanation:</span><br><span class="line">Employee 1 has importance value 5, and he has two direct subordinates: employee 2 and employee 3. They both have importance value 3. So the total importance value of employee 1 is 5 + 3 + 3 = 11.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [-4,-1,0,3,10]</span><br><span class="line">Output: [0,1,9,16,100]</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [-7,-3,2,3,11]</span><br><span class="line">Output: [4,9,9,49,121]</span><br></pre></td></tr></table></figure>
 <p><strong>Note:</strong></p>
 <ol>
-<li>One employee has at most one <strong>direct</strong> leader and may have several subordinates.</li>
-<li>The maximum number of employees won’t exceed 2000.</li>
+<li><code>1 &lt;= A.length &lt;= 10000</code></li>
+<li><code>-10000 &lt;= A[i] &lt;= 10000</code></li>
+<li><code>A</code> is sorted in non-decreasing order.</li>
 </ol>
 <hr>
-<p>给定一个保存员工信息的数据结构，它包含了员工<strong>唯一的id</strong>，<strong>重要度</strong> 和 <strong>直系下属的id</strong>。</p>
-<p>比如，员工1是员工2的领导，员工2是员工3的领导。他们相应的重要度为15, 10, 5。那么员工1的数据结构是[1, 15,  [2]]，员工2的数据结构是[2, 10, [3]]，员工3的数据结构是[3, 5, []]。注意虽然员工3也是员工1的一个下属，但是由于<strong>并不是直系</strong>下属，因此没有体现在员工1的数据结构中。</p>
-<p>现在输入一个公司的所有员工信息，以及单个员工id，返回这个员工和他所有下属的重要度之和。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1</span><br><span class="line">输出: 11</span><br><span class="line">解释:</span><br><span class="line">员工1自身的重要度是5，他有两个直系下属2和3，而且2和3的重要度均为3。因此员工1的总重要度是 5 + 3 + 3 = 11。</span><br></pre></td></tr></table></figure>
-<p><strong>注意:</strong></p>
+<p>给定一个按非递减顺序排序的整数数组 <code>A</code>，返回每个数字的平方组成的新数组，要求也按非递减顺序排序。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[-4,-1,0,3,10]</span><br><span class="line">输出：[0,1,9,16,100]</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[-7,-3,2,3,11]</span><br><span class="line">输出：[4,9,9,49,121]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
 <ol>
-<li>一个员工最多有一个<strong>直系</strong>领导，但是可以有多个<strong>直系</strong>下属</li>
-<li>员工数量不超过2000。</li>
+<li><code>1 &lt;= A.length &lt;= 10000</code></li>
+<li><code>-10000 &lt;= A[i] &lt;= 10000</code></li>
+<li><code>A</code> 已按非递减顺序排序。</li>
 </ol>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>今天这道总算稍微难一点点了.</p>
-<p>首先利用Hash Table这种数据结构进行数据转存, 这样在反复查询的时候非常快捷. 在Python中的字典就是一个Hash Table.</p>
-<p>然后就是利用深度优先搜索, 或者广度优先搜索进行遍历.</p>
-<p>这里采用了深度优先搜索, 用到了递归, 也就是那个helper函数来实现遍历. 由于每个员工最多只有一个直属领导, 所以非常简单.</p>
-<p>时间复杂度为$O(n)$, 空间复杂度为$O(m)$, 其中$m$为总员工数量, $n$为该员工对应下属数量.</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string"># Employee info</span></span><br><span class="line"><span class="string">class Employee:</span></span><br><span class="line"><span class="string">    def __init__(self, id, importance, subordinates):</span></span><br><span class="line"><span class="string">        # It's the unique id of each node.</span></span><br><span class="line"><span class="string">        # unique id of this employee</span></span><br><span class="line"><span class="string">        self.id = id</span></span><br><span class="line"><span class="string">        # the importance value of this employee</span></span><br><span class="line"><span class="string">        self.importance = importance</span></span><br><span class="line"><span class="string">        # the id of direct subordinates</span></span><br><span class="line"><span class="string">        self.subordinates = subordinates</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getImportance</span><span class="params">(self, employees, id)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type employees: Employee</span></span><br><span class="line"><span class="string">        :type id: int</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.info_dict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> emp <span class="keyword">in</span> employees:</span><br><span class="line">            self.info_dict[emp.id] = (emp.importance, emp.subordinates)</span><br><span class="line">        <span class="keyword">return</span> self.helper(id)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, id)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.info_dict[id][<span class="number">1</span>]:</span><br><span class="line">            <span class="keyword">return</span> self.info_dict[id][<span class="number">0</span>]</span><br><span class="line">        imp = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> sub_id <span class="keyword">in</span> self.info_dict[id][<span class="number">1</span>]:</span><br><span class="line">            imp += self.helper(sub_id)</span><br><span class="line">        <span class="keyword">return</span> imp + self.info_dict[id][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>平方后, 直接利用Python内置的<code>sorted</code>排序, 时间复杂度约为$O(N{\rm log}(N))$.</p>
+<p>但是由于内置函数底层本身特别快, 所以其实真实速度并不慢.</p>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>稍微进行一下分析, 可以发现:</p>
+<ul>
+<li>若全为非负数, 平方不改变排序.</li>
+<li>若全为非正数, 平方后排序颠倒.</li>
+</ul>
+<p>当同时存在正数和负数的时候, 可以将两者分离, 得到两组排序好的子数组. 然后每次比较两组头部的数, 进行整体的排序. 这样的时间复杂度为$O(N)$.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sortedSquares</span><span class="params">(self, A)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> list(sorted([x ** <span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> A]))</span><br></pre></td></tr></table></figure>
+<h2 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sortedSquares</span><span class="params">(self, A)</span>:</span></span><br><span class="line">        pos_list = [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> A <span class="keyword">if</span> x &gt; <span class="number">0</span>]</span><br><span class="line">        not_pos_list = list(reversed([x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> A <span class="keyword">if</span> x &lt;= <span class="number">0</span>]))</span><br><span class="line">        len_pos_list = len(pos_list)</span><br><span class="line">        len_not_pos_list = len(not_pos_list)</span><br><span class="line">        <span class="keyword">if</span> len_pos_list == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> not_pos_list</span><br><span class="line">        <span class="keyword">if</span> len_not_pos_list == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> pos_list</span><br><span class="line">        </span><br><span class="line">        p_0, p_1 = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">        res_list = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">if</span> pos_list[p_0] &lt; not_pos_list[p_1]:</span><br><span class="line">                res_list.append(pos_list[p_0])</span><br><span class="line">                p_0 += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                res_list.append(not_pos_list[p_1])</span><br><span class="line">                p_1 += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> p_0 == len_pos_list <span class="keyword">or</span> p_1 == len_not_pos_list:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> p_0 == len_pos_list:</span><br><span class="line">            <span class="keyword">return</span> res_list + not_pos_list[p_1:]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> res_list + pos_list[p_0:]</span><br></pre></td></tr></table></figure>
 <h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
-<li>时间节点: 2019-08-10</li>
-<li>击败比例: 51.09%</li>
+<li>时间节点: 2020-05-06</li>
+<li>击败比例: 60.27%</li>
 </ul>
 
       
@@ -541,8 +537,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/09/LeetCode/Baseball-Game/" rel="next" title="Baseball Game">
-                <i class="fa fa-chevron-left"></i> Baseball Game
+              <a href="/2020/05/04/LeetCode/Unique-Morse-Code-Words/" rel="next" title="Unique Morse Code Words">
+                <i class="fa fa-chevron-left"></i> Unique Morse Code Words
               </a>
             
           </div>
@@ -550,10 +546,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/13/LeetCode/Kth-Largest-Element-in-a-Stream/" rel="prev" title="Kth Largest Element in a Stream">
-                Kth Largest Element in a Stream <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -709,7 +701,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题介绍"><span class="nav-number">1.</span> <span class="nav-text">问题介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一"><span class="nav-number">2.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二"><span class="nav-number">2.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一-1"><span class="nav-number">3.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二-1"><span class="nav-number">3.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
             
 
           </div>
@@ -886,46 +878,6 @@
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
