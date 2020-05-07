@@ -94,18 +94,18 @@
   };
 </script>
 
-  <meta name="description" content="题目介绍Given the root node of a binary search tree, return the sum of values of all nodes with value between L and R (inclusive). The binary search tree is guaranteed to have unique values.">
+  <meta name="description" content="题目介绍Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times. You may assume that the array is non-empty and the majority element a">
 <meta name="keywords" content="统计分析, 机器学习, 资源分享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Range Sum of BST">
-<meta property="og:url" content="https://smileshy777.github.io/2020/03/21/LeetCode/Range-Sum-of-BST/index.html">
+<meta property="og:title" content="Majority Element">
+<meta property="og:url" content="https://smileshy777.github.io/2020/05/07/LeetCode/Majority-Element/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
-<meta property="og:description" content="题目介绍Given the root node of a binary search tree, return the sum of values of all nodes with value between L and R (inclusive). The binary search tree is guaranteed to have unique values.">
+<meta property="og:description" content="题目介绍Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times. You may assume that the array is non-empty and the majority element a">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-28T09:33:25.289Z">
+<meta property="og:updated_time" content="2020-05-07T14:19:47.797Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Range Sum of BST">
-<meta name="twitter:description" content="题目介绍Given the root node of a binary search tree, return the sum of values of all nodes with value between L and R (inclusive). The binary search tree is guaranteed to have unique values.">
+<meta name="twitter:title" content="Majority Element">
+<meta name="twitter:description" content="题目介绍Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times. You may assume that the array is non-empty and the majority element a">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2020/03/21/LeetCode/Range-Sum-of-BST/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/05/07/LeetCode/Majority-Element/">
 
 
 
@@ -124,7 +124,7 @@
 </script>
 
   
-  <title>Range Sum of BST | 阿枂蛋糕店</title>
+  <title>Majority Element | 阿枂蛋糕店</title>
   
 
 
@@ -348,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/03/21/LeetCode/Range-Sum-of-BST/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/05/07/LeetCode/Majority-Element/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -365,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Range Sum of BST
+          <h1 class="post-title" itemprop="name headline">Majority Element
 
               
             
@@ -391,23 +391,13 @@
                 
               
 
-              <time title="创建时间：2020-03-21 15:53:25" itemprop="dateCreated datePublished" datetime="2020-03-21T15:53:25+08:00">2020-03-21</time>
+              <time title="创建时间：2020-05-07 21:40:58 / 修改时间：22:19:47" itemprop="dateCreated datePublished" datetime="2020-05-07T21:40:58+08:00">2020-05-07</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-03-28 17:33:25" itemprop="dateModified" datetime="2020-03-28T17:33:25+08:00">2020-03-28</time>
-              </span>
             
           
 
@@ -427,7 +417,7 @@
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Tree/" itemprop="url" rel="index"><span itemprop="name">Tree</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Array/" itemprop="url" rel="index"><span itemprop="name">Array</span></a></span>
 
                 
                 
@@ -475,37 +465,46 @@
       
 
       
-        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given the <code>root</code> node of a binary search tree, return the sum of values of all nodes with value between <code>L</code> and <code>R</code> (inclusive).</p>
-<p>The binary search tree is guaranteed to have unique values.</p>
- <a id="more"></a>
+        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given an array of size <em>n</em>, find the majority element. The majority element is the element that appears <strong>more than</strong> <code>⌊ n/2 ⌋</code> times.</p>
+<p>You may assume that the array is non-empty and the majority element always exist in the array.</p>
+<a id="more"></a>
 <p><strong>Example 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: root = [10,5,15,3,7,null,18], L = 7, R = 15</span><br><span class="line">Output: 32</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [3,2,3]</span><br><span class="line">Output: 3</span><br></pre></td></tr></table></figure>
 <p><strong>Example 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10</span><br><span class="line">Output: 23</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong></p>
-<ol>
-<li>The number of nodes in the tree is at most <code>10000</code>.</li>
-<li>The final answer is guaranteed to be less than <code>2^31</code>.</li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [2,2,1,1,1,2,2]</span><br><span class="line">Output: 2</span><br></pre></td></tr></table></figure>
 <hr>
-<p>给定二叉搜索树的根结点 <code>root</code>，返回 <code>L</code> 和 <code>R</code>（含）之间的所有结点的值的和。</p>
-<p>二叉搜索树保证具有唯一的值。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：root = [10,5,15,3,7,null,18], L = 7, R = 15</span><br><span class="line">输出：32</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10</span><br><span class="line">输出：23</span><br></pre></td></tr></table></figure>
-<p><strong>提示：</strong></p>
-<ol>
-<li>树中的结点数量最多为 <code>10000</code> 个。</li>
-<li>最终的答案保证小于 <code>2^31</code>。</li>
-</ol>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p><strong>方法一</strong>: 直接使用递归进行整个树的遍历, 将满足要求的数加和.</p>
-<p><strong>方法二</strong>: 利用<code>BST</code>的特性, 减少搜索时间, 即当遇到不满足要求的节点时, 放弃搜索.</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.L = <span class="literal">None</span></span><br><span class="line">        self.R = <span class="literal">None</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rangeSumBST</span><span class="params">(self, root, L, R)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        self.L = L</span><br><span class="line">        self.R = R</span><br><span class="line">        self.helper(root)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> node <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> node.val &gt;= self.L <span class="keyword">and</span> node.val &lt;= self.R:</span><br><span class="line">            self.res += node.val</span><br><span class="line">        self.helper(node.left)</span><br><span class="line">        self.helper(node.right)</span><br></pre></td></tr></table></figure>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.L = <span class="literal">None</span></span><br><span class="line">        self.R = <span class="literal">None</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rangeSumBST</span><span class="params">(self, root, L, R)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        self.L = L</span><br><span class="line">        self.R = R</span><br><span class="line">        self.helper(root)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> node <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> node.val &gt;= self.L <span class="keyword">and</span> node.val &lt;= self.R:</span><br><span class="line">            self.res += node.val</span><br><span class="line">            self.helper(node.left)</span><br><span class="line">            self.helper(node.right)</span><br><span class="line">        <span class="keyword">elif</span> node.val &lt; self.L:</span><br><span class="line">            self.helper(node.right)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.helper(node.left)</span><br></pre></td></tr></table></figure>
+<p>给定一个大小为 <em>n</em> 的数组，找到其中的多数元素。多数元素是指在数组中出现次数<strong>大于</strong> <code>⌊ n/2 ⌋</code> 的元素。</p>
+<p>你可以假设数组是非空的，并且给定的数组总是存在多数元素。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [3,2,3]</span><br><span class="line">输出: 3</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [2,2,1,1,1,2,2]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>这道题难度为easy级, 也确实简单, 但是可以引出多种不同的解法.</p>
+<h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><p>最简单直接的就是使用Hash, 记录每个元素出现次数.</p>
+<p>时间复杂度$O(N)$, 空间复杂度$O(N)$.</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><p>将数组排序后, 由于题目中的众数多余整体数量的一半, 所以返回<code>len(nums) // 2</code>即可.</p>
+<p>时间复杂度$O(N{\rm log}N)$, 空间复杂度$O({\rm log}N)$.</p>
+<h2 id="随机"><a href="#随机" class="headerlink" title="随机"></a>随机</h2><p>因为这里的众数数量多于一半, 所以随机抽取一个数, 其是众数的概率大于二分之一. 然后验证该数是否为众数即可.</p>
+<p>时间复杂度$O(N)$, 空间复杂度$O(1)$.</p>
+<h2 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h2><p>若一个数<code>a</code>为数组<code>A</code>的众数, 且数量超过一半, 则将数组<code>A</code>分为两部分, 数<code>a</code>必为其中一部分的众数.</p>
+<p>利用上述的结论, 若得到了两部分数组各自的众数<code>a0</code>与<code>a1.</code> 若相同, 则说明这就是众数; 若不同, 进一步验证谁是真正的众数. 使用递归, 当数组长度为1时, 直接返回数.</p>
+<p>时间复杂度$O(N{\rm log}N)$, 空间复杂度$O({\rm log}N)$.</p>
+<h2 id="Boyer-Moore-投票算法"><a href="#Boyer-Moore-投票算法" class="headerlink" title="Boyer-Moore 投票算法"></a>Boyer-Moore 投票算法</h2><p>维护一个变量<code>var</code>记录当前数, 初始化为<code>None</code>, 以及<code>counter</code>记录当前票数, 初始化为0.</p>
+<p>遍历数组: </p>
+<ul>
+<li><p>若<code>counter</code>为0, 则将当前数赋予<code>var</code>, <code>counter</code>为1.</p>
+</li>
+<li><p>若当前数与<code>var</code>相同, <code>counter</code>加1.</p>
+</li>
+<li><p>若当前数与<code>var</code>不同, <code>counter</code>减1.</p>
+</li>
+</ul>
+<p>最后剩下的<code>var</code>即为众数.</p>
+<p>时间复杂度$O(N)$, 空间复杂度$O(1)$.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">majorityElement</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        var, counter = <span class="literal">None</span>, <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="keyword">if</span> counter == <span class="number">0</span>:</span><br><span class="line">                var = i</span><br><span class="line">                counter = <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> var == i:</span><br><span class="line">                counter += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                counter -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> var</span><br></pre></td></tr></table></figure>
 <h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
-<li>时间节点: 2020-03-21</li>
-<li>击败比例: 75.05%</li>
+<li>时间节点: 2020-05-07</li>
+<li>击败比例: 78.89%</li>
 </ul>
 
       
@@ -541,8 +540,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/20/流程记录/创建属于自己的博客-三/" rel="next" title="创建属于自己的博客(三)">
-                <i class="fa fa-chevron-left"></i> 创建属于自己的博客(三)
+              <a href="/2020/05/06/LeetCode/Squares-of-a-Sorted-Array/" rel="next" title="Squares of a Sorted Array">
+                <i class="fa fa-chevron-left"></i> Squares of a Sorted Array
               </a>
             
           </div>
@@ -550,10 +549,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/22/LeetCode/Add-to-Array-Form-of-Integer/" rel="prev" title="Add to Array-Form of Integer">
-                Add to Array-Form of Integer <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -709,7 +704,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一"><span class="nav-number">3.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二"><span class="nav-number">3.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash"><span class="nav-number">2.1.</span> <span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序"><span class="nav-number">2.2.</span> <span class="nav-text">排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机"><span class="nav-number">2.3.</span> <span class="nav-text">随机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分治"><span class="nav-number">2.4.</span> <span class="nav-text">分治</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Boyer-Moore-投票算法"><span class="nav-number">2.5.</span> <span class="nav-text">Boyer-Moore 投票算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
             
 
           </div>
@@ -886,46 +881,6 @@
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
