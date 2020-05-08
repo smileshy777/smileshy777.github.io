@@ -94,18 +94,18 @@
   };
 </script>
 
-  <meta name="description" content="关于数据清洗, 若拿到手的是已经整理好的结构化数据, 是非常轻松且简单的; 而若是拿到了比较原始的, 杂乱的数据, 那可能要在这一步耗费不少时间. 总体来说, 数据清洗是简单的, 可能繁琐的, 但也是很重要的一步.">
+  <meta name="description" content="题目介绍Given words first and second, consider occurrences in some text of the form “first second third“, where secondcomes immediately after first, and third comes immediately after second. For each such">
 <meta name="keywords" content="统计分析, 机器学习, 资源分享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="数据建模(三)-数据清洗">
-<meta property="og:url" content="https://smileshy777.github.io/2020/03/24/数据建模/数据建模-三-数据清洗/index.html">
+<meta property="og:title" content="Occurrences After Bigram">
+<meta property="og:url" content="https://smileshy777.github.io/2020/05/08/LeetCode/Occurrences-After-Bigram/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
-<meta property="og:description" content="关于数据清洗, 若拿到手的是已经整理好的结构化数据, 是非常轻松且简单的; 而若是拿到了比较原始的, 杂乱的数据, 那可能要在这一步耗费不少时间. 总体来说, 数据清洗是简单的, 可能繁琐的, 但也是很重要的一步.">
+<meta property="og:description" content="题目介绍Given words first and second, consider occurrences in some text of the form “first second third“, where secondcomes immediately after first, and third comes immediately after second. For each such">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-30T11:57:42.511Z">
+<meta property="og:updated_time" content="2020-05-08T14:04:07.372Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="数据建模(三)-数据清洗">
-<meta name="twitter:description" content="关于数据清洗, 若拿到手的是已经整理好的结构化数据, 是非常轻松且简单的; 而若是拿到了比较原始的, 杂乱的数据, 那可能要在这一步耗费不少时间. 总体来说, 数据清洗是简单的, 可能繁琐的, 但也是很重要的一步.">
+<meta name="twitter:title" content="Occurrences After Bigram">
+<meta name="twitter:description" content="题目介绍Given words first and second, consider occurrences in some text of the form “first second third“, where secondcomes immediately after first, and third comes immediately after second. For each such">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2020/03/24/数据建模/数据建模-三-数据清洗/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/05/08/LeetCode/Occurrences-After-Bigram/">
 
 
 
@@ -124,7 +124,7 @@
 </script>
 
   
-  <title>数据建模(三)-数据清洗 | 阿枂蛋糕店</title>
+  <title>Occurrences After Bigram | 阿枂蛋糕店</title>
   
 
 
@@ -348,7 +348,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/03/24/数据建模/数据建模-三-数据清洗/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/05/08/LeetCode/Occurrences-After-Bigram/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白月光">
@@ -365,7 +365,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">数据建模(三)-数据清洗
+          <h1 class="post-title" itemprop="name headline">Occurrences After Bigram
 
               
             
@@ -391,23 +391,13 @@
                 
               
 
-              <time title="创建时间：2020-03-24 20:36:22" itemprop="dateCreated datePublished" datetime="2020-03-24T20:36:22+08:00">2020-03-24</time>
+              <time title="创建时间：2020-05-08 21:47:59 / 修改时间：22:04:07" itemprop="dateCreated datePublished" datetime="2020-05-08T21:47:59+08:00">2020-05-08</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-03-30 19:57:42" itemprop="dateModified" datetime="2020-03-30T19:57:42+08:00">2020-03-30</time>
-              </span>
             
           
 
@@ -420,7 +410,14 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据建模/" itemprop="url" rel="index"><span itemprop="name">数据建模</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LeetCode/Hash/" itemprop="url" rel="index"><span itemprop="name">Hash</span></a></span>
 
                 
                 
@@ -468,57 +465,40 @@
       
 
       
-        <p>关于数据清洗, 若拿到手的是已经整理好的结构化数据, 是非常轻松且简单的; 而若是拿到了比较原始的, 杂乱的数据, 那可能要在这一步耗费不少时间. 总体来说, 数据清洗是简单的, 可能繁琐的, 但也是很重要的一步.</p>
-<a id="more"></a>
-<h1 id="整理数据"><a href="#整理数据" class="headerlink" title="整理数据"></a>整理数据</h1><p>这里主要以平时用到的最多的表格型数据来说, 使用<code>Pytohn</code>的<code>pandas</code>包, 可以进行有效地处理.</p>
-<p>若原文件时<code>excel</code>或者<code>csv</code>等格式, 则直接读取即可; 若原文件是<code>json</code>这样的格式或类似的格式, 一般是先将其转变为标准的形式, 然后利用如<code>pd.read_json(string)</code>的方式进行读取.</p>
-<p>我们要明确, 一份数据中, 哪些是<strong>ID相关特征</strong>, 这些特征可用于多份数据之间的关联, 但对于分析以及建模来说, 就没有额外帮助了. 同时, 还有一些<strong>基础信息特征</strong>, 如日期等, 这些可以用来分析数据, 也可以考虑参与建模. 这两大类的特征, 一般来说有一个特点, 即100%的覆盖率, 没有缺失.</p>
-<p>除开以上两类特征, 总体来说还剩下<strong>标签列</strong>和<strong>建模特征</strong>. 标签列不必多说, 对于监督学习来说是必要的. 对于建模特征, 如果按数据类型来进行一些细分的话, 大致可以包含以下一些形式:</p>
-<ul>
-<li>无序类别特征.</li>
-<li>有序类别特征.</li>
-<li>离散数值特征.</li>
-<li>连续数值特征.</li>
-<li>日期时间特征.</li>
+        <h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given words <code>first</code> and <code>second</code>, consider occurrences in some <code>text</code> of the form “<code>first second third</code>“, where <code>second</code>comes immediately after <code>first</code>, and <code>third</code> comes immediately after <code>second</code>.</p>
+<p>For each such occurrence, add “<code>third</code>“ to the answer, and return the answer.</p>
+<a id="more"></a> 
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: text = &quot;alice is a good girl she is a good student&quot;, first = &quot;a&quot;, second = &quot;good&quot;</span><br><span class="line">Output: [&quot;girl&quot;,&quot;student&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: text = &quot;we will we will rock you&quot;, first = &quot;we&quot;, second = &quot;will&quot;</span><br><span class="line">Output: [&quot;we&quot;,&quot;rock&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong></p>
+<ol>
+<li><code>1 &lt;= text.length &lt;= 1000</code></li>
+<li><code>text</code> consists of space separated words, where each word consists of lowercase English letters.</li>
+<li><code>1 &lt;= first.length, second.length &lt;= 10</code></li>
+<li><code>first</code> and <code>second</code> consist of lowercase English letters.</li>
+</ol>
+<hr>
+<p>给出第一个词 <code>first</code> 和第二个词 <code>second</code>，考虑在某些文本 <code>text</code> 中可能以 “<code>first second third</code>“ 形式出现的情况，其中 <code>second</code> 紧随 <code>first</code> 出现，<code>third</code> 紧随 <code>second</code> 出现。</p>
+<p>对于每种这样的情况，将第三个词 “<code>third</code>“ 添加到答案中，并返回答案。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：text = &quot;alice is a good girl she is a good student&quot;, first = &quot;a&quot;, second = &quot;good&quot;</span><br><span class="line">输出：[&quot;girl&quot;,&quot;student&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：text = &quot;we will we will rock you&quot;, first = &quot;we&quot;, second = &quot;will&quot;</span><br><span class="line">输出：[&quot;we&quot;,&quot;rock&quot;]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>1 &lt;= text.length &lt;= 1000</code></li>
+<li><code>text</code> 由一些用空格分隔的单词组成，每个单词都由小写英文字母组成</li>
+<li><code>1 &lt;= first.length, second.length &lt;= 10</code></li>
+<li><code>first</code> 和 <code>second</code> 由小写英文字母组成</li>
+</ol>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>非常常规且简单的一道题, 将原字符串按空格进行切分, 然后循环依次进行比较即可.</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findOcurrences</span><span class="params">(self, text, first, second)</span>:</span></span><br><span class="line">        res_list = []</span><br><span class="line">        text_list = [x <span class="keyword">for</span> x <span class="keyword">in</span> text.split(<span class="string">' '</span>) <span class="keyword">if</span> x != <span class="string">''</span>]</span><br><span class="line">        len_text_list = len(text_list)</span><br><span class="line">        <span class="keyword">if</span> len_text_list &lt; <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> res_list</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len_text_list - <span class="number">2</span>):</span><br><span class="line">            <span class="keyword">if</span> text_list[i] == first <span class="keyword">and</span> text_list[i + <span class="number">1</span>] == second:</span><br><span class="line">                res_list.append(text_list[i + <span class="number">2</span>])</span><br><span class="line">        <span class="keyword">return</span> res_list</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-05-08</li>
+<li>击败比例: 45.08%</li>
 </ul>
-<p>对于类别特征, 原始数据大概率是<code>object</code>或者<code>string</code>形式, 考虑到后续入模需要数值型特征, 一种简单的方式, 就是将类别型特征直接进行数值编码, 从字符串映射到整数. 但是这种方式, 除非该类别特征属性的数量很少(比如5个以下), 否则不太适合直接入模. 关于类别特征编码, 我准备在<strong>特征工程</strong>篇章详细叙述.</p>
-<p>对于日期时间类的特征, 在整理数据时, 将其整理成统一的格式即可(如<code>%Y-%m-%D %H:%M:%S</code>), 可用于后续分析之用. 若要作为入模特征, 需要考虑<code>特征抽取</code>的方式, 同样也会在<strong>特征工程</strong>篇章说明.</p>
-<p>此外, 对于<strong>缺失值</strong>的处理也是非常重要的. 不同的原始数据, 对缺失值的表示是不一样的. 常见的缺失值表示方式可能有:</p>
-<ul>
-<li>空值.</li>
-<li>null, NaN等字符串.</li>
-<li>-9999999等特殊数值.</li>
-</ul>
-<p>同时有些时候一份数据是由多份数据拼接而成, 其中可能有多种缺失值的表示, 要留意一下. 处理的方式, 一般来说统一转化成<code>pandas</code>默认的缺失形式就行.</p>
-<h1 id="了解数据"><a href="#了解数据" class="headerlink" title="了解数据"></a>了解数据</h1><p>虽然有别于专门的数据分析, 最终目的是为了建模, 但是早期的对数据尽可能地了解, 是对后续的一些工作有帮助的, 并且可能指导后续的一些尝试和方向, 这个过程一般也可以被称为<strong>EDA</strong>(Exploratory Data Analysis).</p>
-<p>我们可以查看以及了解的东西有哪些呢?</p>
-<ul>
-<li><p>数据集有多少样本, 多少列.</p>
-</li>
-<li><p>样本集随时间的分布, 即各个时间段的样本数量.</p>
-</li>
-<li><p>特征中有多少类别特征, 数值特征, 日期…</p>
-</li>
-<li><p>特征是否具有可解释性(知道特征含义), 是刻画什么维度的数据.</p>
-</li>
-<li><p>各特征的覆盖率.</p>
-<script type="math/tex; mode=display">
-覆盖率=1-缺失率</script></li>
-<li><p>标签列的分布(如均值).</p>
-</li>
-<li><p>标签列在各个组群(如类别特征)上的分布.</p>
-</li>
-<li><p>……</p>
-</li>
-</ul>
-<p>这里推荐一个可以辅助进行EDA的包<code>Pandas Profiling</code>, 其GitHub地址<a href="https://github.com/pandas-profiling/pandas-profiling" target="_blank" rel="noopener">在这里</a>. 这个包可以用一两行命令, 展示出数据集中各个特征的多种统计信息, 也包括特征之间的相关性, 使用后会生成一个html文档. 建议没有使用过的同学尝试一下~</p>
-<p>通过对数据进行EDA, 可以了解手里这份数据整体的内容, 可以据此来制定一些尝试. </p>
-<p>比如发现数据随时间分布有较长的跨度, 可以样本按时间切分, 查看前后样本的一些差异. </p>
-<p>比如发现部分特征覆盖率极低(低于10%), 可以考虑在建模前, 直接先删除这部分特征. </p>
-<p>比如根据业务理解, 认为某些特征的组合(如两两相除)可以表示更强的信息, 则可据此衍生特征. </p>
-<p>比如发现标签列分布不均匀(如1多0少), 此时可以考虑对0进行上采样, 或者增加样本权重等方式</p>
-<p>……</p>
-<p>总之, 数据清洗这一步, 慢慢做就好了, 将原始数据进行统一化的整理, 并进行查看与分析, 为后续建模做一个良好的开端.</p>
 
       
     </div>
@@ -553,8 +533,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/24/数据建模/数据建模-二-样本设计/" rel="next" title="数据建模(二)-样本设计">
-                <i class="fa fa-chevron-left"></i> 数据建模(二)-样本设计
+              <a href="/2020/05/07/LeetCode/Majority-Element/" rel="next" title="Majority Element">
+                <i class="fa fa-chevron-left"></i> Majority Element
               </a>
             
           </div>
@@ -562,10 +542,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/25/LeetCode/Univalued-Binary-Tree/" rel="prev" title="Univalued Binary Tree">
-                Univalued Binary Tree <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -721,7 +697,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#整理数据"><span class="nav-number">1.</span> <span class="nav-text">整理数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#了解数据"><span class="nav-number">2.</span> <span class="nav-text">了解数据</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目介绍"><span class="nav-number">1.</span> <span class="nav-text">题目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">2.</span> <span class="nav-text">思路整理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#速度排名"><span class="nav-number">4.</span> <span class="nav-text">速度排名</span></a></li></ol></div>
             
 
           </div>
@@ -898,46 +874,6 @@
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
