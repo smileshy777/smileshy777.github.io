@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Find Numbers with Even Number of Digits</title>
+    <url>/2020/05/16/LeetCode/Find-Numbers-with-Even-Number-of-Digits/</url>
+    <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given an array <code>nums</code> of integers, return how many of them contain an <strong>even number</strong> of digits.</p>
+ <a id="more"></a>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: nums = [12,345,2,6,7896]</span><br><span class="line">Output: 2</span><br><span class="line">Explanation: </span><br><span class="line">12 contains 2 digits (even number of digits). </span><br><span class="line">345 contains 3 digits (odd number of digits). </span><br><span class="line">2 contains 1 digit (odd number of digits). </span><br><span class="line">6 contains 1 digit (odd number of digits). </span><br><span class="line">7896 contains 4 digits (even number of digits). </span><br><span class="line">Therefore only 12 and 7896 contain an even number of digits.</span><br></pre></td></tr></table></figure>
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: nums = [555,901,482,1771]</span><br><span class="line">Output: 1 </span><br><span class="line">Explanation: </span><br><span class="line">Only 1771 contains an even number of digits.</span><br></pre></td></tr></table></figure>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 500</code></li>
+<li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+</ul>
+<hr>
+<p>给你一个整数数组 <code>nums</code>，请你返回其中位数为 <strong>偶数</strong> 的数字的个数。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums = [12,345,2,6,7896]</span><br><span class="line">输出：2</span><br><span class="line">解释：</span><br><span class="line">12 是 2 位数字（位数为偶数） </span><br><span class="line">345 是 3 位数字（位数为奇数）  </span><br><span class="line">2 是 1 位数字（位数为奇数） </span><br><span class="line">6 是 1 位数字 位数为奇数） </span><br><span class="line">7896 是 4 位数字（位数为偶数）  </span><br><span class="line">因此只有 12 和 7896 是位数为偶数的数字</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums = [555,901,482,1771]</span><br><span class="line">输出：1 </span><br><span class="line">解释： </span><br><span class="line">只有 1771 是位数为偶数的数字。</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 500</code></li>
+<li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+</ul>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>嗯, 太简单…</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findNumbers</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> sum([<span class="number">1</span> <span class="keyword">for</span> x <span class="keyword">in</span> nums <span class="keyword">if</span> len(str(x)) % <span class="number">2</span> == <span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<h1 id="速度排名"><a href="#速度排名" class="headerlink" title="速度排名"></a>速度排名</h1><ul>
+<li>时间节点: 2020-05-16</li>
+<li>击败比例: 76.46%</li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+        <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Number of Days Between Two Dates</title>
     <url>/2020/05/15/LeetCode/Number-of-Days-Between-Two-Dates/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Write a program to count the number of days between two dates.</p>
@@ -84,6 +121,325 @@
       <categories>
         <category>LeetCode</category>
         <category>Array</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/2020/05/13/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<p>正则表达式(regular expression)描述了一种字符串匹配的模式(pattern), 利用这种模式, 可以判断某字符串中是否包含可匹配的子字符串; 可以对匹配到的字符串进行移除, 替换等操作.</p>
+<a id="more"></a>
+<h1 id="理论"><a href="#理论" class="headerlink" title="理论"></a>理论</h1><h2 id="基本匹配"><a href="#基本匹配" class="headerlink" title="基本匹配"></a>基本匹配</h2><p>最简单最基本的匹配方式, 就是直接逐位进行匹配.</p>
+<p>例如正则表达式为<code>the</code>, 则会去尝试匹配<code>the</code>.</p>
+<p>同时, 基本匹配是大小写敏感的.</p>
+<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><p>复杂一些的正则表达式, 需要<strong>元字符</strong>来参与.</p>
+<p>元字符不代表他们本身的字面意思, 都有特殊的含义. 同时一些元字符写在方括号中的时候会转变用法. 以下是元字符的介绍:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">元字符</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">.</td>
+<td style="text-align:center">句号匹配任意单个字符, 除了换行符.</td>
+</tr>
+<tr>
+<td style="text-align:center">[]</td>
+<td style="text-align:center">匹配方括号内的任意字符.</td>
+</tr>
+<tr>
+<td style="text-align:center"><sup><a href="#fn_" id="reffn_"></a></sup></td>
+<td style="text-align:center">匹配除了方括号内的任意字符.</td>
+</tr>
+<tr>
+<td style="text-align:center">*</td>
+<td style="text-align:center">匹配*前的字符0到多次.</td>
+</tr>
+<tr>
+<td style="text-align:center">+</td>
+<td style="text-align:center">匹配+前的字符1到多次.</td>
+</tr>
+<tr>
+<td style="text-align:center">?</td>
+<td style="text-align:center">标记?之前的字符为可选.</td>
+</tr>
+<tr>
+<td style="text-align:center">{m, n}</td>
+<td style="text-align:center">匹配num个大括号之前的字符或者字符集(m &lt;= num &lt;= n).</td>
+</tr>
+<tr>
+<td style="text-align:center">(xyz)</td>
+<td style="text-align:center">字符集, 匹配与xyz完全相同的字符串.</td>
+</tr>
+<tr>
+<td style="text-align:center">\</td>
+<td style="text-align:center"></td>
+<td>或运算符, 匹配符合前或后的字符.</td>
+</tr>
+<tr>
+<td style="text-align:center">\</td>
+<td style="text-align:center">转义字符, 将字符特殊用法消除或者赋予特殊用法.</td>
+</tr>
+<tr>
+<td style="text-align:center">^</td>
+<td style="text-align:center">从开始进行匹配.</td>
+</tr>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:center">从末端进行匹配.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="简写字符集"><a href="#简写字符集" class="headerlink" title="简写字符集"></a>简写字符集</h2><p>正则表达式提供一些常用的字符集简写, 如下表:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">简写</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">.</td>
+<td style="text-align:center">除换行符外的所有字符.</td>
+</tr>
+<tr>
+<td style="text-align:center">\w</td>
+<td style="text-align:center">匹配所有字母数字, 等价于<code>[a-zA-Z0-9_]</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\W</td>
+<td style="text-align:center">匹配所有非字母数字, 即符号, 等价于<code>[^\w]</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\d</td>
+<td style="text-align:center">匹配数字, 等价于<code>[0-9]</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\D</td>
+<td style="text-align:center">匹配非数字, 等价于<code>[^\d]</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\s</td>
+<td style="text-align:center">匹配所有空格字符, 等价于<code>[\t\n\f\r]</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\f</td>
+<td style="text-align:center">匹配一个换页符.</td>
+</tr>
+<tr>
+<td style="text-align:center">\n</td>
+<td style="text-align:center">匹配一个换行符.</td>
+</tr>
+<tr>
+<td style="text-align:center">\r</td>
+<td style="text-align:center">匹配一个回车符</td>
+</tr>
+<tr>
+<td style="text-align:center">\t</td>
+<td style="text-align:center">匹配一个制表符</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="前后预查"><a href="#前后预查" class="headerlink" title="前后预查"></a>前后预查</h2><p>在进行匹配的时候, 还要检查匹配字符串前或后的字符串是否满足指定的模式.</p>
+<p>一般配合<code>()</code>使用.</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">符号</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">?=</td>
+<td style="text-align:center">后面存在</td>
+</tr>
+<tr>
+<td style="text-align:center">?!</td>
+<td style="text-align:center">后面不存在</td>
+</tr>
+<tr>
+<td style="text-align:center">?&lt;=</td>
+<td style="text-align:center">前面存在</td>
+</tr>
+<tr>
+<td style="text-align:center">?&lt;!</td>
+<td style="text-align:center">前面不存在</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="标志"><a href="#标志" class="headerlink" title="标志"></a>标志</h2><p>标志也可以称作修正符, 用以控制搜索及返回结果的模式.</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">标志</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">i</td>
+<td style="text-align:center">忽略大小写.</td>
+</tr>
+<tr>
+<td style="text-align:center">g</td>
+<td style="text-align:center">全局搜索.</td>
+</tr>
+<tr>
+<td style="text-align:center">m</td>
+<td style="text-align:center">多行修饰符, 让<code>^</code>与<code>$</code>工作范围在每行的起始.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="贪婪匹配-amp-惰性匹配"><a href="#贪婪匹配-amp-惰性匹配" class="headerlink" title="贪婪匹配 &amp; 惰性匹配"></a>贪婪匹配 &amp; 惰性匹配</h2><p>正则表达式默认采用的贪婪匹配模式, 在该模式下会匹配尽可能长的字符串.</p>
+<p>使用<code>?</code>将贪婪匹配转换为惰性匹配, 常配合<code>*</code>, <code>+</code>等元字符使用.</p>
+<h1 id="re模块"><a href="#re模块" class="headerlink" title="re模块"></a>re模块</h1><p>在Python中的re模块是用来专门处理正则表达式的, 下面介绍一下基础的常用方法.</p>
+<h2 id="match-amp-search"><a href="#match-amp-search" class="headerlink" title="match &amp; search"></a>match &amp; search</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.match(pattern, string, flags=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">re.search(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><code>match</code>可用于从一开始进行匹配, 若没有匹配到结果, 则返回<code>None</code>.</p>
+<p><code>search</code>与<code>match</code>非常相似, 只是它可以从任意位置开始匹配.</p>
+<p>参数说明:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">pattern</td>
+<td style="text-align:center">正则表达式.</td>
+</tr>
+<tr>
+<td style="text-align:center">string</td>
+<td style="text-align:center">要匹配的字符串.</td>
+</tr>
+<tr>
+<td style="text-align:center">flag</td>
+<td style="text-align:center">标志位, 用于控制正则表达式的匹配方式.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可选标志位:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">修饰符</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">re.I</td>
+<td style="text-align:center">忽略大小写.</td>
+</tr>
+<tr>
+<td style="text-align:center">re.M</td>
+<td style="text-align:center">多行匹配, 影响<code>^</code>和<code>$</code>.</td>
+</tr>
+<tr>
+<td style="text-align:center">re.S</td>
+<td style="text-align:center">使<code>.</code>匹配包含换行符在内的所有字符.</td>
+</tr>
+<tr>
+<td style="text-align:center">re.L</td>
+<td style="text-align:center">由当前环境解析字符, 影响<code>\w, \W, \B, \b</code>, 不推荐使用.</td>
+</tr>
+<tr>
+<td style="text-align:center">re.U</td>
+<td style="text-align:center">由Unicode字符集解析字符.</td>
+</tr>
+<tr>
+<td style="text-align:center">re.X</td>
+<td style="text-align:center">这个标记允许你编写更具可读性更友好的正则表达式.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>常用的是忽略大小写以及多行匹配.</p>
+<p>返回结果为匹配对象:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">匹配对象方法</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">group(num=0)</td>
+<td style="text-align:center">返回匹配到的整个字符串. 可以通过输入1及以上的单个或多个数字, 来获取对应模式的小组的字符串.</td>
+</tr>
+<tr>
+<td style="text-align:center">groups()</td>
+<td style="text-align:center">返回一个包含所有小组字符串的元组.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="sub"><a href="#sub" class="headerlink" title="sub"></a>sub</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.sub(pattern, repl, string, count=<span class="number">0</span>, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><code>sub</code>可用于替换给定字符串中匹配项.</p>
+<p>参数说明:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">pattern</td>
+<td style="text-align:center">正则表达式.</td>
+</tr>
+<tr>
+<td style="text-align:center">repl</td>
+<td style="text-align:center">用于替换的字符串, 也可以是函数.</td>
+</tr>
+<tr>
+<td style="text-align:center">string</td>
+<td style="text-align:center">要匹配的字符串.</td>
+</tr>
+<tr>
+<td style="text-align:center">count</td>
+<td style="text-align:center">匹配替换的最大次数, 默认0表示全部替换.</td>
+</tr>
+<tr>
+<td style="text-align:center">flag</td>
+<td style="text-align:center">标志位, 用于控制正则表达式的匹配方式.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>举个栗子来说明<code>repl</code>为函数时的情形:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 将匹配的数字乘于2.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(s)</span>:</span></span><br><span class="line">    value = int(s.group())</span><br><span class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</span><br><span class="line"> </span><br><span class="line">string_ = <span class="string">'aaa123bbb234'</span></span><br><span class="line">print(re.sub(<span class="string">'\d+'</span>, func, string_))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">aaa246bbb468</span><br></pre></td></tr></table></figure>
+<h2 id="findall-amp-finditer"><a href="#findall-amp-finditer" class="headerlink" title="findall &amp; finditer"></a>findall &amp; finditer</h2><p>利用<code>match</code>与<code>search</code>进行匹配时, 只能匹配一个结果.</p>
+<p>而<code>findall</code>与<code>finditer</code>可以返回所有匹配项, 根据不同情况选择使用. 相比<code>findall</code>一次性返回所有结果, <code>finditer</code>返回一个迭代器.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.findall(pattern, string, flags=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">re.finditer(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>其中的参数, 与前面方法相同.</p>
+<h2 id="split"><a href="#split" class="headerlink" title="split"></a>split</h2><p>与字符串的<code>split</code>方法类似, 将匹配项作为分割边界, 返回分割后的结果.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">re.split(pattern, string, maxsplit=<span class="number">0</span>, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>其中的<code>maxsplit</code>参数表示最大分割次数, 其余参数与前面方法相同.</p>
+]]></content>
+      <categories>
+        <category>编程基础</category>
       </categories>
   </entry>
   <entry>
