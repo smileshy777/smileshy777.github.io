@@ -143,52 +143,51 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">.</td>
+<td style="text-align:center"><code>.</code></td>
 <td style="text-align:center">句号匹配任意单个字符, 除了换行符.</td>
 </tr>
 <tr>
-<td style="text-align:center">[]</td>
+<td style="text-align:center"><code>[]</code></td>
 <td style="text-align:center">匹配方括号内的任意字符.</td>
 </tr>
 <tr>
-<td style="text-align:center"><sup><a href="#fn_" id="reffn_"></a></sup></td>
+<td style="text-align:center"><code>[^]</code></td>
 <td style="text-align:center">匹配除了方括号内的任意字符.</td>
 </tr>
 <tr>
-<td style="text-align:center">*</td>
+<td style="text-align:center"><code>*</code></td>
 <td style="text-align:center">匹配*前的字符0到多次.</td>
 </tr>
 <tr>
-<td style="text-align:center">+</td>
+<td style="text-align:center"><code>+</code></td>
 <td style="text-align:center">匹配+前的字符1到多次.</td>
 </tr>
 <tr>
-<td style="text-align:center">?</td>
+<td style="text-align:center"><code>?</code></td>
 <td style="text-align:center">标记?之前的字符为可选.</td>
 </tr>
 <tr>
-<td style="text-align:center">{m, n}</td>
-<td style="text-align:center">匹配num个大括号之前的字符或者字符集(m &lt;= num &lt;= n).</td>
+<td style="text-align:center"><code>{m, n}</code></td>
+<td style="text-align:center">匹配<code>num</code>个大括号之前的字符或者字符集<code>(m &lt;= num &lt;= n)</code>.</td>
 </tr>
 <tr>
-<td style="text-align:center">(xyz)</td>
-<td style="text-align:center">字符集, 匹配与xyz完全相同的字符串.</td>
+<td style="text-align:center"><code>(xyz)</code></td>
+<td style="text-align:center">字符集, 匹配与<code>xyz</code>完全相同的字符串.</td>
 </tr>
 <tr>
-<td style="text-align:center">\</td>
-<td style="text-align:center"></td>
-<td>或运算符, 匹配符合前或后的字符.</td>
+<td style="text-align:center"><code>竖线</code></td>
+<td style="text-align:center">或运算符, 匹配符合前或后的字符(由于显示问题, 以中文示意).</td>
 </tr>
 <tr>
-<td style="text-align:center">\</td>
+<td style="text-align:center"><code>\</code></td>
 <td style="text-align:center">转义字符, 将字符特殊用法消除或者赋予特殊用法.</td>
 </tr>
 <tr>
-<td style="text-align:center">^</td>
+<td style="text-align:center"><code>^</code></td>
 <td style="text-align:center">从开始进行匹配.</td>
 </tr>
 <tr>
-<td style="text-align:center">$</td>
+<td style="text-align:center"><code>$</code></td>
 <td style="text-align:center">从末端进行匹配.</td>
 </tr>
 </tbody>
@@ -205,43 +204,43 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">.</td>
+<td style="text-align:center"><code>.</code></td>
 <td style="text-align:center">除换行符外的所有字符.</td>
 </tr>
 <tr>
-<td style="text-align:center">\w</td>
+<td style="text-align:center"><code>\w</code></td>
 <td style="text-align:center">匹配所有字母数字, 等价于<code>[a-zA-Z0-9_]</code></td>
 </tr>
 <tr>
-<td style="text-align:center">\W</td>
+<td style="text-align:center"><code>\W</code></td>
 <td style="text-align:center">匹配所有非字母数字, 即符号, 等价于<code>[^\w]</code></td>
 </tr>
 <tr>
-<td style="text-align:center">\d</td>
+<td style="text-align:center"><code>\d</code></td>
 <td style="text-align:center">匹配数字, 等价于<code>[0-9]</code></td>
 </tr>
 <tr>
-<td style="text-align:center">\D</td>
+<td style="text-align:center"><code>\D</code></td>
 <td style="text-align:center">匹配非数字, 等价于<code>[^\d]</code></td>
 </tr>
 <tr>
-<td style="text-align:center">\s</td>
+<td style="text-align:center"><code>\s</code></td>
 <td style="text-align:center">匹配所有空格字符, 等价于<code>[\t\n\f\r]</code></td>
 </tr>
 <tr>
-<td style="text-align:center">\f</td>
+<td style="text-align:center"><code>\f</code></td>
 <td style="text-align:center">匹配一个换页符.</td>
 </tr>
 <tr>
-<td style="text-align:center">\n</td>
+<td style="text-align:center"><code>\n</code></td>
 <td style="text-align:center">匹配一个换行符.</td>
 </tr>
 <tr>
-<td style="text-align:center">\r</td>
+<td style="text-align:center"><code>\r</code></td>
 <td style="text-align:center">匹配一个回车符</td>
 </tr>
 <tr>
-<td style="text-align:center">\t</td>
+<td style="text-align:center"><code>\t</code></td>
 <td style="text-align:center">匹配一个制表符</td>
 </tr>
 </tbody>
@@ -259,19 +258,19 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">?=</td>
+<td style="text-align:center"><code>?=</code></td>
 <td style="text-align:center">后面存在</td>
 </tr>
 <tr>
-<td style="text-align:center">?!</td>
+<td style="text-align:center"><code>?!</code></td>
 <td style="text-align:center">后面不存在</td>
 </tr>
 <tr>
-<td style="text-align:center">?&lt;=</td>
+<td style="text-align:center"><code>?&lt;=</code></td>
 <td style="text-align:center">前面存在</td>
 </tr>
 <tr>
-<td style="text-align:center">?&lt;!</td>
+<td style="text-align:center"><code>?&lt;!</code></td>
 <td style="text-align:center">前面不存在</td>
 </tr>
 </tbody>
@@ -288,15 +287,15 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">i</td>
+<td style="text-align:center"><code>i</code></td>
 <td style="text-align:center">忽略大小写.</td>
 </tr>
 <tr>
-<td style="text-align:center">g</td>
+<td style="text-align:center"><code>g</code></td>
 <td style="text-align:center">全局搜索.</td>
 </tr>
 <tr>
-<td style="text-align:center">m</td>
+<td style="text-align:center"><code>m</code></td>
 <td style="text-align:center">多行修饰符, 让<code>^</code>与<code>$</code>工作范围在每行的起始.</td>
 </tr>
 </tbody>
@@ -319,15 +318,15 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">pattern</td>
+<td style="text-align:center"><code>pattern</code></td>
 <td style="text-align:center">正则表达式.</td>
 </tr>
 <tr>
-<td style="text-align:center">string</td>
+<td style="text-align:center"><code>string</code></td>
 <td style="text-align:center">要匹配的字符串.</td>
 </tr>
 <tr>
-<td style="text-align:center">flag</td>
+<td style="text-align:center"><code>flag</code></td>
 <td style="text-align:center">标志位, 用于控制正则表达式的匹配方式.</td>
 </tr>
 </tbody>
@@ -344,27 +343,27 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">re.I</td>
+<td style="text-align:center"><code>re.I</code></td>
 <td style="text-align:center">忽略大小写.</td>
 </tr>
 <tr>
-<td style="text-align:center">re.M</td>
+<td style="text-align:center"><code>re.M</code></td>
 <td style="text-align:center">多行匹配, 影响<code>^</code>和<code>$</code>.</td>
 </tr>
 <tr>
-<td style="text-align:center">re.S</td>
+<td style="text-align:center"><code>re.S</code></td>
 <td style="text-align:center">使<code>.</code>匹配包含换行符在内的所有字符.</td>
 </tr>
 <tr>
-<td style="text-align:center">re.L</td>
+<td style="text-align:center"><code>re.L</code></td>
 <td style="text-align:center">由当前环境解析字符, 影响<code>\w, \W, \B, \b</code>, 不推荐使用.</td>
 </tr>
 <tr>
-<td style="text-align:center">re.U</td>
+<td style="text-align:center"><code>re.U</code></td>
 <td style="text-align:center">由Unicode字符集解析字符.</td>
 </tr>
 <tr>
-<td style="text-align:center">re.X</td>
+<td style="text-align:center"><code>re.X</code></td>
 <td style="text-align:center">这个标记允许你编写更具可读性更友好的正则表达式.</td>
 </tr>
 </tbody>
@@ -382,11 +381,11 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">group(num=0)</td>
+<td style="text-align:center"><code>group(num=0)</code></td>
 <td style="text-align:center">返回匹配到的整个字符串. 可以通过输入1及以上的单个或多个数字, 来获取对应模式的小组的字符串.</td>
 </tr>
 <tr>
-<td style="text-align:center">groups()</td>
+<td style="text-align:center"><code>groups()</code></td>
 <td style="text-align:center">返回一个包含所有小组字符串的元组.</td>
 </tr>
 </tbody>
@@ -405,23 +404,23 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">pattern</td>
+<td style="text-align:center"><code>pattern</code></td>
 <td style="text-align:center">正则表达式.</td>
 </tr>
 <tr>
-<td style="text-align:center">repl</td>
+<td style="text-align:center"><code>repl</code></td>
 <td style="text-align:center">用于替换的字符串, 也可以是函数.</td>
 </tr>
 <tr>
-<td style="text-align:center">string</td>
+<td style="text-align:center"><code>string</code></td>
 <td style="text-align:center">要匹配的字符串.</td>
 </tr>
 <tr>
-<td style="text-align:center">count</td>
+<td style="text-align:center"><code>count</code></td>
 <td style="text-align:center">匹配替换的最大次数, 默认0表示全部替换.</td>
 </tr>
 <tr>
-<td style="text-align:center">flag</td>
+<td style="text-align:center"><code>flag</code></td>
 <td style="text-align:center">标志位, 用于控制正则表达式的匹配方式.</td>
 </tr>
 </tbody>
