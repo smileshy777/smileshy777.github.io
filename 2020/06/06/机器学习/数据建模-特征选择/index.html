@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="有时候, 选择比努力更加重要.  如果在前一篇中, 我还扯”特征工程不那么重要”, 那这里我会说”特征选择一直很重要”（○｀ 3′○） 这里我会根据自己有限的经验, 介绍一些特征选择的方法.">
+<meta name="keywords" content="统计分析, 机器学习, 资源分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据建模-特征选择">
+<meta property="og:url" content="https://smileshy777.github.io/2020/06/06/机器学习/数据建模-特征选择/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="有时候, 选择比努力更加重要.  如果在前一篇中, 我还扯”特征工程不那么重要”, 那这里我会说”特征选择一直很重要”（○｀ 3′○） 这里我会根据自己有限的经验, 介绍一些特征选择的方法.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-07T11:20:53.538Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据建模-特征选择">
+<meta name="twitter:description" content="有时候, 选择比努力更加重要.  如果在前一篇中, 我还扯”特征工程不那么重要”, 那这里我会说”特征选择一直很重要”（○｀ 3′○） 这里我会根据自己有限的经验, 介绍一些特征选择的方法.">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/06/06/机器学习/数据建模-特征选择/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>数据建模-特征选择 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/06/06/机器学习/数据建模-特征选择/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据建模-特征选择
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-06 12:35:47" itemprop="dateCreated datePublished" datetime="2020-06-06T12:35:47+08:00">2020-06-06</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-06-07 19:20:53" itemprop="dateModified" datetime="2020-06-07T19:20:53+08:00">2020-06-07</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>有时候, 选择比努力更加重要.</p>
+</blockquote>
+<p>如果在前一篇中, 我还扯”特征工程不那么重要”, 那这里我会说”特征选择一直很重要”（○｀ 3′○）</p>
+<p>这里我会根据自己有限的经验, 介绍一些特征选择的方法.</p>
+<a id="more"></a>
+<h1 id="为什么要进行特征选择"><a href="#为什么要进行特征选择" class="headerlink" title="为什么要进行特征选择"></a>为什么要进行特征选择</h1><p>特征选择有不少的好处, 主要来说有以下几点:</p>
+<ul>
+<li>减少特征数量, 让模型更加简单. 同样的模型效果, 一个模型用了1000个特征, 一个模型用了100个特征, 在使用的时候会选择哪个模型呢? 我想大多数人应该都会选择第二个相对简单的模型.</li>
+<li>提升模型稳定性, 模型的稳定很大程度上依赖于特征的稳定, 在一个随时间变化的环境中, 模型的稳定性有时候是最重要的.</li>
+<li>提升模型表现. 并不是所有特征对模型都是正向提升的, 零提升, 甚至负提升的特征也经常存在. 正因如此, 特征选择才会如此重要. 想像一下, 耗费了大量精力衍生出上千个特征, 自信满满地跑一个模型, 结果发现测试集评估指标没啥变化, 隐约…还下降了(っ*´Д`)っ这时候的心态是有点崩的, 因为衍生的特征中, 有大量零提升与少量负提升的特征.</li>
+</ul>
+<h1 id="特征选择的两个方面"><a href="#特征选择的两个方面" class="headerlink" title="特征选择的两个方面"></a>特征选择的两个方面</h1><p>在进一步讨论特征选择之前, 先来讨论一下数据集的划分. 在训练模型时, 一个比较科学地做法, 是首先按照OOT(out of time)的方式, 划分出测试集. 之所以这样, 是因为在实际生产环境中, 多数时候是用当前数据训练模型, 去预测未来的事情, 而为了模拟这一情况, 测试集的划分通常选择整体样本中时间段靠后的一匹样本. 然后在训练集中分离出验证集, 或者在训练集中做交叉验证, 在样本量大的时候两种方式基本等价, 这里假设是采用验证集的方式.</p>
+<p>那么问题就来了, 由于时间跨度的不同, 样本数据特征的分布就很可能不同. 举个栗子, 某个在训练集上的强特征(与标签有较高的相关性), 到了测试集上变弱了. 如果不考虑这一情况, 仍旧照常训练, 后果就是模型也许在验证集上表现不错, 但是到了测试集就明显拉胯了o(TヘTo)</p>
+<p>基于此, 我认为特征选择主要可以分为两个方面:</p>
+<ul>
+<li>特征稳定性.</li>
+<li>特征有效性.</li>
+</ul>
+<p>下面进行具体地说明.</p>
+<h1 id="特征稳定性"><a href="#特征稳定性" class="headerlink" title="特征稳定性"></a>特征稳定性</h1><p>先说稳定性, 是因为我认为应该先做特征稳定性的检验, 只有特征是相对稳定的情况下, 再评估特征的对模型的提升才有意义.</p>
+<p>那么怎么评估特征的稳定性呢? 主要的思路是观察对比特征在不同的时间段上的表现是否一致. 如果看到了特征随时间的分布发生了一些变化, 有时候并不是特征本身不稳定, 而是样本本身发生了偏移. 但有些特征, 即使在样本发生偏移时, 仍能够保持较好的稳定性, 这样的特征能够确保我们的模型在未来变化的环境中, 能够长期保持较为稳定的性能.</p>
+<p>具体的的做法, 有以下一些, 并不代表全部可行的做法, 也不代表一定好使(≧∇≦)ﾉ:</p>
+<ul>
+<li><p>PSI.</p>
+<p>如果不了解PSI的同学, 可以谷歌一下, 原理很简单这里就不多说了, 计算公式如下:</p>
+<script type="math/tex; mode=display">
+PSI=\sum_i(A_i-E_i)\times {\rm ln}(A_i/E_i)</script><p>在多个时间段的样本上, 计算特征的PSI, 如果特征的PSI较大, 超过某阈值(一般超过0.1), 则可以考虑舍弃该特征.</p>
+<p>不过我个人认为PSI指标更多说明的是样本本身的变化, 可以用来辅助判断特征的稳定性, 但如果过于依赖PSI的话可能会有问题.</p>
+</li>
+<li><p>基于模型验证稳定性.</p>
+<p>可以在训练集上, 按时间将其分成两份数据集, 在其中一份数据集(通常选时间靠前的一份)上, 对每个特征单独进行建模, 得到交叉验证的评估, 然后在另一份数据集上进行预测评估, 对比前后评估结果是否差距过大.</p>
+<p>比如在二分类问题中, 采用AUC作为评估指标, 在第一份数据集上的交叉验证结果为0.6, 第二份数据集上为0.58, 那么认为特征稳定性还不错. 而如果第一份上0.6, 第二份上0.5, 那么很明显该特征是不稳定的.</p>
+</li>
+<li><p>基于分箱验证稳定性.</p>
+<p>这里与上面基于模型验证稳定性是比较类似的. </p>
+<p>举个栗子, 在二分类问题中, 对某个特征采用等频分箱, 分成10箱. 然后按时间前后分成两部分, 在两份数据上, 分别计算出各分箱的标签均值(比如标签为是否逾期, 则表示逾期率). 然后可以将两份数据上各箱的逾期率, 以折线图的形式, 画到图上, 比较前后两份数据集上该特征的表现是否一致. 若一致则可认为稳定, 否则不稳定. 除了画图人为观察判断以外, 还可以用一些其它方法, 比如对两个分箱后的标签均值列表, 计算其相关性(皮尔森相关性较好), 通过相关性来判断特征前后表现是否一致.</p>
+<p>此外, 比如当分成10箱时发现特征前后表现不一致, 可以尝试减少分箱数, 如5箱, 虽然损失了信息, 但有可能可以提高特征稳定性.</p>
+</li>
+<li><p>对抗验证.</p>
+<p>这个方法的原理是这样的, 有时候测试集与训练集之间, 存在分布上的差异, 这个差异导致在验证集上获得的模型表现, 在测试集不成立.</p>
+<p>为了定量衡量这种分布差异, 可以给训练集标签为0, 测试集标签为1, 进行二分类建模.</p>
+<p>建模后, 可以观察模型的AUC, 如果训练集与测试集同分布, 且模型训练得当, 则AUC一定在0.5附近. 若AUC比较大比如0.6, 则说明两者的分布是不一致的.</p>
+<p>若AUC较大时, 原本对抗验证的处理方法, 是将训练集中, 模型预测值最低(与测试集分布差异最大)的一批样本删除. 而在一些时候样本是比较珍贵的, 可以先根据模型得到的特征重要性, 找到模型认为对分布差异贡献最大的一些特征, 可以考虑删除这些特征, 来使训练集与测试集分布趋于一致.</p>
+</li>
+</ul>
+<p>以上提到的一些方法, 在进行特征选择时, 可以结合起来使用, 这样能够从多个不同的维度去筛选出稳定的特征, 为后续进一步筛选特征做准备.</p>
+<h1 id="特征有效性"><a href="#特征有效性" class="headerlink" title="特征有效性"></a>特征有效性</h1><p>现在假设特征的稳定性已经较好了, 此时一般来说有一个现象, 就是在验证集上获得的模型表现, 在测试集上也能用于近似的结果.</p>
+<p>那么进一步, 要在这些特征的中挑选出能够让模型学习得最好的那一组特征. 举个栗子, 就好比一个学生要考试了, 摆在他面前的有一大堆学习资料, 如果其中掺杂了一些不好的资料, 那么不但会耽误学生学习其它优秀的资料, 而且可能还会形成误导.</p>
+<p>筛选特征的方法有很多, 我这里列举一些比较常用的做法.</p>
+<h2 id="基于简单统计信息"><a href="#基于简单统计信息" class="headerlink" title="基于简单统计信息"></a>基于简单统计信息</h2><p>比如基于特征的缺失率, 当一个特征的缺失率高达95%时, 也许对当前模型表现还有那么一丢丢贡献, 但是实际生产环境中这样的特征更倾向于舍弃.</p>
+<p>同理, 特征中的某个数值, 占据了绝大部分比例, 比如0占了98%, 那么这样的特征在一些情况下也是可以考虑直接删除的.</p>
+<h2 id="基于相关性"><a href="#基于相关性" class="headerlink" title="基于相关性"></a>基于相关性</h2><p>在一般的分类, 回归问题中, 可以进行特征与标签的相关性评估.</p>
+<p>常用的相关性有以下一些:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">相关性指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">连续 &amp; 连续</td>
+<td style="text-align:center">皮尔森, 斯皮尔曼</td>
+</tr>
+<tr>
+<td style="text-align:center">连续 &amp; 离散</td>
+<td style="text-align:center">方差分析</td>
+</tr>
+<tr>
+<td style="text-align:center">离散 &amp; 离散</td>
+<td style="text-align:center">互信息</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>基于统计相关性来进行评估特征, 优点是很快, 在一些场景下需要用到线性模型, 或者特征里有很多强特征时, 是个还不错的方法. 但缺点是有时候不能较好地评估非线性相关的特征, 比如皮尔森相关性.</p>
+<p>因此, 在使用相关性来评估特征时, 要结合具体场景进行谨慎考虑.</p>
+<h2 id="L1正则"><a href="#L1正则" class="headerlink" title="L1正则"></a>L1正则</h2><p>利用含有L1正则的线性模型来挑选特征, 根据不同的正则系数, 会将不同数量的特征的系数变成0.</p>
+<p>选择合适的正则系数, 可以较快地在大量特征中选择出一组较好的特征.</p>
+<p>不过由于是基于线性模型进行选择, 所以如果原本特征中, 存在一些与标签关系为非线性的特征, 可能也会被当做无用特征, 系数变为0.</p>
+<h2 id="特征重要性"><a href="#特征重要性" class="headerlink" title="特征重要性"></a>特征重要性</h2><p>此方法的核心思想是, 先利用一些方法, 对特征的重要性进行排序, 然后根据排序保留靠前的特征, 舍弃靠后的特征.</p>
+<p>常用的衡量特征重要性的方法有以下一些:</p>
+<ul>
+<li>直接基于树模型衡量特征重要性. 比如在GBDT模型中, 可以根据某特征被分割次数, 或者提供的信息增益衡量其重要性.</li>
+<li>基于随机排列衡量特征重要性. 这一类方法的主要思想是, 一个特征原本有一个重要性, 而在另外一种情况下(比如将该特征随机排列), 又得到一个重要性, 通过对比前后两个重要性, 来判断该特征是否有效.<ul>
+<li>Null Importance: 此方法是保持特征不变, 随机排列标签, 来对比前后特征重要性的变化. 若前后特征重要性变化大, 则说明该特征是真实有效的; 若特征重要性前后几乎差不多, 甚至还提高了o(*≧▽≦)ツ┏━┓那这个特征极大可能是噪音.</li>
+<li>Eli5: 这里叫做这个名称, 是因为在一个叫<code>eli5</code>的包中有实现这种方法~此方法是在训练集上正常训练, 然后在验证集上预测时计算评估指标(如AUC), 不过考虑两种情况, 一种是真实的特征, 一种是对某个特征进行随机排列, 对比前后评估指标的变化. 同样若前后差距较大, 则说明该特征是重要的.</li>
+<li>Boruta: 此方法是通过在训练时, 把原本的所有特征复制一份, 比如原本的10个特征变成20个特征. 然后对复制的所有特征进行随机排列. 接下来多次训练模型, 在每次训练模型后, 整体考虑真实特征与影子(随机排列)特征的重要性, 将不合格的特征逐一去除, 保留最后较好的一组特征.</li>
+</ul>
+</li>
+<li>Shap. 此方法原本是用于模型解释性的, 但是其同样可以输出特征重要性的评估. 这里不细讲, 以后应该会单独介绍.</li>
+</ul>
+<p>而在获得了各个特征的重要性后, 一般来说, 有两种处理方式:</p>
+<ul>
+<li><p>直接按某阈值切分, 按比例保留一部分高重要性特征, 舍弃其余低重要性特征. 在考虑切分阈值时, 可以画出按重要性排序后, 重要性的累计图, 找到累计重要性变化较小的地方(即剩下特征对整体贡献很小), 作为阈值.</p>
+</li>
+<li><p>RFE(recursive feature elimination), 即不使用重要性进行一刀切, 而是逐步地剔除重要性较小的特征. 比如原本100个特征, 每次训练模型后, 剔除当前重要性最小的5个特征, 同时记录当前模型在验证集或者交叉验证上的表现.</p>
+<p>在最后停止时, 会得到在不同数量特征组合下, 模型的表现, 此时可以选择其中表现最好的特征组合. 也可以缩小范围, 比如发现在30~40特征数量上表现不错, 那在这个区间每次只剔除重要性最小的特征, 进行细致地搜索.</p>
+</li>
+</ul>
+<p>一般来说, RFE效果不错, 且耗费计算资源在可接受范围内, 是一种较好的方法.</p>
+<h2 id="逐步法"><a href="#逐步法" class="headerlink" title="逐步法"></a>逐步法</h2><p>逐步法的核心思想是, 从一组初始特征开始, 逐渐加入或者逐渐舍弃特征. 在每次加入或者舍弃时, 一般需要所有可能进行建模比较效果, 选择最优的情况.</p>
+<ul>
+<li><p>前向法.</p>
+<p>从指定特征或者0特征开始, 每次对原特征加上其它某一个特征进行建模, 遍历一遍后, 将表现最好的特征加入, 再进行下一轮循环. 直到达到停止条件, 如指定最大特征数量, 或者评估指标不再上升.</p>
+</li>
+<li><p>后向法.</p>
+<p>与前向法相反, 从全部特征开始, 每次考虑剔除一个特征, 遍历后剔除那个剔除后让模型效果提升最大的特征. 直到达到最小特征数量, 或者评估指标不再上升.</p>
+</li>
+<li><p>前向后向法.</p>
+<p>结合前向法与后向法, 比如先用前向法, 当评估指标不再上升后, 再使用后向法, 如此循环.</p>
+</li>
+</ul>
+<p>逐步法的好处是也许可能找到一组非常好的特征, 但是缺点也很明显, 算法时间复杂度很高, 当特征很多, 且模型较为需要较多训练时间(如GBDT)时, 会显得很慢. 可以在特征不是很多, 且使用线性模型这样训练速度较快的模型时使用.</p>
+<h2 id="搜索法"><a href="#搜索法" class="headerlink" title="搜索法"></a>搜索法</h2><p>考虑到特征选择其实是一件玄学的事情, 所以为什么不用玄学对抗玄学呢(≧∇≦)ﾉ</p>
+<ul>
+<li><p>暴力搜索法.</p>
+<p>遍历所有可能的特征组合. 如果算力够的话, 也不失为一种办法…</p>
+</li>
+<li><p>随机搜索法.</p>
+<p>每次随机抽取一部分特征, 相比暴力搜索法, 更加可控一些, 可以指定搜索次数, 防止程序一直跑下去.</p>
+</li>
+<li><p>启发式搜索法.</p>
+<p>使用一些启发式算法来优化搜索过程. 比如基因算法, 每个特征是否在当前组合中出现, 可以看出是一组基因序列, 1即出现, 0即不出现.</p>
+<p>在某一代的组群中, 表现较好的特征组合用于更多的机会进行交叉组合与变异.</p>
+<p>通过这样的方式, 既可以避免暴力搜索的超高复杂度, 也可以尽量避免随机搜索进行的无效搜索.</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/06/机器学习/数据建模-特征工程/" rel="next" title="数据建模-特征工程">
+                <i class="fa fa-chevron-left"></i> 数据建模-特征工程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/06/机器学习/数据建模-模型评估/" rel="prev" title="数据建模-模型评估">
+                数据建模-模型评估 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要进行特征选择"><span class="nav-number">1.</span> <span class="nav-text">为什么要进行特征选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征选择的两个方面"><span class="nav-number">2.</span> <span class="nav-text">特征选择的两个方面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征稳定性"><span class="nav-number">3.</span> <span class="nav-text">特征稳定性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征有效性"><span class="nav-number">4.</span> <span class="nav-text">特征有效性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于简单统计信息"><span class="nav-number">4.1.</span> <span class="nav-text">基于简单统计信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于相关性"><span class="nav-number">4.2.</span> <span class="nav-text">基于相关性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#L1正则"><span class="nav-number">4.3.</span> <span class="nav-text">L1正则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特征重要性"><span class="nav-number">4.4.</span> <span class="nav-text">特征重要性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逐步法"><span class="nav-number">4.5.</span> <span class="nav-text">逐步法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搜索法"><span class="nav-number">4.6.</span> <span class="nav-text">搜索法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
