@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Rank Transform of an Array</title>
-    <url>/2020/06/09/Rank-Transform-of-an-Array/</url>
+    <url>/2020/06/09/LeetCode/Rank-Transform-of-an-Array/</url>
     <content><![CDATA[<h1 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h1><p>Given an array of integers <code>arr</code>, replace each element with its rank.</p>
 <p>The rank represents how large the element is. The rank has the following rules:</p>
 <ul>
@@ -165,12 +165,12 @@
 <li><p>为什么会造成过拟合.</p>
 <p>有很多原因可能会造成过拟合, 这里以GBDT模型为例, 来列举一些会让训练集/验证集/测试集之间评估指标差距变大的原因:</p>
 <ul>
-<li><p>树模型正则参数设置不合理. 在树模型中, 对结果影响较大的参数, 比如最大树深度, 当取值比较大时(例如5层), 会发生什么情况呢? 树模型会尽其所能去寻找特征与特征之间的交互, 以求优化目标函数. 但这样存在的问题是, 越深的层数, 越复杂的特征之间的交互, 其有效性可能只存在于训练集, 部分存在于验证集, 不存在于测试集. 简而言之, 模型复杂度较高, 学到了一些”假知识”.</p>
+<li><p>树模型超参数设置不合理. 在树模型中, 对结果影响较大的参数, 比如最大树深度, 当取值比较大时(例如7层), 会发生什么情况呢? 树模型会尽其所能去寻找特征与特征之间的交互, 以求优化目标函数. 但这样存在的问题是, 越深的层数, 越复杂的特征之间的交互, 其有效性可能只存在于训练集, 部分存在于验证集, 不存在于测试集. 简而言之, 模型复杂度较高, 学到了一些”假知识”.</p>
 </li>
 <li><p>提前停止参数设置过大. 除了最大树深度, 对于GBDT而言, 树的棵树也是很重要的参数. 而提前停止这一方法, 可以较好的寻找最佳树的棵树. 但是, 当此参数设置过大时, 也会造成过拟合的情况. </p>
 <p>比如原本学到某个树的棵树时, 已经比较合适了. 而由于提前停止设置过大, 只要验证集在某一刻变好一点, 就会继续增加树木棵树, 训练集上评估指标会一直变好, 验证集上评估指标会发生波动. 训练集与验证集上的评估指标差距拉大, 造成过拟合.</p>
 </li>
-<li><p>有一些”噪音”特征也会造成过拟合. 比如GBDT在训练的时候, 有一些原本对问题没有真正贡献, 但在”偶然”的情况下, 参与了学习. 其带来的效果是会抬高模型在训练集的评估指标, 但通常在验证集与测试集上都会降低评估指标.</p>
+<li><p>有一些”噪音”特征也会造成过拟合. 比如GBDT在训练的时候, 有一些特征原本对问题没有真正贡献, 但在”偶然”的情况下, 参与了学习. 其带来的效果是会抬高模型在训练集的评估指标, 但通常在验证集与测试集上都会降低评估指标.</p>
 <p>若结合验证集使用提前停止方法, 那模型可能学一些冗余的规则, 来抵消掉”噪音”特征带来的降低的效果. 最终结果, 相比没有”噪音”特征造成过拟合的情况, 可能是训练集上评估指标很高, 验证集差距不大, 测试集评估指标较低Σ(っ °Д °;)っ 因为除了”噪音”特征, 那些冗余的规则对于测试集来说可能也会带来反效果.</p>
 </li>
 </ul>
@@ -186,7 +186,7 @@
 </ul>
 <h1 id="模型解释性"><a href="#模型解释性" class="headerlink" title="模型解释性"></a>模型解释性</h1><p>在一些场景下, 我们需要尽可能地确保模型的解释性.</p>
 <p>那什么是模型的解释性呢? </p>
-<p>首先是入模特征的解释性, 即对某个特征, 是否了解其含义, 其分布是否符合经验认知. 举个栗子, 有个特征是”性别”, 含义是很清晰的(&gt;▽&lt;) 假设标签是”是否爱玩游戏”, 经过分析发现, 性别为女的爱玩游戏的概率更大(=′ー`) 这时候好像和我们的认知有那么点冲突, 可以进一步分析, 这里的”游戏”是&lt;英雄联盟&gt;, 还是&lt;奇迹暖暖&gt; ヽ(✿ﾟ▽ﾟ)ノ</p>
+<p>首先是入模特征的解释性, 即对某个特征, 是否了解其含义, 其分布是否符合经验认知. 举个栗子, 有个特征是”性别”, 含义是很清晰的(&gt;▽&lt;) 假设标签是”是否爱玩游戏”, 经过分析发现, 性别为女的爱玩游戏的概率更大(=′ー`) 这时候好像和我们的认知有那么点冲突, 可以进一步分析, 这里的”游戏”是&lt;英雄联盟&gt;, 还是&lt;奇迹暖暖&gt; ヽ(✿ﾟ▽ﾟ)</p>
 <p>然后是模型学成啥样了. 要想知道模型学成啥样了, 最直观的模型莫过于线性模型. 对于线性模型来说, 我们可以知道它各个特征系数的大小, 是正还是负, 很好理解. 然后是决策树一类的模型, 虽然层数多了以后比较复杂, 但是仍然有明了的结构. 而更复杂的模型, 如GBDT, 神经网络等, 想像线性模型一样, 直接观察其参数去估计模型学成啥样了, 是不现实的.</p>
 <p>那有没有方法对复杂的模型, 也能够从模型解释性的角度对其进行分析呢? 当然是可以的, 其实模型解释性是一个专门的方向, 一直以来人们提出了很多的方法. 这里着重介绍两种方法.</p>
 <ul>
@@ -252,7 +252,7 @@ PSI=\sum_i(A_i-E_i)\times {\rm ln}(A_i/E_i)</script><p>在多个时间段的样�
 <p>这个方法的原理是这样的, 有时候测试集与训练集之间, 存在分布上的差异, 这个差异导致在验证集上获得的模型表现, 在测试集不成立.</p>
 <p>为了定量衡量这种分布差异, 可以给训练集标签为0, 测试集标签为1, 进行二分类建模.</p>
 <p>建模后, 可以观察模型的AUC, 如果训练集与测试集同分布, 且模型训练得当, 则AUC一定在0.5附近. 若AUC比较大比如0.6, 则说明两者的分布是不一致的.</p>
-<p>若AUC较大时, 原本对抗验证的处理方法, 是将训练集中, 模型预测值最低(与测试集分布差异最大)的一批样本删除. 而在一些时候样本是比较珍贵的, 可以先根据模型得到的特征重要性, 找到模型认为对分布差异贡献最大的一些特征, 可以考虑删除这些特征, 来使训练集与测试集分布趋于一致.</p>
+<p>若AUC较大时, 原本对抗验证的处理方法, 是将训练集中, 模型预测值最低(与测试集分布差异最大)的一批样本删除, 或者将预测值最高(与测试集分布差异最小)的一批样本作为验证集. 而在一些时候样本是比较珍贵的, 可以先根据模型得到的特征重要性, 找到模型认为对分布差异贡献最大的一些特征, 可以考虑删除这些特征, 来使训练集与测试集分布趋于一致.</p>
 </li>
 </ul>
 <p>以上提到的一些方法, 在进行特征选择时, 可以结合起来使用, 这样能够从多个不同的维度去筛选出稳定的特征, 为后续进一步筛选特征做准备.</p>
@@ -297,7 +297,7 @@ PSI=\sum_i(A_i-E_i)\times {\rm ln}(A_i/E_i)</script><p>在多个时间段的样�
 <ul>
 <li>直接基于树模型衡量特征重要性. 比如在GBDT模型中, 可以根据某特征被分割次数, 或者提供的信息增益衡量其重要性.</li>
 <li>基于随机排列衡量特征重要性. 这一类方法的主要思想是, 一个特征原本有一个重要性, 而在另外一种情况下(比如将该特征随机排列), 又得到一个重要性, 通过对比前后两个重要性, 来判断该特征是否有效.<ul>
-<li>Null Importance: 此方法是保持特征不变, 随机排列标签, 来对比前后特征重要性的变化. 若前后特征重要性变化大, 则说明该特征是真实有效的; 若特征重要性前后几乎差不多, 甚至还提高了o(*≧▽≦)ツ┏━┓那这个特征极大可能是噪音.</li>
+<li>Null Importance: 此方法是保持特征不变, 随机排列标签, 来对比前后特征重要性的变化. 若前后特征重要性变化大, 则说明该特征是真实有效的; 若特征重要性前后几乎差不多, 甚至还提高了o(*≧▽≦)ツ 那这个特征极大可能是噪音.</li>
 <li>Eli5: 这里叫做这个名称, 是因为在一个叫<code>eli5</code>的包中有实现这种方法~此方法是在训练集上正常训练, 然后在验证集上预测时计算评估指标(如AUC), 不过考虑两种情况, 一种是真实的特征, 一种是对某个特征进行随机排列, 对比前后评估指标的变化. 同样若前后差距较大, 则说明该特征是重要的.</li>
 <li>Boruta: 此方法是通过在训练时, 把原本的所有特征复制一份, 比如原本的10个特征变成20个特征. 然后对复制的所有特征进行随机排列. 接下来多次训练模型, 在每次训练模型后, 整体考虑真实特征与影子(随机排列)特征的重要性, 将不合格的特征逐一去除, 保留最后较好的一组特征.</li>
 </ul>
@@ -538,7 +538,7 @@ PSI=\sum_i(A_i-E_i)\times {\rm ln}(A_i/E_i)</script><p>在多个时间段的样�
 <a id="more"></a>
 <h1 id="整理数据"><a href="#整理数据" class="headerlink" title="整理数据"></a>整理数据</h1><p>这里主要以平时用到的最多的表格型数据来说, 使用<code>Pytohn</code>的<code>pandas</code>包, 可以进行有效地处理.</p>
 <p>若原文件时<code>excel</code>或者<code>csv</code>等格式, 则直接读取即可; 若原文件是<code>json</code>这样的格式或类似的格式, 一般是先将其转变为标准的形式, 然后利用如<code>pd.read_json(string)</code>的方式进行读取.</p>
-<p>我们要明确, 一份数据中, 哪些是<strong>ID相关特征</strong>, 这些特征可用于多份数据之间的关联, 但对于分析以及建模来说, 就没有额外帮助了. 同时, 还有一些<strong>基础信息特征</strong>, 如日期等, 这些可以用来分析数据, 也可以考虑参与建模. 这两大类的特征, 一般来说有一个特点, 即100%的覆盖率, 没有缺失.</p>
+<p>我们要明确, 一份数据中, 哪些是<strong>ID相关特征</strong>, 这些特征可用于多份数据之间的关联, 但对于分析以及建模来说, 可能没有额外帮助. 同时, 还有一些<strong>基础信息特征</strong>, 如日期等, 这些可以用来分析数据, 也可以考虑参与建模. 这两大类的特征, 一般来说有一个特点, 即100%的覆盖率, 没有缺失.</p>
 <p>除开以上两类特征, 总体来说还剩下<strong>标签列</strong>和<strong>建模特征</strong>. 标签列不必多说, 对于监督学习来说是必要的. 对于建模特征, 如果按数据类型来进行一些细分的话, 大致可以包含以下一些形式:</p>
 <ul>
 <li>无序类别特征.</li>
@@ -1266,14 +1266,6 @@ s.t.\ 资金_i\ge0\quad i\in I\\
       </categories>
   </entry>
   <entry>
-    <title>node2vec</title>
-    <url>/2020/05/24/%E5%9B%BE%E7%AE%97%E6%B3%95/node2vec/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>图算法</category>
-      </categories>
-  </entry>
-  <entry>
     <title>二分网络的部分方法与应用</title>
     <url>/2020/05/24/%E5%9B%BE%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%BD%91%E7%BB%9C%E7%9A%84%E9%83%A8%E5%88%86%E6%96%B9%E6%B3%95%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
     <content><![CDATA[<p>除了社交网络这一常见的网络类型外, 二分网络也是一种经常出现的网络. 所谓二分网络, 即节点被分为了两大类, 其中的边总是存在于一类节点到另一类节点之间. 例如用户与商品的二分网络, 投资者与股票的二分网络等.</p>
@@ -1321,21 +1313,19 @@ s.t.\ 资金_i\ge0\quad i\in I\\
 </li>
 <li><p>相似性计算.</p>
 <p>用户与物品的相似性计算是类似的, 将每个用户对每个物品的打分(没有记录则为空)整理为一个矩阵. 每个用户的向量可以使用对物品的打分构成; 每个物品的向量可以用各个用户对它的打分构成. 向量中的空值可以用0来填充.</p>
-<p>得到向量后, 相似性就可以利用余弦相似度进行计算了.</p>
-<script type="math/tex; mode=display">
-Cosine\_Similarity=\frac{AB}{|A||B|}</script></li>
-</ul>
-<p>  然而这里存在的一个问题是, 对于用户没有评分的物品, 其实有两种可能:</p>
-<ol>
-<li>用户还没接触过.</li>
+<p>得到向量后, 相似性就可以利用余弦相似度$Cosine_Similarity=\frac{AB}{|A||B|}$进行计算了.</p>
+<p>然而这里存在的一个问题是, 对于用户没有评分的物品, 其实有两种可能:</p>
+<ul>
+<li><p>用户还没接触过.</p>
+</li>
 <li><p>用户提前知道自己不喜欢该物品, 不参与打分.</p>
+</li>
+</ul>
 <p>因此直接使用0来进行填充, 是不太好的. 一种更好的方法是, 是计算出用户对每个物品打分的平均值, 再将用户对物品的打分基础上减去这个平均值.</p>
 <p><img src="fig_4.png" alt="fig_4"></p>
 <p>进行这样的处理后, 0可以视作用户对物品的一个平均评分, 比之前的情形要好一些.</p>
 <p>使用协同过滤, 有如下优缺点:</p>
 </li>
-</ol>
-<ul>
 <li><p>优点:</p>
 <ul>
 <li>不需要去精心设计物品与用户的特征向量, 只要有二分网络即可.</li>
@@ -1572,11 +1562,46 @@ A_{m\times n}\thickapprox U_{m\times k}\Sigma_{k\times k}V^T_{k\times n}</script
 <p>用以衡量组分划分的好坏的一个非常重要的指标, 越大说明划分效果越好. 计算公式为:</p>
 <script type="math/tex; mode=display">
 Q=\sum_i(组群_i内部的连边之和比例-组群_i连边之和比例的平方)</script><p>对于无向图, 一般看做有向图处理, 即一条无向连边, 等价于两条有向连边.</p>
+<p>一般Q值在0.3~0.7.</p>
 <p><img src="fig_2.png" alt="fig_2"></p>
-<p>|      |  C1  |  C2  |  C3  |<br>| :—: | :—: | :—: | :—: |<br>|  C1  |  6   |  0   |  1   |<br>|  C2  |  0   |  6   |  1   |<br>|  C3  |  1   |  1   |  8   |</p>
-<script type="math/tex; mode=display">
-Q=\frac{6+6+8}{2\times 12}-(\frac{6+1}{2\times 12})^2-(\frac{6+1}{2\times 12})^2-(\frac{8+1+1}{2\times 12})^2=0.49</script><p>一般Q值在0.3~0.7.</p>
 </li>
+</ul>
+</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">C1</th>
+<th style="text-align:center">C2</th>
+<th style="text-align:center">C3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">C1</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">C2</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">C3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<script type="math/tex; mode=display">
+Q=\frac{6+6+8}{2\times 12}-(\frac{6+1}{2\times 12})^2-(\frac{6+1}{2\times 12})^2-(\frac{8+1+1}{2\times 12})^2=0.49</script><ul>
 <li><p>算法流程.</p>
 <ol>
 <li>将每个节点作为一个组群.</li>
@@ -1588,12 +1613,10 @@ Q=\frac{6+6+8}{2\times 12}-(\frac{6+1}{2\times 12})^2-(\frac{6+1}{2\times 12})^2
 </ul>
 <h1 id="代码实践"><a href="#代码实践" class="headerlink" title="代码实践"></a>代码实践</h1><p>对于Louvain算法, 在Github上有开源的包<a href="https://github.com/taynaud/python-louvain" target="_blank" rel="noopener">python-louvain</a>, 利用这个包来对网络进行组群划分.</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> community  <span class="comment"># python-louvain 在调用时的名称为community</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-  <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">edge_list_df = pd.read_csv(<span class="string">'network_links.csv'</span>)</span><br><span class="line">G = nx.from_pandas_edgelist(edge_list_df)</span><br></pre></td></tr></table></figure>
-  <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用best_partition将会得到最佳组群划分的一个字典, 其中key为节点, value为组群编号.</span></span><br><span class="line">node_group = community.best_partition(G)</span><br></pre></td></tr></table></figure>
-  <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 得到不同节点的组群编号列表.</span></span><br><span class="line">values = [node_group.get(node) <span class="keyword">for</span> node <span class="keyword">in</span> G.nodes()]</span><br><span class="line"><span class="comment">#对不同组群的节点进行不同着色.</span></span><br><span class="line">plt.figure(figsize=(<span class="number">20</span>,<span class="number">20</span>))</span><br><span class="line">nx.draw(G, cmap=plt.cm.RdYlBu, node_color=values, with_labels=<span class="literal">True</span>, edge_color=<span class="string">'gray'</span>, node_size=<span class="number">200</span>, pos=nx.spring_layout(G, k=<span class="number">0.2</span>, iterations=<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
-<p>  <img src="fig_3.png" alt="fig_3"></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">edge_list_df = pd.read_csv(<span class="string">'network_links.csv'</span>)</span><br><span class="line">G = nx.from_pandas_edgelist(edge_list_df)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用best_partition将会得到最佳组群划分的一个字典, 其中key为节点, value为组群编号.</span></span><br><span class="line">node_group = community.best_partition(G)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 得到不同节点的组群编号列表.</span></span><br><span class="line">values = [node_group.get(node) <span class="keyword">for</span> node <span class="keyword">in</span> G.nodes()]</span><br><span class="line"><span class="comment">#对不同组群的节点进行不同着色.</span></span><br><span class="line">plt.figure(figsize=(<span class="number">20</span>,<span class="number">20</span>))</span><br><span class="line">nx.draw(G, cmap=plt.cm.RdYlBu, node_color=values, with_labels=<span class="literal">True</span>, edge_color=<span class="string">'gray'</span>, node_size=<span class="number">200</span>, pos=nx.spring_layout(G, k=<span class="number">0.2</span>, iterations=<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
+<p><img src="fig_3.png" alt="fig_3"></p>
 ]]></content>
       <categories>
         <category>图算法</category>

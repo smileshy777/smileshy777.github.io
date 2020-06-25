@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/24/图算法/二分网络的部分方法与应用/fig_4.png">
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/24/图算法/二分网络的部分方法与应用/fig_5.png">
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/24/图算法/二分网络的部分方法与应用/fig_6.png">
-<meta property="og:updated_time" content="2020-05-24T14:01:57.187Z">
+<meta property="og:updated_time" content="2020-06-25T11:40:30.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二分网络的部分方法与应用">
 <meta name="twitter:description" content="除了社交网络这一常见的网络类型外, 二分网络也是一种经常出现的网络. 所谓二分网络, 即节点被分为了两大类, 其中的边总是存在于一类节点到另一类节点之间. 例如用户与商品的二分网络, 投资者与股票的二分网络等. 特别是用户与商品构成的商品偏好网络, 有着很大的研究价值, 对于构建推荐系统来说必不可少的. 推荐系统一般考虑的是, 想什么样的用户推荐什么样的商品, 会使得用户喜欢, 点击率更高一些.">
@@ -399,13 +399,23 @@
                 
               
 
-              <time title="创建时间：2020-05-24 17:33:07 / 修改时间：22:01:57" itemprop="dateCreated datePublished" datetime="2020-05-24T17:33:07+08:00">2020-05-24</time>
+              <time title="创建时间：2020-05-24 17:33:07" itemprop="dateCreated datePublished" datetime="2020-05-24T17:33:07+08:00">2020-05-24</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-06-25 19:40:30" itemprop="dateModified" datetime="2020-06-25T19:40:30+08:00">2020-06-25</time>
+              </span>
             
           
 
@@ -511,21 +521,19 @@
 </li>
 <li><p>相似性计算.</p>
 <p>用户与物品的相似性计算是类似的, 将每个用户对每个物品的打分(没有记录则为空)整理为一个矩阵. 每个用户的向量可以使用对物品的打分构成; 每个物品的向量可以用各个用户对它的打分构成. 向量中的空值可以用0来填充.</p>
-<p>得到向量后, 相似性就可以利用余弦相似度进行计算了.</p>
-<script type="math/tex; mode=display">
-Cosine\_Similarity=\frac{AB}{|A||B|}</script></li>
-</ul>
-<p>  然而这里存在的一个问题是, 对于用户没有评分的物品, 其实有两种可能:</p>
-<ol>
-<li>用户还没接触过.</li>
+<p>得到向量后, 相似性就可以利用余弦相似度$Cosine_Similarity=\frac{AB}{|A||B|}$进行计算了.</p>
+<p>然而这里存在的一个问题是, 对于用户没有评分的物品, 其实有两种可能:</p>
+<ul>
+<li><p>用户还没接触过.</p>
+</li>
 <li><p>用户提前知道自己不喜欢该物品, 不参与打分.</p>
+</li>
+</ul>
 <p>因此直接使用0来进行填充, 是不太好的. 一种更好的方法是, 是计算出用户对每个物品打分的平均值, 再将用户对物品的打分基础上减去这个平均值.</p>
 <p><img src="fig_4.png" alt="fig_4"></p>
 <p>进行这样的处理后, 0可以视作用户对物品的一个平均评分, 比之前的情形要好一些.</p>
 <p>使用协同过滤, 有如下优缺点:</p>
 </li>
-</ol>
-<ul>
 <li><p>优点:</p>
 <ul>
 <li>不需要去精心设计物品与用户的特征向量, 只要有二分网络即可.</li>
@@ -680,8 +688,8 @@ A_{m\times n}\thickapprox U_{m\times k}\Sigma_{k\times k}V^T_{k\times n}</script
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/05/24/图算法/node2vec/" rel="prev" title="node2vec">
-                node2vec <i class="fa fa-chevron-right"></i>
+              <a href="/2020/05/25/LeetCode/Lucky-Numbers-in-a-Matrix/" rel="prev" title="Lucky Numbers in a Matrix">
+                Lucky Numbers in a Matrix <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -752,7 +760,7 @@ A_{m\times n}\thickapprox U_{m\times k}\Sigma_{k\times k}V^T_{k\times n}</script
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-count">93</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
