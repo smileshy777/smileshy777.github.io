@@ -697,7 +697,7 @@ s.t.\ 资金_i\ge0\quad i\in I\\
 <p>对于第二条经验, 可以通过根据当前大盘的局势判断, 来选择<code>总资金</code>的量, 牛市的时候用更多的资金投资, 熊市的时候用少量的资金投资.</p>
 <p>总结起来, 现在的目标函数变成了下面这个样子:</p>
 <script type="math/tex; mode=display">
-arg\ max(\sum_i资金_i(收益_i-风险_i))-\lambda\sum_i资金_i^2\\
+max(\sum_i资金_i(收益_i-风险_i))-\lambda\sum_i资金_i^2\\
 s.t.\ 资金_i\ge0\quad i\in I\\
 \sum_i资金_i=总资金\times\beta</script><p>其中的$\lambda$是<code>L2</code>正则参数, 越大, 则资金越分散, 越小则越集中.</p>
 <p>$\beta$是大盘局势, 牛市时值大, 熊市时值小.</p>
