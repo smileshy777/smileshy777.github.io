@@ -682,7 +682,7 @@ PSI=\sum_i(A_i-E_i)\times {\rm ln}(A_i/E_i)</script><p>在多个时间段的样�
 <p>假设咱们有收集数据的能力, 收集到了几种股票的历史长期表现, 再经过一些简单的算法, 可以定量得到每个股票的<code>收益</code>与<code>风险</code>.</p>
 <p>现在我们要最大化如下目标函数:</p>
 <script type="math/tex; mode=display">
-arg\ max(\sum_i资金_i(收益_i-风险_i))\\
+max(\sum_i资金_i(收益_i-风险_i))\\
 s.t.\ 资金_i\ge0\quad i\in I\\
 \sum_i资金_i=总资金</script><p>相信聪明的同学已经发现了, 这个优化问题根本不需要所谓的优化o(〃’▽’〃)o</p>
 <p>只要把钱全部拿来买<code>收益-风险</code>最大的这一个股票, 就行了.</p>
