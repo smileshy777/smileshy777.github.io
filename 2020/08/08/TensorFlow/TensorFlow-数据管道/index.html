@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="如果需要训练的数据大小不大, 那么可以直接全部读入内存中进行训练, 这样一般效率最高.但如果需要训练的数据很大, 无法一次载入内存, 那么通常需要在训练的过程中分批读入.使用tf.data的API可以构建数据输入管道, 轻松处理大量的数据, 不同的数据格式, 以及不同的数据转换.">
+<meta name="keywords" content="TensorFlow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow-数据管道">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="如果需要训练的数据大小不大, 那么可以直接全部读入内存中进行训练, 这样一般效率最高.但如果需要训练的数据很大, 无法一次载入内存, 那么通常需要在训练的过程中分批读入.使用tf.data的API可以构建数据输入管道, 轻松处理大量的数据, 不同的数据格式, 以及不同的数据转换.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/output_8_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/output_15_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/output_15_1.png">
+<meta property="og:updated_time" content="2020-12-03T13:55:11.741Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow-数据管道">
+<meta name="twitter:description" content="如果需要训练的数据大小不大, 那么可以直接全部读入内存中进行训练, 这样一般效率最高.但如果需要训练的数据很大, 无法一次载入内存, 那么通常需要在训练的过程中分批读入.使用tf.data的API可以构建数据输入管道, 轻松处理大量的数据, 不同的数据格式, 以及不同的数据转换.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/output_8_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>TensorFlow-数据管道 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/08/TensorFlow/TensorFlow-数据管道/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TensorFlow-数据管道
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-08 23:18:23" itemprop="dateCreated datePublished" datetime="2020-08-08T23:18:23+08:00">2020-08-08</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-12-03 21:55:11" itemprop="dateModified" datetime="2020-12-03T21:55:11+08:00">2020-12-03</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/TensorFlow/" itemprop="url" rel="index"><span itemprop="name">TensorFlow</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果需要训练的数据大小不大, 那么可以直接全部读入内存中进行训练, 这样一般效率最高.<br>但如果需要训练的数据很大, 无法一次载入内存, 那么通常需要在训练的过程中分批读入.<br>使用<code>tf.data</code>的API可以构建数据输入管道, 轻松处理大量的数据, 不同的数据格式, 以及不同的数据转换.</p>
+<a id="more"></a>
+<h1 id="构建数据管道"><a href="#构建数据管道" class="headerlink" title="构建数据管道"></a>构建数据管道</h1><h2 id="从numpy-array构建数据管道"><a href="#从numpy-array构建数据管道" class="headerlink" title="从numpy array构建数据管道"></a>从numpy array构建数据管道</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从numpy array构建数据管道</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices((iris[<span class="string">"data"</span>], iris[<span class="string">"target"</span>]))</span><br><span class="line"><span class="keyword">for</span> features, label <span class="keyword">in</span> ds.take(<span class="number">5</span>):</span><br><span class="line">    print(features, label)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor([5.1 3.5 1.4 0.2], shape=(4,), dtype=float64) tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor([4.9 3.  1.4 0.2], shape=(4,), dtype=float64) tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor([4.7 3.2 1.3 0.2], shape=(4,), dtype=float64) tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor([4.6 3.1 1.5 0.2], shape=(4,), dtype=float64) tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor([5.  3.6 1.4 0.2], shape=(4,), dtype=float64) tf.Tensor(0, shape=(), dtype=int64)
+</code></pre><h2 id="从pandas-DataFrame构建数据管道"><a href="#从pandas-DataFrame构建数据管道" class="headerlink" title="从pandas DataFrame构建数据管道"></a>从pandas DataFrame构建数据管道</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 pandas DataFrame构建数据管道</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">df = pd.DataFrame(iris[<span class="string">"data"</span>], columns=iris[<span class="string">'feature_names'</span>])</span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices((df.to_dict(<span class="string">"list"</span>), iris[<span class="string">"target"</span>]))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> features, label <span class="keyword">in</span> ds.take(<span class="number">3</span>):</span><br><span class="line">    print(features, label)</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;sepal length (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=5.1&gt;, &#39;sepal width (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=3.5&gt;, &#39;petal length (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=1.4&gt;, &#39;petal width (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=0.2&gt;} tf.Tensor(0, shape=(), dtype=int64)
+{&#39;sepal length (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=4.9&gt;, &#39;sepal width (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=3.0&gt;, &#39;petal length (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=1.4&gt;, &#39;petal width (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=0.2&gt;} tf.Tensor(0, shape=(), dtype=int64)
+{&#39;sepal length (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=4.7&gt;, &#39;sepal width (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=3.2&gt;, &#39;petal length (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=1.3&gt;, &#39;petal width (cm)&#39;: &lt;tf.Tensor: shape=(), dtype=float32, numpy=0.2&gt;} tf.Tensor(0, shape=(), dtype=int64)
+</code></pre><h2 id="从Python-gennerator构建数据管道"><a href="#从Python-gennerator构建数据管道" class="headerlink" title="从Python gennerator构建数据管道"></a>从Python gennerator构建数据管道</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从Python generator构建数据管道</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.image <span class="keyword">import</span> ImageDataGenerator</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个从文件中读取图片的generator</span></span><br><span class="line">image_generator = ImageDataGenerator(rescale=<span class="number">1.0</span> / <span class="number">255</span>).flow_from_directory(</span><br><span class="line">    <span class="string">"./data/cifar2/test/"</span>,</span><br><span class="line">    target_size=(<span class="number">32</span>, <span class="number">32</span>),</span><br><span class="line">    batch_size=<span class="number">20</span>,</span><br><span class="line">    class_mode=<span class="string">'binary'</span>)</span><br><span class="line"></span><br><span class="line">classdict = image_generator.class_indices</span><br><span class="line">print(classdict)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> features, label <span class="keyword">in</span> image_generator:</span><br><span class="line">        <span class="keyword">yield</span> features, label</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_generator(generator,</span><br><span class="line">                                    output_types=(tf.float32, tf.int32))</span><br></pre></td></tr></table></figure>
+<pre><code>Found 2000 images belonging to 2 classes.
+{&#39;0_airplane&#39;: 0, &#39;1_automobile&#39;: 1}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize=(<span class="number">6</span>, <span class="number">6</span>))</span><br><span class="line"><span class="keyword">for</span> i, (img, label) <span class="keyword">in</span> enumerate(ds.unbatch().take(<span class="number">9</span>)):</span><br><span class="line">    ax = plt.subplot(<span class="number">3</span>, <span class="number">3</span>, i + <span class="number">1</span>)</span><br><span class="line">    ax.imshow(img.numpy())</span><br><span class="line">    ax.set_title(<span class="string">"label = %d"</span> % label)</span><br><span class="line">    ax.set_xticks([])</span><br><span class="line">    ax.set_yticks([])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="output_8_0.png" alt="png"></p>
+<h2 id="从csv文件构建数据管道"><a href="#从csv文件构建数据管道" class="headerlink" title="从csv文件构建数据管道"></a>从csv文件构建数据管道</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从csv文件构建数据管道</span></span><br><span class="line">ds = tf.data.experimental.make_csv_dataset(</span><br><span class="line">    file_pattern=[<span class="string">"./data/titanic/train.csv"</span>, <span class="string">"./data/titanic/test.csv"</span>],</span><br><span class="line">    batch_size=<span class="number">3</span>,</span><br><span class="line">    label_name=<span class="string">"Survived"</span>,</span><br><span class="line">    na_value=<span class="string">""</span>,</span><br><span class="line">    num_epochs=<span class="number">1</span>,</span><br><span class="line">    ignore_errors=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> data, label <span class="keyword">in</span> ds.take(<span class="number">2</span>):</span><br><span class="line">    print(data, label)</span><br></pre></td></tr></table></figure>
+<pre><code>OrderedDict([(&#39;PassengerId&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([185, 948, 331], dtype=int32)&gt;), (&#39;Pclass&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([3, 3, 3], dtype=int32)&gt;), (&#39;Name&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=
+array([b&#39;Kink-Heilmann, Miss. Luise Gretchen&#39;, b&#39;Cor, Mr. Bartol&#39;,
+       b&#39;McCoy, Miss. Agnes&#39;], dtype=object)&gt;), (&#39;Sex&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;female&#39;, b&#39;male&#39;, b&#39;female&#39;], dtype=object)&gt;), (&#39;Age&#39;, &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 4., 35.,  0.], dtype=float32)&gt;), (&#39;SibSp&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 2], dtype=int32)&gt;), (&#39;Parch&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([2, 0, 0], dtype=int32)&gt;), (&#39;Ticket&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;315153&#39;, b&#39;349230&#39;, b&#39;367226&#39;], dtype=object)&gt;), (&#39;Fare&#39;, &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([22.025 ,  7.8958, 23.25  ], dtype=float32)&gt;), (&#39;Cabin&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;&#39;, b&#39;&#39;, b&#39;&#39;], dtype=object)&gt;), (&#39;Embarked&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;S&#39;, b&#39;S&#39;, b&#39;Q&#39;], dtype=object)&gt;)]) tf.Tensor([1. 0. 1.], shape=(3,), dtype=float32)
+OrderedDict([(&#39;PassengerId&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([1228,   57, 1014], dtype=int32)&gt;), (&#39;Pclass&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([2, 2, 1], dtype=int32)&gt;), (&#39;Name&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=
+array([b&#39;de Brito, Mr. Jose Joaquim&#39;, b&#39;Rugg, Miss. Emily&#39;,
+       b&#39;Schabert, Mrs. Paul (Emma Mock)&#39;], dtype=object)&gt;), (&#39;Sex&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;male&#39;, b&#39;female&#39;, b&#39;female&#39;], dtype=object)&gt;), (&#39;Age&#39;, &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([32., 21., 35.], dtype=float32)&gt;), (&#39;SibSp&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 1], dtype=int32)&gt;), (&#39;Parch&#39;, &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 0], dtype=int32)&gt;), (&#39;Ticket&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;244360&#39;, b&#39;C.A. 31026&#39;, b&#39;13236&#39;], dtype=object)&gt;), (&#39;Fare&#39;, &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([13.  , 10.5 , 57.75], dtype=float32)&gt;), (&#39;Cabin&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;&#39;, b&#39;&#39;, b&#39;C28&#39;], dtype=object)&gt;), (&#39;Embarked&#39;, &lt;tf.Tensor: shape=(3,), dtype=string, numpy=array([b&#39;S&#39;, b&#39;S&#39;, b&#39;C&#39;], dtype=object)&gt;)]) tf.Tensor([0. 1. 1.], shape=(3,), dtype=float32)
+</code></pre><h2 id="从文本文件构建数据管道"><a href="#从文本文件构建数据管道" class="headerlink" title="从文本文件构建数据管道"></a>从文本文件构建数据管道</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从文本文件构建数据管道</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.TextLineDataset(</span><br><span class="line">    filenames=[<span class="string">"./data/titanic/train.csv"</span>, </span><br><span class="line">               <span class="string">"./data/titanic/test.csv"</span>]).skip(<span class="number">1</span>)  <span class="comment"># 略去第一行header</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> ds.take(<span class="number">5</span>):</span><br><span class="line">    print(line)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;1,0,3,&quot;Braund, Mr. Owen Harris&quot;,male,22,1,0,A/5 21171,7.25,,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;2,1,1,&quot;Cumings, Mrs. John Bradley (Florence Briggs Thayer)&quot;,female,38,1,0,PC 17599,71.2833,C85,C&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;3,1,3,&quot;Heikkinen, Miss. Laina&quot;,female,26,0,0,STON/O2. 3101282,7.925,,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;4,1,1,&quot;Futrelle, Mrs. Jacques Heath (Lily May Peel)&quot;,female,35,1,0,113803,53.1,C123,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;5,0,3,&quot;Allen, Mr. William Henry&quot;,male,35,0,0,373450,8.05,,S&#39;, shape=(), dtype=string)
+</code></pre><h2 id="从文件路径构建数据管道"><a href="#从文件路径构建数据管道" class="headerlink" title="从文件路径构建数据管道"></a>从文件路径构建数据管道</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ds = tf.data.Dataset.list_files(<span class="string">"./data/cifar2/train/*/*.jpg"</span>)</span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> ds.take(<span class="number">5</span>):</span><br><span class="line">    print(file)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;./data/cifar2/train/0_airplane/1625.jpg&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;./data/cifar2/train/1_automobile/3325.jpg&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;./data/cifar2/train/1_automobile/3621.jpg&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;./data/cifar2/train/0_airplane/1615.jpg&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;./data/cifar2/train/1_automobile/4356.jpg&#39;, shape=(), dtype=string)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_image</span><span class="params">(img_path, size=<span class="params">(<span class="number">32</span>, <span class="number">32</span>)</span>)</span>:</span></span><br><span class="line">    label = <span class="number">1</span> <span class="keyword">if</span> tf.strings.regex_full_match(img_path,</span><br><span class="line">                                             <span class="string">".*/automobile/.*"</span>) <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    img = tf.io.read_file(img_path)</span><br><span class="line">    img = tf.image.decode_jpeg(img)  <span class="comment"># 注意此处为jpeg格式</span></span><br><span class="line">    img = tf.image.resize(img, size)</span><br><span class="line">    <span class="keyword">return</span> img, label</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, (img, label) <span class="keyword">in</span> enumerate(ds.map(load_image).take(<span class="number">2</span>)):</span><br><span class="line">    plt.figure(i)</span><br><span class="line">    plt.imshow((img / <span class="number">255.0</span>).numpy())</span><br><span class="line">    plt.title(<span class="string">"label = %d"</span> % label)</span><br><span class="line">    plt.xticks([])</span><br><span class="line">    plt.yticks([])</span><br></pre></td></tr></table></figure>
+<p><img src="output_15_0.png" alt="png"></p>
+<p><img src="output_15_1.png" alt="png"></p>
+<h2 id="从TFRecord构建数据管道"><a href="#从TFRecord构建数据管道" class="headerlink" title="从TFRecord构建数据管道"></a>从TFRecord构建数据管道</h2><p>TFRecord是一种二进制格式, 可以高效地读取/传输数据, 当一些数据在预处理好以后, 可能会重复使用时, 可以考虑TFRecord格式.</p>
+<p>TFRecord需要首先将原始数据序列化保存, 然后在读取的时候在进行相应的解析.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_bytes_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="string">"""Returns a bytes_list from a string / byte."""</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(value, type(tf.constant(<span class="number">0</span>))):</span><br><span class="line">        value = value.numpy()  <span class="comment"># BytesList won't unpack a string from an EagerTensor.</span></span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_float_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="string">"""Returns a float_list from a float / double."""</span></span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(float_list=tf.train.FloatList(value=[value]))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_int64_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="string">"""Returns an int64_list from a bool / enum / int / uint."""</span></span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_list_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="string">"""Returns a bytes_list from a string / byte."""</span></span><br><span class="line">    value = tf.io.serialize_tensor(value).numpy()</span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原始数据</span></span><br><span class="line"></span><br><span class="line">data_set = &#123;</span><br><span class="line">    <span class="string">'a'</span>: np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]),</span><br><span class="line">    <span class="string">'b'</span>: np.array([<span class="number">.1</span>, <span class="number">.2</span>, <span class="number">.3</span>, <span class="number">.4</span>]),</span><br><span class="line">    <span class="string">'c'</span>: np.array([<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>]),</span><br><span class="line">    <span class="string">'d'</span>: np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data_set = tf.data.Dataset.from_tensor_slices(data_set)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 序列化并保存为tfrecord</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">serialize_example</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">  Creates a tf.Example message ready to be written to a file.</span></span><br><span class="line"><span class="string">  """</span></span><br><span class="line">    <span class="comment"># Create a dictionary mapping the feature name to the tf.Example-compatible</span></span><br><span class="line">    <span class="comment"># data type.</span></span><br><span class="line">    feature = &#123;</span><br><span class="line">        <span class="string">'a'</span>: _int64_feature(x[<span class="string">'a'</span>]),</span><br><span class="line">        <span class="string">'b'</span>: _float_feature(x[<span class="string">'b'</span>]),</span><br><span class="line">        <span class="string">'c'</span>: _bytes_feature(x[<span class="string">'c'</span>]),</span><br><span class="line">        <span class="string">'d'</span>: _list_feature(x[<span class="string">'d'</span>]),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Create a Features message using tf.train.Example.</span></span><br><span class="line"></span><br><span class="line">    example_proto = tf.train.Example(features=tf.train.Features(</span><br><span class="line">        feature=feature))</span><br><span class="line">    <span class="keyword">return</span> example_proto.SerializeToString()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> features <span class="keyword">in</span> data_set:</span><br><span class="line">        <span class="keyword">yield</span> serialize_example(features)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">serialized_features_dataset = tf.data.Dataset.from_generator(</span><br><span class="line">    generator, output_types=tf.string, output_shapes=())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入tfrecord文件</span></span><br><span class="line">filename = <span class="string">'test.tfrecord'</span></span><br><span class="line">writer = tf.data.experimental.TFRecordWriter(filename)</span><br><span class="line">writer.write(serialized_features_dataset)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取tfrecord文件</span></span><br><span class="line"></span><br><span class="line">filenames = [filename]</span><br><span class="line">raw_dataset = tf.data.TFRecordDataset(filenames)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解析</span></span><br><span class="line">feature_description = &#123;</span><br><span class="line">    <span class="string">'a'</span>: tf.io.FixedLenFeature([], tf.int64, default_value=<span class="number">0</span>),</span><br><span class="line">    <span class="string">'b'</span>: tf.io.FixedLenFeature([], tf.float32, default_value=<span class="number">0.0</span>),</span><br><span class="line">    <span class="string">'c'</span>: tf.io.FixedLenFeature([], tf.string, default_value=<span class="string">''</span>),</span><br><span class="line">    <span class="string">'d'</span>: tf.io.FixedLenFeature([], tf.string, default_value=<span class="string">''</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_parse_function</span><span class="params">(example_proto)</span>:</span></span><br><span class="line">    <span class="comment"># Parse the input `tf.Example` proto using the dictionary above.</span></span><br><span class="line">    feature = tf.io.parse_single_example(example_proto, feature_description)</span><br><span class="line">    feature[<span class="string">'d'</span>] = tf.io.parse_tensor(feature[<span class="string">'d'</span>], tf.int64)</span><br><span class="line">    <span class="keyword">return</span> feature</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">parsed_dataset = raw_dataset.map(_parse_function)</span><br><span class="line"><span class="keyword">for</span> parsed_record <span class="keyword">in</span> parsed_dataset.take(<span class="number">10</span>):</span><br><span class="line">    tf.print(parsed_record)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;a&apos;: 1, &apos;b&apos;: 0.1, &apos;c&apos;: &quot;a&quot;, &apos;d&apos;: [1 2 3]&#125;</span><br><span class="line">&#123;&apos;a&apos;: 2, &apos;b&apos;: 0.2, &apos;c&apos;: &quot;b&quot;, &apos;d&apos;: [2 3 4]&#125;</span><br><span class="line">&#123;&apos;a&apos;: 3, &apos;b&apos;: 0.3, &apos;c&apos;: &quot;c&quot;, &apos;d&apos;: [3 4 5]&#125;</span><br><span class="line">&#123;&apos;a&apos;: 4, &apos;b&apos;: 0.4, &apos;c&apos;: &quot;d&quot;, &apos;d&apos;: [4 5 6]&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="应用数据转换"><a href="#应用数据转换" class="headerlink" title="应用数据转换"></a>应用数据转换</h1><p>Dataset数据结构应用非常灵活, 因为它本质上是一个Sequece序列, 其每个元素可以是各种类型, 例如可以是张量, 列表, 字典, 也可以是Dataset.<br>Dataset包含了非常丰富的数据转换功能.</p>
+<ul>
+<li>map: 将转换函数映射到数据集每一个元素.</li>
+<li>flat_map: 将转换函数映射到数据集的每一个元素, 并将嵌套的Dataset压平.</li>
+<li>interleave: 效果类似flat_map, 但可以将不同来源的数据夹在一起.</li>
+<li>filter: 过滤掉某些元素.</li>
+<li>zip: 将两个长度相同的Dataset横向铰合.</li>
+<li>concatenate: 将两个Dataset纵向连接. </li>
+<li>reduce: 执行归并操作.</li>
+<li>batch: 构建批次, 每次放一个批次. 比原始数据增加一个维度. 其逆操作为unbatch.</li>
+<li>padded_batch: 构建批次, 类似batch, 但可以填充到相同的形状.</li>
+<li>window: 构建滑动窗口, 返回Dataset of Dataset.</li>
+<li>shuffle: 数据顺序洗牌.</li>
+<li>repeat: 重复数据若干次, 不带参数时, 重复无数次.</li>
+<li>shard: 采样, 从某个位置开始隔固定距离采样一个元素.</li>
+<li>take: 采样, 从开始位置取前几个元素.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># map: 将转换函数映射到数据集每一个元素</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices(</span><br><span class="line">    [<span class="string">"hello world"</span>, <span class="string">"hello China"</span>, <span class="string">"hello Beijing"</span>])</span><br><span class="line">ds_map = ds.map(<span class="keyword">lambda</span> x: tf.strings.split(x, <span class="string">" "</span>))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_map:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor([b&#39;hello&#39; b&#39;world&#39;], shape=(2,), dtype=string)
+tf.Tensor([b&#39;hello&#39; b&#39;China&#39;], shape=(2,), dtype=string)
+tf.Tensor([b&#39;hello&#39; b&#39;Beijing&#39;], shape=(2,), dtype=string)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># flat_map: 将转换函数映射到数据集的每一个元素, 并将嵌套的Dataset压平</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices(</span><br><span class="line">    [<span class="string">"hello world"</span>, <span class="string">"hello China"</span>, <span class="string">"hello Beijing"</span>])</span><br><span class="line">ds_flatmap = ds.flat_map(</span><br><span class="line">    <span class="keyword">lambda</span> x: tf.data.Dataset.from_tensor_slices(tf.strings.split(x, <span class="string">" "</span>)))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_flatmap:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;hello&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;world&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;hello&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;China&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;hello&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;Beijing&#39;, shape=(), dtype=string)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># interleave: 效果类似flat_map, 但可以将不同来源的数据夹在一起</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices(</span><br><span class="line">    [<span class="string">"hello world"</span>, <span class="string">"hello China"</span>, <span class="string">"hello Beijing"</span>])</span><br><span class="line">ds_interleave = ds.interleave(</span><br><span class="line">    <span class="keyword">lambda</span> x: tf.data.Dataset.from_tensor_slices(tf.strings.split(x, <span class="string">" "</span>)))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_interleave:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;hello&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;hello&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;hello&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;world&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;China&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;Beijing&#39;, shape=(), dtype=string)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># filter: 过滤掉某些元素。</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices([<span class="string">"hello world"</span>,<span class="string">"hello China"</span>,<span class="string">"hello Beijing"</span>])</span><br><span class="line"><span class="comment"># 找出含有字母a或B的元素</span></span><br><span class="line">ds_filter = ds.filter(<span class="keyword">lambda</span> x: tf.strings.regex_full_match(x, <span class="string">".*[a|B].*"</span>))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_filter:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;hello China&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;hello Beijing&#39;, shape=(), dtype=string)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zip: 将两个长度相同的Dataset横向铰合。</span></span><br><span class="line"></span><br><span class="line">ds1 = tf.data.Dataset.range(<span class="number">0</span>, <span class="number">3</span>)</span><br><span class="line">ds2 = tf.data.Dataset.range(<span class="number">3</span>, <span class="number">6</span>)</span><br><span class="line">ds3 = tf.data.Dataset.range(<span class="number">6</span>, <span class="number">9</span>)</span><br><span class="line">ds_zip = tf.data.Dataset.zip((ds1, ds2, ds3))</span><br><span class="line"><span class="keyword">for</span> x, y, z <span class="keyword">in</span> ds_zip:</span><br><span class="line">    print(x.numpy(), y.numpy(), z.numpy())</span><br></pre></td></tr></table></figure>
+<pre><code>0 3 6
+1 4 7
+2 5 8
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># condatenate: 将两个Dataset纵向连接。</span></span><br><span class="line"></span><br><span class="line">ds1 = tf.data.Dataset.range(<span class="number">0</span>, <span class="number">3</span>)</span><br><span class="line">ds2 = tf.data.Dataset.range(<span class="number">3</span>, <span class="number">6</span>)</span><br><span class="line">ds_concat = tf.data.Dataset.concatenate(ds1, ds2)</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_concat:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor(1, shape=(), dtype=int64)
+tf.Tensor(2, shape=(), dtype=int64)
+tf.Tensor(3, shape=(), dtype=int64)
+tf.Tensor(4, shape=(), dtype=int64)
+tf.Tensor(5, shape=(), dtype=int64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reduce: 执行归并操作。</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_tensor_slices([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5.0</span>])</span><br><span class="line">result = ds.reduce(<span class="number">0.0</span>, <span class="keyword">lambda</span> x, y: tf.add(x, y))</span><br><span class="line">result</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;tf.Tensor: shape=(), dtype=float32, numpy=15.0&gt;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># batch: 构建批次, 每次放一个批次. 比原始数据增加一个维度. 其逆操作为unbatch</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">11</span>)</span><br><span class="line">ds_batch = ds.batch(<span class="number">4</span>)</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_batch:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor([0 1 2 3], shape=(4,), dtype=int64)
+tf.Tensor([4 5 6 7], shape=(4,), dtype=int64)
+tf.Tensor([ 8  9 10], shape=(3,), dtype=int64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># padded_batch: 构建批次, 类似batch, 但可以填充到相同的形状</span></span><br><span class="line"></span><br><span class="line">elements = [[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], [<span class="number">6</span>, <span class="number">7</span>], [<span class="number">8</span>]]</span><br><span class="line">ds = tf.data.Dataset.from_generator(<span class="keyword">lambda</span>: iter(elements), tf.int32)</span><br><span class="line"></span><br><span class="line">ds_padded_batch = ds.padded_batch(<span class="number">2</span>, padded_shapes=[<span class="number">4</span>,])</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_padded_batch:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(
+[[1 2 0 0]
+ [3 4 5 0]], shape=(2, 4), dtype=int32)
+tf.Tensor(
+[[6 7 0 0]
+ [8 0 0 0]], shape=(2, 4), dtype=int32)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># window: 构建滑动窗口, 返回Dataset of Dataset</span></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">12</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># window返回的是Dataset of Dataset, 可以用flat_map压平</span></span><br><span class="line">ds_window = ds.window(</span><br><span class="line">    <span class="number">3</span>, shift=<span class="number">1</span>).flat_map(<span class="keyword">lambda</span> x: x.batch(<span class="number">3</span>, drop_remainder=<span class="literal">True</span>))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_window:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>WARNING:tensorflow:AutoGraph could not transform &lt;function &lt;lambda&gt; at 0x7fcb59acb9e0&gt; and will run it as-is.
+Cause: could not parse the source code:
+
+    3, shift=1).flat_map(lambda x: x.batch(3, drop_remainder=True))
+
+This error may be avoided by creating the lambda in a standalone statement.
+
+WARNING: AutoGraph could not transform &lt;function &lt;lambda&gt; at 0x7fcb59acb9e0&gt; and will run it as-is.
+Cause: could not parse the source code:
+
+    3, shift=1).flat_map(lambda x: x.batch(3, drop_remainder=True))
+
+This error may be avoided by creating the lambda in a standalone statement.
+
+tf.Tensor([0 1 2], shape=(3,), dtype=int64)
+tf.Tensor([1 2 3], shape=(3,), dtype=int64)
+tf.Tensor([2 3 4], shape=(3,), dtype=int64)
+tf.Tensor([3 4 5], shape=(3,), dtype=int64)
+tf.Tensor([4 5 6], shape=(3,), dtype=int64)
+tf.Tensor([5 6 7], shape=(3,), dtype=int64)
+tf.Tensor([6 7 8], shape=(3,), dtype=int64)
+tf.Tensor([7 8 9], shape=(3,), dtype=int64)
+tf.Tensor([ 8  9 10], shape=(3,), dtype=int64)
+tf.Tensor([ 9 10 11], shape=(3,), dtype=int64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#shuffle: 数据顺序洗牌.</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">12</span>)</span><br><span class="line">ds_shuffle = ds.shuffle(buffer_size=<span class="number">5</span>)</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_shuffle:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(3, shape=(), dtype=int64)
+tf.Tensor(2, shape=(), dtype=int64)
+tf.Tensor(6, shape=(), dtype=int64)
+tf.Tensor(7, shape=(), dtype=int64)
+tf.Tensor(8, shape=(), dtype=int64)
+tf.Tensor(1, shape=(), dtype=int64)
+tf.Tensor(10, shape=(), dtype=int64)
+tf.Tensor(9, shape=(), dtype=int64)
+tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor(4, shape=(), dtype=int64)
+tf.Tensor(5, shape=(), dtype=int64)
+tf.Tensor(11, shape=(), dtype=int64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># repeat: 重复数据若干次, 不带参数时, 重复无数次</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">3</span>)</span><br><span class="line">ds_repeat = ds.repeat(<span class="number">3</span>)</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_repeat:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor(1, shape=(), dtype=int64)
+tf.Tensor(2, shape=(), dtype=int64)
+tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor(1, shape=(), dtype=int64)
+tf.Tensor(2, shape=(), dtype=int64)
+tf.Tensor(0, shape=(), dtype=int64)
+tf.Tensor(1, shape=(), dtype=int64)
+tf.Tensor(2, shape=(), dtype=int64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># shard: 采样, 从某个位置开始隔固定距离采样一个元素</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">12</span>)</span><br><span class="line">ds_shard = ds.shard(<span class="number">3</span>, index=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_shard:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(1, shape=(), dtype=int64)
+tf.Tensor(4, shape=(), dtype=int64)
+tf.Tensor(7, shape=(), dtype=int64)
+tf.Tensor(10, shape=(), dtype=int64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take: 采样, 从开始位置取前几个元素</span></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">12</span>)</span><br><span class="line">ds_take = ds.take(<span class="number">3</span>)</span><br><span class="line">abs</span><br><span class="line">list(ds_take.as_numpy_iterator())</span><br></pre></td></tr></table></figure>
+<pre><code>[0, 1, 2]
+</code></pre><h1 id="提升管道性能"><a href="#提升管道性能" class="headerlink" title="提升管道性能"></a>提升管道性能</h1><p>训练深度学习模型常常会非常耗时.<br>模型训练的耗时主要来自于两个部分, 一部分来自数据准备, 另一部分来自参数迭代.<br>参数迭代过程的耗时通常依赖于GPU来提升.<br>而数据准备过程的耗时则可以通过构建高效的数据管道进行提升.<br>以下是一些构建高效数据管道的建议.</p>
+<ul>
+<li>使用<code>prefetch</code>方法让数据准备和参数迭代两个过程相互并行.</li>
+<li>使用<code>interleave</code>方法可以让数据读取过程多进程执行,并将不同来源数据夹在一起.</li>
+<li>使用<code>map</code>时设置<code>num_parallel_calls</code>让数据转换过程多进行执行.</li>
+<li>使用<code>cache</code>方法让数据在第一个<code>epoch</code>后缓存到内存中, 仅限于数据集不大情形.</li>
+<li>使用<code>map</code>转换时, 先<code>batch</code>, 然后采用向量化的转换方法对每个<code>batch</code>进行转换</li>
+</ul>
+<h2 id="prefetch-方法"><a href="#prefetch-方法" class="headerlink" title="prefetch 方法"></a>prefetch 方法</h2><p>使用<code>prefetch</code>方法让数据准备和参数迭代两个过程相互并行.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印时间分割线</span></span><br><span class="line"><span class="meta">@tf.function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printbar</span><span class="params">()</span>:</span></span><br><span class="line">    ts = tf.timestamp()</span><br><span class="line">    today_ts = ts % (<span class="number">24</span> * <span class="number">60</span> * <span class="number">60</span>)</span><br><span class="line"></span><br><span class="line">    hour = tf.cast(today_ts // <span class="number">3600</span> + <span class="number">8</span>, tf.int32) % tf.constant(<span class="number">24</span>)</span><br><span class="line">    minite = tf.cast((today_ts % <span class="number">3600</span>) // <span class="number">60</span>, tf.int32)</span><br><span class="line">    second = tf.cast(tf.floor(today_ts % <span class="number">60</span>), tf.int32)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">timeformat</span><span class="params">(m)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> tf.strings.length(tf.strings.format(<span class="string">"&#123;&#125;"</span>, m)) == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> (tf.strings.format(<span class="string">"0&#123;&#125;"</span>, m))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> (tf.strings.format(<span class="string">"&#123;&#125;"</span>, m))</span><br><span class="line"></span><br><span class="line">    timestring = tf.strings.join(</span><br><span class="line">        [timeformat(hour),</span><br><span class="line">         timeformat(minite),</span><br><span class="line">         timeformat(second)],</span><br><span class="line">        separator=<span class="string">":"</span>)</span><br><span class="line">    tf.print(<span class="string">"=========="</span> * <span class="number">3</span>, end=<span class="string">""</span>)</span><br><span class="line">    tf.print(timestring)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据准备和参数迭代两个过程默认情况下是串行的</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟数据准备</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        <span class="comment"># 假设每次准备数据需要2s</span></span><br><span class="line">        time.sleep(<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_generator(generator, output_types=(tf.int32))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟参数迭代</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_step</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment">#假设每一步训练需要1s</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 训练过程预计耗时 10 * 2 + 10 * 1 = 30s</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start training..."</span>))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds:</span><br><span class="line">    train_step()</span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end training..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================00:31:27
+start training...
+==============================00:31:57
+end training...
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 prefetch 方法让数据准备和参数迭代两个过程相互并行</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练过程预计耗时 max(10 * 2, 10 * 1) = 20s</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start training with prefetch..."</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># tf.data.experimental.AUTOTUNE 可以让程序自动选择合适的参数</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE):</span><br><span class="line">    train_step()</span><br><span class="line"></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end training..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================00:33:49
+start training with prefetch...
+==============================00:34:10
+end training...
+</code></pre><h2 id="interleave"><a href="#interleave" class="headerlink" title="interleave"></a>interleave</h2><p>使用<code>interleave</code>方法可以让数据读取过程多进程执行, 并将不同来源数据夹在一起.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ds_files = tf.data.Dataset.list_files(<span class="string">"./data/titanic/*.csv"</span>)</span><br><span class="line">ds = ds_files.flat_map(<span class="keyword">lambda</span> x: tf.data.TextLineDataset(x).skip(<span class="number">1</span>))</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> ds.take(<span class="number">4</span>):</span><br><span class="line">    print(line)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;892,0.0,3,&quot;Kelly, Mr. James&quot;,male,34.5,0,0,330911,7.8292,,Q&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;893,1.0,3,&quot;Wilkes, Mrs. James (Ellen Needs)&quot;,female,47.0,1,0,363272,7.0,,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;894,0.0,2,&quot;Myles, Mr. Thomas Francis&quot;,male,62.0,0,0,240276,9.6875,,Q&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;895,0.0,3,&quot;Wirz, Mr. Albert&quot;,male,27.0,0,0,315154,8.6625,,S&#39;, shape=(), dtype=string)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ds_files = tf.data.Dataset.list_files(<span class="string">"./data/titanic/*.csv"</span>)</span><br><span class="line">ds = ds_files.interleave(<span class="keyword">lambda</span> x: tf.data.TextLineDataset(x).skip(<span class="number">1</span>))</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> ds.take(<span class="number">8</span>):</span><br><span class="line">    print(line)</span><br></pre></td></tr></table></figure>
+<pre><code>tf.Tensor(b&#39;1,0,3,&quot;Braund, Mr. Owen Harris&quot;,male,22,1,0,A/5 21171,7.25,,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;892,0.0,3,&quot;Kelly, Mr. James&quot;,male,34.5,0,0,330911,7.8292,,Q&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;2,1,1,&quot;Cumings, Mrs. John Bradley (Florence Briggs Thayer)&quot;,female,38,1,0,PC 17599,71.2833,C85,C&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;893,1.0,3,&quot;Wilkes, Mrs. James (Ellen Needs)&quot;,female,47.0,1,0,363272,7.0,,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;3,1,3,&quot;Heikkinen, Miss. Laina&quot;,female,26,0,0,STON/O2. 3101282,7.925,,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;894,0.0,2,&quot;Myles, Mr. Thomas Francis&quot;,male,62.0,0,0,240276,9.6875,,Q&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;4,1,1,&quot;Futrelle, Mrs. Jacques Heath (Lily May Peel)&quot;,female,35,1,0,113803,53.1,C123,S&#39;, shape=(), dtype=string)
+tf.Tensor(b&#39;895,0.0,3,&quot;Wirz, Mr. Albert&quot;,male,27.0,0,0,315154,8.6625,,S&#39;, shape=(), dtype=string)
+</code></pre><h2 id="num-parallel-calls"><a href="#num-parallel-calls" class="headerlink" title="num_parallel_calls"></a>num_parallel_calls</h2><p>使用<code>map</code>时设置<code>num_parallel_calls</code>让数据转换过程多进行执行.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ds = tf.data.Dataset.list_files(<span class="string">"./data/cifar2/train/*/*.jpg"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_image</span><span class="params">(img_path, size=<span class="params">(<span class="number">32</span>, <span class="number">32</span>)</span>)</span>:</span></span><br><span class="line">    label = <span class="number">1</span> <span class="keyword">if</span> tf.strings.regex_full_match(img_path,</span><br><span class="line">                                             <span class="string">".*/automobile/.*"</span>) <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    img = tf.io.read_file(img_path)</span><br><span class="line">    img = tf.image.decode_jpeg(img)  <span class="comment"># 注意此处为jpeg格式</span></span><br><span class="line">    img = tf.image.resize(img, size)</span><br><span class="line">    <span class="keyword">return</span> img, label</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 单进程转换</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start transformation..."</span>))</span><br><span class="line"></span><br><span class="line">ds_map = ds.map(load_image)</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> ds_map:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end transformation..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================11:02:15
+start transformation...
+==============================11:02:19
+end transformation...
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多进程转换</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start parallel transformation..."</span>))</span><br><span class="line"></span><br><span class="line">ds_map_parallel = ds.map(load_image,</span><br><span class="line">                         num_parallel_calls=tf.data.experimental.AUTOTUNE)</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> ds_map_parallel:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end parallel transformation..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================11:02:52
+start parallel transformation...
+==============================11:02:53
+end parallel transformation...
+</code></pre><h2 id="cache"><a href="#cache" class="headerlink" title="cache"></a>cache</h2><p>使用<code>cache</code>方法让数据在第一个<code>epoch</code>后缓存到内存中, 仅限于数据集不大情形.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟数据准备</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">        <span class="comment"># 假设每次准备数据需要2s</span></span><br><span class="line">        time.sleep(<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ds = tf.data.Dataset.from_generator(generator, output_types=(tf.int32))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟参数迭代</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_step</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># 假设每一步训练需要0s</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练过程预计耗时 (5 * 2 + 5 * 0) * 3 = 30s</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start training..."</span>))</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> tf.range(<span class="number">3</span>):</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> ds:</span><br><span class="line">        train_step()</span><br><span class="line">    printbar()</span><br><span class="line">    tf.print(<span class="string">"epoch ="</span>, epoch, <span class="string">" ended"</span>)</span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end training..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================18:17:35
+start training...
+==============================18:17:45
+epoch = 0  ended
+==============================18:17:56
+epoch = 1  ended
+==============================18:18:06
+epoch = 2  ended
+==============================18:18:06
+end training...
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟数据准备</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">        <span class="comment"># 假设每次准备数据需要2s</span></span><br><span class="line">        time.sleep(<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用cache方法让数据在第一个epoch后缓存到内存中, 仅限于数据集不大情形</span></span><br><span class="line">ds = tf.data.Dataset.from_generator(generator, output_types=(tf.int32)).cache()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟参数迭代</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_step</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># 假设每一步训练需要0s</span></span><br><span class="line">    time.sleep(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练过程预计耗时 (5 * 2 + 5 * 0) + (5 * 0 + 5 * 0) * 2 = 10s</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start training..."</span>))</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> tf.range(<span class="number">3</span>):</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> ds:</span><br><span class="line">        train_step()</span><br><span class="line">    printbar()</span><br><span class="line">    tf.print(<span class="string">"epoch ="</span>, epoch, <span class="string">" ended"</span>)</span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end training..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================18:19:13
+start training...
+==============================18:19:23
+epoch = 0  ended
+==============================18:19:23
+epoch = 1  ended
+==============================18:19:23
+epoch = 2  ended
+==============================18:19:23
+end training...
+</code></pre><h2 id="batch"><a href="#batch" class="headerlink" title="batch"></a>batch</h2><p>使用<code>map</code>转换时, 先<code>batch</code>, 然后采用向量化的转换方法对每个<code>batch</code>进行转换.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先map后batch</span></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">100000</span>)</span><br><span class="line">ds_map_batch = ds.map(<span class="keyword">lambda</span> x: x**<span class="number">2</span>).batch(<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start scalar transformation..."</span>))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_map_batch:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end scalar transformation..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================18:20:50
+start scalar transformation...
+==============================18:20:53
+end scalar transformation...
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先batch后map</span></span><br><span class="line">ds = tf.data.Dataset.range(<span class="number">100000</span>)</span><br><span class="line">ds_batch_map = ds.batch(<span class="number">20</span>).map(<span class="keyword">lambda</span> x: x**<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"start vector transformation..."</span>))</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> ds_batch_map:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">printbar()</span><br><span class="line">tf.print(tf.constant(<span class="string">"end vector transformation..."</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>==============================18:21:20
+start vector transformation...
+==============================18:21:20
+end vector transformation...
+</code></pre>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/07/TensorFlow/TensorFlow-计算图/" rel="next" title="TensorFlow-计算图">
+                <i class="fa fa-chevron-left"></i> TensorFlow-计算图
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/10/大数据/Pandas读写大文件/" rel="prev" title="Pandas读写大文件">
+                Pandas读写大文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#构建数据管道"><span class="nav-number">1.</span> <span class="nav-text">构建数据管道</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从numpy-array构建数据管道"><span class="nav-number">1.1.</span> <span class="nav-text">从numpy array构建数据管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从pandas-DataFrame构建数据管道"><span class="nav-number">1.2.</span> <span class="nav-text">从pandas DataFrame构建数据管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从Python-gennerator构建数据管道"><span class="nav-number">1.3.</span> <span class="nav-text">从Python gennerator构建数据管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从csv文件构建数据管道"><span class="nav-number">1.4.</span> <span class="nav-text">从csv文件构建数据管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从文本文件构建数据管道"><span class="nav-number">1.5.</span> <span class="nav-text">从文本文件构建数据管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从文件路径构建数据管道"><span class="nav-number">1.6.</span> <span class="nav-text">从文件路径构建数据管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从TFRecord构建数据管道"><span class="nav-number">1.7.</span> <span class="nav-text">从TFRecord构建数据管道</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用数据转换"><span class="nav-number">2.</span> <span class="nav-text">应用数据转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#提升管道性能"><span class="nav-number">3.</span> <span class="nav-text">提升管道性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#prefetch-方法"><span class="nav-number">3.1.</span> <span class="nav-text">prefetch 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#interleave"><span class="nav-number">3.2.</span> <span class="nav-text">interleave</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#num-parallel-calls"><span class="nav-number">3.3.</span> <span class="nav-text">num_parallel_calls</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache"><span class="nav-number">3.4.</span> <span class="nav-text">cache</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#batch"><span class="nav-number">3.5.</span> <span class="nav-text">batch</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

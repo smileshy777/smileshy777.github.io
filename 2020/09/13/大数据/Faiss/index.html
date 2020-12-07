@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Faiss是Facebook开源的一个能够在海量数据中, 高效地进行邻近搜索的一个库, 下面就来介绍一下这个库的一些基本算法原理, 以及简单的使用.">
+<meta name="keywords" content="大数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Faiss">
+<meta property="og:url" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="Faiss是Facebook开源的一个能够在海量数据中, 高效地进行邻近搜索的一个库, 下面就来介绍一下这个库的一些基本算法原理, 以及简单的使用.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/fig_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/fig_2.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/fig_3.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/fig_4.png">
+<meta property="og:updated_time" content="2020-11-18T13:49:38.595Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Faiss">
+<meta name="twitter:description" content="Faiss是Facebook开源的一个能够在海量数据中, 高效地进行邻近搜索的一个库, 下面就来介绍一下这个库的一些基本算法原理, 以及简单的使用.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/09/13/大数据/Faiss/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/09/13/大数据/Faiss/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Faiss | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/09/13/大数据/Faiss/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Faiss
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-13 23:08:05" itemprop="dateCreated datePublished" datetime="2020-09-13T23:08:05+08:00">2020-09-13</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-11-18 21:49:38" itemprop="dateModified" datetime="2020-11-18T21:49:38+08:00">2020-11-18</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/大数据/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Faiss是Facebook开源的一个能够在海量数据中, 高效地进行邻近搜索的一个库, 下面就来介绍一下这个库的一些基本算法原理, 以及简单的使用.</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在我的之前一篇讲<a href="whitemoonlight.top/2020/10/09/数据结构与算法/KD-Tree/">KD Tree</a>的文章中, 就介绍了一种在邻近搜索中, 用空间换时间的数据结构, KD Tree, 在数据较小的情况下, 还是可以使用的, 能够把时间复杂度, 从$O(N)$降低到$O(\log N)$.</p>
+<p>然鹅在大数据场景下, 数据(向量)的个数可能达到亿的量级, 此外, 向量维度的增加, 也会导致数据量进一步增大, 此时若想在内存中构建一棵KD Tree, 单机是肯定完成不了的.</p>
+<p>如果能有一个库, 能够支持多种邻近搜索模式, 能够根据实际情况的需求, 能够在搜索精度, 速度, 内存占用之间进行平衡, 能够在磁盘上也能进行搜索, 那就好了♪(^∇^*)</p>
+<p>Faiss站了出来: 没错, 正是在下OvO</p>
+<p>Faiss是Facebook开源的一个库, 用C++写成, 并非常友好地提供了Python接口. Faiss可以用在实际的生产环境中, 下面对Faiss的部分基本原理进行介绍, 并展示简单应用.</p>
+<h1 id="精确模式"><a href="#精确模式" class="headerlink" title="精确模式"></a>精确模式</h1><p>Faiss是支持多种模式的, 其中必然就少不了暴力搜索模式, 也可以称作精确模式, 因为要对所有的向量进行无损的遍历, 所以得到的结果也必然是准确的.</p>
+<p>精确模型没有太多好说的, 下面看一下代码:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建向量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">d = <span class="number">64</span>  <span class="comment"># 向量维度</span></span><br><span class="line">nb = <span class="number">100000</span>  <span class="comment"># 保存的向量数量</span></span><br><span class="line">nq = <span class="number">10000</span>  <span class="comment"># 需要查询的向量数量</span></span><br><span class="line">np.random.seed(<span class="number">7</span>)</span><br><span class="line">xb = np.random.random((nb, d)).astype(<span class="string">'float32'</span>)  <span class="comment"># 注意需要限制32位浮点数</span></span><br><span class="line">xq = np.random.random((nq, d)).astype(<span class="string">'float32'</span>)</span><br></pre></td></tr></table></figure>
+<p>要使用Faiss进行搜索, 需要先创建索引, 这里的<code>IndexFlatL2</code>表示暴力搜索对应的索引, 并用欧氏距离作为指标.</p>
+<p>后面会看到, 会用一些算法来加速或者压缩内存, 这时候除了创建索引, 还需要一个训练的过程, 不过<code>IndexFlatL2</code>并不需要训练.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建索引</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> faiss</span><br><span class="line">index = faiss.IndexFlatL2(d)  <span class="comment"># 创建索引</span></span><br><span class="line">print(<span class="string">'是否已训练:'</span>, index.is_trained)</span><br><span class="line">index.add(xb)  <span class="comment"># 添加向量</span></span><br><span class="line">print(<span class="string">'向量个数: '</span>, index.ntotal)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">是否已训练: True</span><br><span class="line">向量个数:  100000</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索</span></span><br><span class="line"></span><br><span class="line">k = <span class="number">4</span>  <span class="comment"># 最近邻个数</span></span><br><span class="line">D, I = index.search(xb[:<span class="number">5</span>], k)  <span class="comment"># 直接对保存的向量进行搜索, 查看结果是否正确</span></span><br><span class="line">print(<span class="string">'Index:'</span>)</span><br><span class="line">print(I)</span><br><span class="line">print(<span class="string">'Distance:'</span>)</span><br><span class="line">print(D)</span><br><span class="line">print(<span class="string">'#'</span> * <span class="number">42</span>)</span><br><span class="line">D, I = index.search(xq, k)  <span class="comment"># 用真实查询向量进行搜索</span></span><br><span class="line">print(<span class="string">'Index:'</span>)</span><br><span class="line">print(I[:<span class="number">5</span>])  <span class="comment"># 前5个查询向量的结果</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Index:</span><br><span class="line">[[    0 97820 94546 51393]</span><br><span class="line"> [    1 58334 87280 12181]</span><br><span class="line"> [    2 24444 71046 91180]</span><br><span class="line"> [    3 37506 12216 26707]</span><br><span class="line"> [    4 77045 47784 13208]]</span><br><span class="line">Distance:</span><br><span class="line">[[0.        4.6321406 4.7470975 4.9057417]</span><br><span class="line"> [0.        4.5316086 4.9688716 5.0430927]</span><br><span class="line"> [0.        5.3778887 5.4905343 5.74937  ]</span><br><span class="line"> [0.        4.600462  4.725213  5.1498823]</span><br><span class="line"> [0.        5.570385  5.8674355 5.8756237]]</span><br><span class="line">##########################################</span><br><span class="line">Index:</span><br><span class="line">[[75581 78376 18034 48733]</span><br><span class="line"> [ 2006 39322 19294 50124]</span><br><span class="line"> [48158 68786 84956 10466]</span><br><span class="line"> [40157 76112 20177 74830]</span><br><span class="line"> [30148 10533 99308 45521]]</span><br></pre></td></tr></table></figure>
+<p>为了同后面的加速模式做一下比较, 这里测试一下暴力搜索的速度:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%timeit index.search(xq, k)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">416 ms ± 1.03 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</span><br></pre></td></tr></table></figure>
+<h1 id="加速搜索"><a href="#加速搜索" class="headerlink" title="加速搜索"></a>加速搜索</h1><p>下面来讲解Faiss中的加速搜索的方法, Faiss应该在实际工程细节中, 加入了大量的调优, 而这里仅从部分加速算法的角度来进行介绍.</p>
+<p>搜索的时间, 一般来说取决于向量的数量以及维度, 不过可能多数时候向量的维度并不会太大, 更多的是取决于向量的数量.</p>
+<p>但是这又不是训练模型, 总不能对向量进行抽样吧, 而像KD Tree那样又太费内存, 怎么办呢?</p>
+<p>还是那个思路, 如果能够用一些方法, 减小不必要的搜索, 即把一些明显距离较远的向量排除, 再在小范围中搜索, 就会快很多.</p>
+<p>Faiss这里的方法简单而有效, 用到了聚类(K-means)的方法. 即先用K-means对向量进行聚类, 每个向量都被划分到一个组中, 当对一个向量进行邻近搜索时, 先根据每个组的中心向量, 来判断哪些组中可能有该向量的邻近向量, 然后再到对应的组中进行精细地搜索.</p>
+<p>这里的原理比较简单, 但有一些需要注意的地方. 首先是这种加速是有一定的代价的, 即得到的结果, 相比上面的暴力搜索模式, 可能并不完全一样.</p>
+<p>同时, 有两个参数<code>nlist</code>与<code>nprobe</code>, 需要进行尝试与调节, 才能在实际的任务中, 取得较好的结果:</p>
+<ul>
+<li><p><code>nlist</code></p>
+<p>聚类中心的数量.</p>
+<p>在<code>nlist</code>给定的情况下, 这个参数越大, 搜索的时间越小.</p>
+</li>
+<li><p><code>nprobe</code></p>
+<p>每次在多少个组中进行搜索.</p>
+<p>在<code>nlist</code>给定的情况下, 这个参数越大, 搜索的时间越多, 结果越精准.</p>
+</li>
+</ul>
+<p>Faiss中一个比较重要的索引就是<code>IndexIVFFlat</code>, 利用聚类以及倒排方法进行加速, 在初始化的时候, 还需要一个编码器<code>quantizer</code>, 这里使用<code>IndexFlatL2</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加速搜索</span></span><br><span class="line"></span><br><span class="line">nlist = <span class="number">100</span>  <span class="comment"># 聚类中心数量</span></span><br><span class="line">k = <span class="number">4</span></span><br><span class="line">quantizer = faiss.IndexFlatL2(d)  <span class="comment"># 需要一个编码器</span></span><br><span class="line">index = faiss.IndexIVFFlat(quantizer, d, nlist)</span><br><span class="line">print(<span class="string">'是否已训练:'</span>, index.is_trained)</span><br><span class="line">index.train(xb)</span><br><span class="line">print(<span class="string">'是否已训练:'</span>, index.is_trained)</span><br><span class="line"></span><br><span class="line">index.add(xb)  <span class="comment"># 添加向量</span></span><br><span class="line">index.nprobe = <span class="number">10</span>  <span class="comment"># 设置搜索聚类组群的数量, 默认为1</span></span><br><span class="line">D, I = index.search(xq, k)</span><br><span class="line">print(I[:<span class="number">5</span>])  <span class="comment"># 前5个查询向量的结果</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">是否已训练: False</span><br><span class="line">是否已训练: True</span><br><span class="line">[[78376 18034 48733  8985]</span><br><span class="line"> [ 2006 19294   430 30718]</span><br><span class="line"> [48158 68786 84956 51185]</span><br><span class="line"> [40157 20177 74830 17291]</span><br><span class="line"> [45521 33644 17126 22048]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">97.7 ms ± 3.22 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)</span><br></pre></td></tr></table></figure>
+<p>对比上面精确模式的约400ms, 这里花费的时间大约是其四分之一, 确实能够加速搜索.</p>
+<h1 id="节省内存"><a href="#节省内存" class="headerlink" title="节省内存"></a>节省内存</h1><p>如果仅仅是能够加速, 是不够的, 还需要在尽量保证精度的情况下, 节省内存占用.</p>
+<p>如何建设内存占用呢? 主要就是从向量维度上, 来进行考虑了, 即降维.</p>
+<p>一提到降维, 可能就会想到PCA, 它是一个有效的无监督, 线性降维算法. 通俗地来说, 就是把原来高维的特征空间中的点, 映射到低维空间中. 关于PCA的具体算法原理, 还行做更多了解的同学, 可以去网上进行查阅. 在Faiss中, 也有对PCA的实现, 但这不是这里的重点, 就不做展示了~</p>
+<p>除了使用PCA算法进行降维, 在Faiss中还有一种关键的算法, 即<a href="https://hal.inria.fr/file/index/docid/514462/filename/paper_hal.pdf" target="_blank" rel="noopener">Product Quantizer</a>, 简称PQ, 下面对PQ的原理进行阐述.</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>这里假设有一个$50000\times 1024$的向量矩阵, 每一行为一个$1024$维的向量.</p>
+<p>现在把每个向量平均分成$m$个子向量, 假设$m=8$, 每个子向量$128$维, 如图:</p>
+<p><img src="fig_1.png" alt="fig"></p>
+<p>对于这8组子向量, 分别使用K-means算法, 并设聚类中心数量为$256$, 结果如下:</p>
+<p><img src="fig_2.png" alt="fig"></p>
+<p>这时候, 可以对每组子向量, 都用聚类的组群的编号(0-255), 来进行编码, 那么原本的一个$1024$维浮点数向量, 就可以用8维无符号整型向量代替:</p>
+<p><img src="fig_3.png" alt="fig"></p>
+<p>这样, 内存占用缩减了多少呢? 原本的字节数为:</p>
+<script type="math/tex; mode=display">
+1024\times 4=4096</script><p>现在的字节数为:</p>
+<script type="math/tex; mode=display">
+8\times 1=8</script><p>缩减了512 ($=4096/8$) 倍!</p>
+<p>上面的$m$可以用来控制具体的缩减程度, $m$越小, 则越更高缩减内存占用, 但是在搜索精度上会差一些.</p>
+<p>那么… 这样转换了以后, 如何进行计算呢, 总不能直接拿着编号来计算吧OvO</p>
+<p>要知道, 每组子向量的每个整数编号, 都是映射到一个聚类中心的, 那么在计算距离或者相似度的时候, 就可以将编号转变为真实向量(有损), 再进行计算.</p>
+<p>具体有两种方式:</p>
+<p><img src="fig_4.png" alt="fig"></p>
+<p>上图中, $x$表示待查询向量, $y$表示数据集中的向量, $q(\cdot)$表示将原本向量根据聚类, 划分到某个组群的中心向量. 左边的方式, 表示将$x,y$向量都先进行转换, 然后再计算; 右边的方式, 表示使用原始的$x$向量, 和转换后的$y$向量进行计算.</p>
+<p>运用PQ的方式, 是能够有效地减少内存占用空间的, 并且也能够和上一节中的加速算法一起结合起来使用, 它们并不冲突♪(^∇^*)</p>
+<p>在Faiss中, <code>IndexIVFPQ</code>就是同时使用了PQ算法来减少内存占用, 并也使用聚类和倒排来进行加速. 在原有的基础上, 增加了一个参数$m$, 用以控制子向量的划分个数.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 减小内存占用</span></span><br><span class="line"></span><br><span class="line">nlist = <span class="number">100</span></span><br><span class="line">m = <span class="number">8</span>  <span class="comment"># 子向量个数</span></span><br><span class="line">k = <span class="number">4</span></span><br><span class="line">quantizer = faiss.IndexFlatL2(d)</span><br><span class="line">index = faiss.IndexIVFPQ(quantizer, d, nlist, m, <span class="number">8</span>)  <span class="comment"># 8表示每个子向量用8个比特来进行编码</span></span><br><span class="line">index.train(xb)</span><br><span class="line">index.add(xb)</span><br><span class="line">index.nprobe = <span class="number">10</span></span><br><span class="line">D, I = index.search(xq, k)</span><br><span class="line">print(I[:<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[[38423 69668  2747 90800]</span><br><span class="line"> [30739 11101 36633 18976]</span><br><span class="line"> [84956 55762 43311 48158]</span><br><span class="line"> [ 2845 58680 13501 32725]</span><br><span class="line"> [33644 23032 74010 76153]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%timeit index.search(xq, k)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">46.2 ms ± 981 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)</span><br></pre></td></tr></table></figure>
+<p>从测试结果来看, “降维”后在搜索时间上也有所降低.</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>在这一篇中, 主要介绍了Faiss这个开源库的相关内容, 包括其用途, 部分特性及原理.</p>
+<p>但关于Faiss的内容, 其实还远不止这些, 在真实的场景中, 是否将全部向量放入内存, 可能会用到GPU来加速计算, 使用哪一种索引, 参数如何选择, 在精度, 速度, 内存之间如何平衡, 都是需要试验与分析的.</p>
+<p>那么需要优化的点不止一处, 如何进行抉择呢, 我认为一种不错的方法, 是对多数方面, 设定一个阈值, 达到阈值即可, 在此基础上, 对某一项, 或者少数某几项来进行优化, 就像一个带约束的优化问题那样. 比如搜索速度, 内存占用, 都可以设定一个阈值, 而搜索结果的精度, 作为在此基础上的优化目标.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/13/大数据/PySpark学习笔记-三/" rel="next" title="PySpark学习笔记(三)">
+                <i class="fa fa-chevron-left"></i> PySpark学习笔记(三)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/07/自然语言处理/文本表示/" rel="prev" title="文本表示">
+                文本表示 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#精确模式"><span class="nav-number">2.</span> <span class="nav-text">精确模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加速搜索"><span class="nav-number">3.</span> <span class="nav-text">加速搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节省内存"><span class="nav-number">4.</span> <span class="nav-text">节省内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

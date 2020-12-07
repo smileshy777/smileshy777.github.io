@@ -95,7 +95,7 @@
 </script>
 
   <meta name="description" content="大多数时候, 我们可以去采集获取现实中真实的图结构的数据, 对其进行分析和研究. 而如果想通过一些方法, 来生成类似的数据, 可以怎么做呢? 如果一个相对简单的过程, 就能够生成与现实世界中非常相似的网络, 那么有如下好处:  可以用生成的网络, 代替真实网络进行研究和实验. 可以更加清楚地了解真实世界网络的生成方式.">
-<meta name="keywords" content="统计分析, 机器学习, 资源分享">
+<meta name="keywords" content="图算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网络生成模型">
 <meta property="og:url" content="https://smileshy777.github.io/2020/05/21/图算法/网络生成模型/index.html">
@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/21/图算法/网络生成模型/fig_1.png">
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/21/图算法/网络生成模型/fig_2.png">
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/21/图算法/网络生成模型/fig_3.png">
-<meta property="og:updated_time" content="2020-05-23T08:57:22.331Z">
+<meta property="og:updated_time" content="2020-10-10T14:54:38.001Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络生成模型">
 <meta name="twitter:description" content="大多数时候, 我们可以去采集获取现实中真实的图结构的数据, 对其进行分析和研究. 而如果想通过一些方法, 来生成类似的数据, 可以怎么做呢? 如果一个相对简单的过程, 就能够生成与现实世界中非常相似的网络, 那么有如下好处:  可以用生成的网络, 代替真实网络进行研究和实验. 可以更加清楚地了解真实世界网络的生成方式.">
@@ -245,6 +245,22 @@
     
 
     <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -411,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-05-23 16:57:22" itemprop="dateModified" datetime="2020-05-23T16:57:22+08:00">2020-05-23</time>
+                <time title="修改时间：2020-10-10 22:54:38" itemprop="dateModified" datetime="2020-10-10T22:54:38+08:00">2020-10-10</time>
               </span>
             
           
@@ -441,14 +457,6 @@
           
           
 
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-                 阅读次数： 
-                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
-              </span>
-            </span>
           
 
           
@@ -726,6 +734,15 @@ p(v_i)=\frac{d_i}{\sum_j d_j}</script><p>优先连接网络与真实网络比较
 
     <footer class="post-footer">
       
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/图算法/" rel="tag"># 图算法</a>
+          
+        </div>
+      
 
       
       
@@ -745,8 +762,8 @@ p(v_i)=\frac{d_i}{\sum_j d_j}</script><p>优先连接网络与真实网络比较
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/05/22/LeetCode/Find-Words-That-Can-Be-Formed-by-Characters/" rel="prev" title="Find Words That Can Be Formed by Characters">
-                Find Words That Can Be Formed by Characters <i class="fa fa-chevron-right"></i>
+              <a href="/2020/05/23/图算法/使用NetworkX分析网络/" rel="prev" title="使用NetworkX分析网络">
+                使用NetworkX分析网络 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -817,7 +834,7 @@ p(v_i)=\frac{d_i}{\sum_j d_j}</script><p>优先连接网络与真实网络比较
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -852,38 +869,99 @@ p(v_i)=\frac{d_i}{\sum_j d_j}</script><p>优先连接网络与真实网络比较
         
           
         
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
     
 
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
     
   </nav>
 
@@ -961,32 +1039,6 @@ p(v_i)=\frac{d_i}{\sum_j d_j}</script><p>优先连接网络与真实网络比较
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

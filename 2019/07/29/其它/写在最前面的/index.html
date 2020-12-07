@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="写博客的目的写博客这件事情, 是我从很久以前就想要做的, 但是一直拖到现在, 我想一来是我有点拖延症, 二来是没有找到合适的网站/网站外观. 现在国内一般可以用来写博客的并不多, 比较好的有简书, 博客园, 剩下的一些比如CSDN, 知乎…虽然它们在其它一些方面很有用, 但是就写博客来说叭太行. 而简书和博客园的外观以及功能虽然可以一定程度上地定制, 但是终究不是很喜欢, 还有一点是有广告…">
+<meta name="keywords" content="统计分析, 机器学习, 资源分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="写在最前面的">
+<meta property="og:url" content="https://smileshy777.github.io/2019/07/29/其它/写在最前面的/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="写博客的目的写博客这件事情, 是我从很久以前就想要做的, 但是一直拖到现在, 我想一来是我有点拖延症, 二来是没有找到合适的网站/网站外观. 现在国内一般可以用来写博客的并不多, 比较好的有简书, 博客园, 剩下的一些比如CSDN, 知乎…虽然它们在其它一些方面很有用, 但是就写博客来说叭太行. 而简书和博客园的外观以及功能虽然可以一定程度上地定制, 但是终究不是很喜欢, 还有一点是有广告…">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-12-07T06:50:01.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="写在最前面的">
+<meta name="twitter:description" content="写博客的目的写博客这件事情, 是我从很久以前就想要做的, 但是一直拖到现在, 我想一来是我有点拖延症, 二来是没有找到合适的网站/网站外观. 现在国内一般可以用来写博客的并不多, 比较好的有简书, 博客园, 剩下的一些比如CSDN, 知乎…虽然它们在其它一些方面很有用, 但是就写博客来说叭太行. 而简书和博客园的外观以及功能虽然可以一定程度上地定制, 但是终究不是很喜欢, 还有一点是有广告…">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2019/07/29/其它/写在最前面的/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>写在最前面的 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2019/07/29/其它/写在最前面的/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">写在最前面的
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-29 23:30:38" itemprop="dateCreated datePublished" datetime="2019-07-29T23:30:38+08:00">2019-07-29</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-12-07 14:50:01" itemprop="dateModified" datetime="2020-12-07T14:50:01+08:00">2020-12-07</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/其它/" itemprop="url" rel="index"><span itemprop="name">其它</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="写博客的目的"><a href="#写博客的目的" class="headerlink" title="写博客的目的"></a>写博客的目的</h1><p>写博客这件事情, 是我从很久以前就想要做的, 但是一直拖到现在, 我想一来是我有点拖延症, 二来是没有找到合适的网站/网站外观.</p>
+<p>现在国内一般可以用来写博客的并不多, 比较好的有简书, 博客园, 剩下的一些比如CSDN, 知乎…虽然它们在其它一些方面很有用, 但是就写博客来说叭太行. 而简书和博客园的外观以及功能虽然可以一定程度上地定制, 但是终究不是很喜欢, 还有一点是有广告…</p>
+<a id="more"></a>
+<p>所以, 有一个自己相对独立的博客就有必要了, 但是完全独立对我来说并不那么需要, 于是依托于github的免费服务器, 再利用Hexo的定制功能就是比较理想的选择.</p>
+<p>关于怎么用上面那个方法搭建博客以后也许我会写一下, 步骤正确以后非常简单. 而对于博客的定制我也还在慢慢摸索, 现在我的博客很简洁, 以后会逐渐加入搜索, 评论等功能, 这样能更好地方便读者, 以及和读者进行互动.</p>
+<p>Ok, 有了写博客的地方, 那我接下来要写一些什么样的文章呢?</p>
+<p>首先我想写一写一些类似于聊天一样的文章, 我把这类文章划分为”摆龙门阵”, 嘿嘿, 因为我是巴渝的人.</p>
+<p>然后我的工作是需要用到统计分析, 机器学习这些东西的, 所以也会写一些关于这方面的文章. 如果写我特别熟悉的部分, 算是一种对知识结构的梳理; 如果写我也刚接触的知识, 那能够让我尽可能去搞明白其前因后果, 自己大概懂了和写出来想让别人也懂是两码事, 至少…能够顺利地import, 做一个快乐的调包侠对吧~</p>
+<p>还有一些东西比如图算法, 自然语言处理, 这些我暂时用不到但是以后很可能会用到的技能, 我会一边学习, 一边总结分享.</p>
+<p>最后还有数据结构和算法题, 我估计我会两三天做一道. 刷题可以同时锻炼思维能力和代码能力, 无论是一个合格的程序员, 还是以后有一天不靠码代码维生了, 我认为都是很有用的. 而且, 当在LeetCode上提交代码, 得到一个大大的绿色的Accept的时候, 大脑会分泌多巴胺!</p>
+<p>此外, 写博客还有一个目的, 大概是在两年以前, 我接触并逐渐开始理解”开源”这个词, 一开始我并不理解它的意思, 而作为一个一路自学过来的人, 现在可以说如果没有”开源”, 就不会有现在的我. </p>
+<blockquote>
+<p>我相信, 一定程度上的开源, 可以让世界变得更加美好!</p>
+</blockquote>
+<p>当你要主动去学习一些东西的时候, 那么就去找资料, 可以谷歌(大伙懂的…), 可以去一些社区寻求答案. ApacheCN, Github, 知乎, Kaggle, YouTube等等, 很多的人在分享他们的代码, 他们的经验, 无数的知识躺在那里, 等着想要学习的人去学习. 而现在, 我受益于开源, 也想要回报开源, 这也是我写博客的一大原因之一.</p>
+<p>总结下就是:</p>
+<ul>
+<li>觉得写博客很酷!</li>
+<li>写博客可以帮我更好地理解知识(自己都不懂还来教别人???)</li>
+<li>可以和世界各地的人(理论上)的人交流问题.</li>
+<li>回报开源.</li>
+</ul>
+<h1 id="我的黄金三年"><a href="#我的黄金三年" class="headerlink" title="我的黄金三年"></a>我的黄金三年</h1><p>趁我刚毕业没多久, 一些东西还没有忘记, 把一些对我人生改变很大的事情记录下来.</p>
+<p>一直一来很多事情都能对一个人的人生产生影响, 有好有坏, 有大有小, 而我之所以要写下了, 如小标题所言, 我认为这些事情是有意义的. 它们也许改变了我的世界线, 也许世界线会收束, 它们的影响其实很小, 但都是我的黄金三年.</p>
+<h2 id="放弃了物理"><a href="#放弃了物理" class="headerlink" title="放弃了物理."></a>放弃了物理.</h2><p>说出来可能你不信, 我当初是想成为一名物流学家的, 可以拿诺贝尔奖的那种, 爱因斯坦是我的偶像.</p>
+<p>我以前物理学得应该还算好吧, 其次我对这个世界感兴趣, 但这些并不是让我学物理的全部原因, 还有一个很重要的原因, 我想要时光机, 我想要长生不老. 而我认为达成这两样, 或者就时光机来说, 正确的路径, 就是物理.</p>
+<p>我想要时光机, 回到过去, 改变一些东西.</p>
+<p>而后的一段时间, 我没有好好学习, 是的, 和大多数大学生一样, 翘课, 考试临时抱佛脚, 打游戏. 还好我打游戏比较厉害, 相比玩得菜的能获得更多的快乐哈哈哈. 本来没好好学习想甩锅的, 想想还是算了, 脑子长自己头上, 别人把你关起来不让你学了?</p>
+<p>再到后来, 经过大概一个假期的纠结, 我决定放弃当初那个要成为物理学家的想法. </p>
+<p>当时我哭了吗? 应该没有吧.</p>
+<blockquote>
+<p>这个世界, 所有世界线, 都不可能存在时光机!</p>
+</blockquote>
+<h2 id="谈了场恋爱"><a href="#谈了场恋爱" class="headerlink" title="谈了场恋爱?"></a>谈了场恋爱?</h2><p><code>自我A</code>: 痛苦吗?</p>
+<p><code>自我B</code>: 很痛苦!</p>
+<p><code>自我A</code>: 问心无愧吗?</p>
+<p><code>自我B</code>: 问心无愧!</p>
+<p><code>自我A</code>: 浪费的时间可惜吗?</p>
+<p><code>自我B</code>: 可惜! 但也许是我必须经历的, 我对世界的认知还太少, 我的自控能力还太差.</p>
+<p><code>自我A</code>: 熬夜, 暴饮暴食, 不锻炼, 现在你的身体素质不太好啊.</p>
+<p><code>自我B</code>: 是的, 不过一切都在慢慢好转. 我现在没有暴饮暴食, 不会过度熬夜, 偶尔会进行室内运动. 等春暖花开, 我会去跑步的.</p>
+<p><code>自我A</code>: 有总结过经验吗?</p>
+<p><code>自我B</code>: 哈哈哈, 非要说的话, “不做舔狗”吧.</p>
+<p><code>自我A</code>: 你还记得多少?</p>
+<p><code>自我B</code>: 时间自然会帮我忘记.</p>
+<p><code>自我A</code>: 那个小男孩还活着吗?</p>
+<p><code>自我B</code>: 这你直接问<code>自我C</code>了啊…小C很好, 现在睡得很香, 还说睡醒了一起开黑呢.</p>
+<h2 id="交了群朋友"><a href="#交了群朋友" class="headerlink" title="交了群朋友!"></a>交了群朋友!</h2><p>在研究生期间, 室友, 同学, 师兄师姐对我都挺好的, 不知道从哪说起, 就想到啥说啥吧.</p>
+<p>先说室友A, 我的Linux大门是他帮忙打开的, 还记得当时我的小黑在win7上卡的快成PPT了, 他向我安利了Ubuntu, 并帮我用U盘进行了安装, 从此过后(直到毕业)再没用win系统做过正事(除了玩游戏).</p>
+<p>再说室友B, 在我放弃物理后, 都是能混就混了, 没错我就是个混子嗷. 室友B学习比较扎实, 关键是他乐于传教, 有不懂的知识可以问, 不会的题可以抄…某种意义上, 要是没他帮我, 我可能毕不了业.</p>
+<p>还有室友C, 接下来就亲切的称呼他为宝子哥好了, 宝子哥乃教育学某大师关门弟子, 造诣自不必多言. 精通心理学, 心理暗示, 传销…啊不没传销, 反正就是很厉害的一个人. 我还记得他对我的谆谆教诲:</p>
+<blockquote>
+<p>没人对你说过, 你很帅吗?</p>
+<p>诶, 你真的觉得我帅吗?</p>
+<p>当年本科的时候, 大伙来的时候就我一个有女朋友, 毕业的时候基本上都有女朋友了.</p>
+<p>老哥, 你废了.</p>
+<p>你有没有听说过…PXX(少儿不宜, 手动屏蔽).</p>
+</blockquote>
+<p>除了室友, 好几个同学人都很好, 能遇到这么好的一群人实属幸事!</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/17/其它/创建属于自己的博客-一/" rel="prev" title="创建属于自己的博客(一)">
+                创建属于自己的博客(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写博客的目的"><span class="nav-number">1.</span> <span class="nav-text">写博客的目的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#我的黄金三年"><span class="nav-number">2.</span> <span class="nav-text">我的黄金三年</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#放弃了物理"><span class="nav-number">2.1.</span> <span class="nav-text">放弃了物理.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈了场恋爱"><span class="nav-number">2.2.</span> <span class="nav-text">谈了场恋爱?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交了群朋友"><span class="nav-number">2.3.</span> <span class="nav-text">交了群朋友!</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

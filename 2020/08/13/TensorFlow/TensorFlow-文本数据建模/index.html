@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="在现实世界中, 文本这种原生的数据类型的数量是很多的, 因为语言是我们交换信息的渠道. 而相比传统的机器学习方法, 基于深度学习的方法在自然语言处理上, 取得了巨大的成功.本篇的主要目的不是深入探讨文本处理的细节, 而是通过TensorFlow来展示基础的文本建模流程.">
+<meta name="keywords" content="TensorFlow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow-文本数据建模">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="在现实世界中, 文本这种原生的数据类型的数量是很多的, 因为语言是我们交换信息的渠道. 而相比传统的机器学习方法, 基于深度学习的方法在自然语言处理上, 取得了巨大的成功.本篇的主要目的不是深入探讨文本处理的细节, 而是通过TensorFlow来展示基础的文本建模流程.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/output_11_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/output_16_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/output_33_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/output_34_0.png">
+<meta property="og:updated_time" content="2020-10-10T14:36:32.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow-文本数据建模">
+<meta name="twitter:description" content="在现实世界中, 文本这种原生的数据类型的数量是很多的, 因为语言是我们交换信息的渠道. 而相比传统的机器学习方法, 基于深度学习的方法在自然语言处理上, 取得了巨大的成功.本篇的主要目的不是深入探讨文本处理的细节, 而是通过TensorFlow来展示基础的文本建模流程.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/output_11_1.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>TensorFlow-文本数据建模 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/13/TensorFlow/TensorFlow-文本数据建模/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TensorFlow-文本数据建模
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-13 18:46:38" itemprop="dateCreated datePublished" datetime="2020-08-13T18:46:38+08:00">2020-08-13</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-10 22:36:32" itemprop="dateModified" datetime="2020-10-10T22:36:32+08:00">2020-10-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/TensorFlow/" itemprop="url" rel="index"><span itemprop="name">TensorFlow</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在现实世界中, 文本这种原生的数据类型的数量是很多的, 因为语言是我们交换信息的渠道. 而相比传统的机器学习方法, 基于深度学习的方法在自然语言处理上, 取得了巨大的成功.<br>本篇的主要目的不是深入探讨文本处理的细节, 而是通过TensorFlow来展示基础的文本建模流程.</p>
+<a id="more"></a>
+<h1 id="数据分析"><a href="#数据分析" class="headerlink" title="数据分析"></a>数据分析</h1><p>这里使用经典的IMDB数据集, 来进行文本数据建模, 做情感分析. 首先, 对原始数据进行一些简单的分析.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">train_sent_list = []</span><br><span class="line">train_label_list = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/imdb/train.txt'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        label, sent = line.split(<span class="string">'\t'</span>)</span><br><span class="line">        train_sent_list.append(sent)</span><br><span class="line">        train_label_list.append(int(label))</span><br><span class="line">    f.close()</span><br><span class="line">len(train_sent_list)</span><br></pre></td></tr></table></figure>
+<pre><code>20000
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.sum(train_label_list)</span><br></pre></td></tr></table></figure>
+<pre><code>10062
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_sent_list[: <span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>[&quot;It really boggles my mind when someone comes across a movie like this and claims it to be one of the worst slasher films out there. This is by far not one of the worst out there, still not a good movie, but not the worst nonetheless. Go see something like Death Nurse or Blood Lake and then come back to me and tell me if you think the Night Brings Charlie is the worst. The film has decent camera work and editing, which is way more than I can say for many more extremely obscure slasher films.&lt;br /&gt;&lt;br /&gt;The film doesn&#39;t deliver on the on-screen deaths, there&#39;s one death where you see his pruning saw rip into a neck, but all other deaths are hardly interesting. But the lack of on-screen graphic violence doesn&#39;t mean this isn&#39;t a slasher film, just a bad one.&lt;br /&gt;&lt;br /&gt;The film was obviously intended not to be taken too seriously. The film came in at the end of the second slasher cycle, so it certainly was a reflection on traditional slasher elements, done in a tongue in cheek way. For example, after a kill, Charlie goes to the town&#39;s &#39;welcome&#39; sign and marks the population down one less. This is something that can only get a laugh.&lt;br /&gt;&lt;br /&gt;If you&#39;re into slasher films, definitely give this film a watch. It is slightly different than your usual slasher film with possibility of two killers, but not by much. The comedy of the movie is pretty much telling the audience to relax and not take the movie so god darn serious. You may forget the movie, you may remember it. I&#39;ll remember it because I love the name.\n&quot;,
+ &quot;Mary Pickford becomes the chieftain of a Scottish clan after the death of her father, and then has a romance. As fellow commenter Snow Leopard said, the film is rather episodic to begin. Some of it is amusing, such as Pickford whipping her clansmen to church, while some of it is just there. All in all, the story is weak, especially the recycled, contrived romance plot-line and its climax. The transfer is so dark it&#39;s difficult to appreciate the scenery, but even accounting for that, this doesn&#39;t appear to be director Maurice Tourneur&#39;s best work. Pickford and Tourneur collaborated once more in the somewhat more accessible &#39;The Poor Little Rich Girl,&#39; typecasting Pickford as a child character.\n&quot;]
+</code></pre><p>可以看到, 训练集有20000条样本, 正负样本各占一半, 接下来再看测试集样本.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">test_sent_list = []</span><br><span class="line">test_label_list = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/imdb/test.txt'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        label, sent = line.split(<span class="string">'\t'</span>)</span><br><span class="line">        test_sent_list.append(sent)</span><br><span class="line">        test_label_list.append(int(label))</span><br><span class="line">    f.close()</span><br><span class="line">len(test_sent_list)</span><br></pre></td></tr></table></figure>
+<pre><code>5000
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.sum(test_label_list)</span><br></pre></td></tr></table></figure>
+<pre><code>2438
+</code></pre><p>测试集有5000条样本, 正负样本也是各占一半.<br>下面再进行一下简单的句子长度统计和词频统计.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计句子长度</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line">all_sent_list = train_sent_list + test_sent_list</span><br><span class="line"></span><br><span class="line">sent_len_list = []</span><br><span class="line"><span class="keyword">for</span> sent <span class="keyword">in</span> all_sent_list:</span><br><span class="line">    sent_len_list.append(len(sent.split(<span class="string">' '</span>)))</span><br><span class="line"></span><br><span class="line">counter = Counter(sent_len_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绘制句子长度直方图</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">plt.hist(sent_len_list, bins=<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="output_11_1.png" alt="png"></p>
+<p>可以看到, 大部分的句子长度小于500, 集中于200附近, 由此后续将文本截断长度设置为200.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计词频</span></span><br><span class="line">word_list = []</span><br><span class="line"><span class="keyword">for</span> sent <span class="keyword">in</span> all_sent_list:</span><br><span class="line">    word_list += sent.split(<span class="string">' '</span>)</span><br><span class="line"></span><br><span class="line">counter = Counter(word_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 总的词汇(包括标点, 其它字符)有约29万个</span></span><br><span class="line">len(counter)</span><br></pre></td></tr></table></figure>
+<pre><code>290691
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按词频排序, 查看出现次数最多的词汇, 发现个别词汇出现次数很多</span></span><br><span class="line">counter_sort = sorted(counter.items(), key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="literal">True</span>)</span><br><span class="line">print(counter_sort[: <span class="number">30</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[(&#39;the&#39;, 287012), (&#39;a&#39;, 155089), (&#39;and&#39;, 152645), (&#39;of&#39;, 142970), (&#39;to&#39;, 132566), (&#39;is&#39;, 103225), (&#39;in&#39;, 85576), (&#39;that&#39;, 64553), (&#39;I&#39;, 64024), (&#39;this&#39;, 57166), (&#39;it&#39;, 54404), (&#39;/&gt;&lt;br&#39;, 50935), (&#39;was&#39;, 46697), (&#39;as&#39;, 42507), (&#39;with&#39;, 41717), (&#39;for&#39;, 41065), (&#39;but&#39;, 33780), (&#39;The&#39;, 33095), (&#39;on&#39;, 30765), (&#39;movie&#39;, 30480), (&#39;are&#39;, 28497), (&#39;his&#39;, 27686), (&#39;film&#39;, 27389), (&#39;have&#39;, 27124), (&#39;not&#39;, 26258), (&#39;be&#39;, 25509), (&#39;you&#39;, 25108), (&#39;he&#39;, 21674), (&#39;by&#39;, 21422), (&#39;at&#39;, 21295)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不包括出现频次特别高的词汇, 绘制词频直方图</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">plt.hist(list(map(<span class="keyword">lambda</span> x: x[<span class="number">1</span>], counter_sort[<span class="number">5000</span>:])), bins=<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>(array([1.78939e+05, 3.55410e+04, 1.64970e+04, 9.91400e+03, 6.79800e+03,
+        4.93300e+03, 0.00000e+00, 3.69100e+03, 3.04000e+03, 2.48100e+03,
+        2.08100e+03, 1.82100e+03, 0.00000e+00, 1.53300e+03, 1.32100e+03,
+        1.16800e+03, 1.06300e+03, 8.84000e+02, 0.00000e+00, 8.43000e+02,
+        7.69000e+02, 6.78000e+02, 6.56000e+02, 6.00000e+02, 0.00000e+00,
+        5.21000e+02, 5.12000e+02, 4.59000e+02, 4.19000e+02, 4.15000e+02,
+        3.73000e+02, 0.00000e+00, 3.56000e+02, 3.35000e+02, 2.78000e+02,
+        3.09000e+02, 3.08000e+02, 0.00000e+00, 2.83000e+02, 2.47000e+02,
+        2.40000e+02, 2.47000e+02, 2.07000e+02, 0.00000e+00, 2.14000e+02,
+        2.02000e+02, 1.94000e+02, 1.95000e+02, 1.64000e+02, 0.00000e+00,
+        1.63000e+02, 1.72000e+02, 1.48000e+02, 1.61000e+02, 1.53000e+02,
+        1.47000e+02, 0.00000e+00, 1.34000e+02, 1.42000e+02, 1.12000e+02,
+        1.33000e+02, 1.15000e+02, 0.00000e+00, 1.14000e+02, 1.09000e+02,
+        1.03000e+02, 1.04000e+02, 9.70000e+01, 0.00000e+00, 9.50000e+01,
+        1.11000e+02, 9.70000e+01, 7.10000e+01, 9.20000e+01, 0.00000e+00,
+        9.20000e+01, 7.50000e+01, 7.40000e+01, 8.70000e+01, 7.00000e+01,
+        7.80000e+01, 0.00000e+00, 6.00000e+01, 5.80000e+01, 5.30000e+01,
+        7.10000e+01, 7.00000e+01, 0.00000e+00, 7.10000e+01, 6.30000e+01,
+        4.40000e+01, 7.00000e+01, 5.60000e+01, 0.00000e+00, 6.10000e+01,
+        5.10000e+01, 5.70000e+01, 5.40000e+01, 5.30000e+01, 2.10000e+01]),
+ array([ 1.  ,  1.84,  2.68,  3.52,  4.36,  5.2 ,  6.04,  6.88,  7.72,
+         8.56,  9.4 , 10.24, 11.08, 11.92, 12.76, 13.6 , 14.44, 15.28,
+        16.12, 16.96, 17.8 , 18.64, 19.48, 20.32, 21.16, 22.  , 22.84,
+        23.68, 24.52, 25.36, 26.2 , 27.04, 27.88, 28.72, 29.56, 30.4 ,
+        31.24, 32.08, 32.92, 33.76, 34.6 , 35.44, 36.28, 37.12, 37.96,
+        38.8 , 39.64, 40.48, 41.32, 42.16, 43.  , 43.84, 44.68, 45.52,
+        46.36, 47.2 , 48.04, 48.88, 49.72, 50.56, 51.4 , 52.24, 53.08,
+        53.92, 54.76, 55.6 , 56.44, 57.28, 58.12, 58.96, 59.8 , 60.64,
+        61.48, 62.32, 63.16, 64.  , 64.84, 65.68, 66.52, 67.36, 68.2 ,
+        69.04, 69.88, 70.72, 71.56, 72.4 , 73.24, 74.08, 74.92, 75.76,
+        76.6 , 77.44, 78.28, 79.12, 79.96, 80.8 , 81.64, 82.48, 83.32,
+        84.16, 85.  ]),
+ &lt;a list of 100 Patch objects&gt;)
+</code></pre><p><img src="output_16_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">num = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> counter:</span><br><span class="line">    <span class="keyword">if</span> counter[k] == <span class="number">1</span>:</span><br><span class="line">        num += <span class="number">1</span></span><br><span class="line">num</span><br></pre></td></tr></table></figure>
+<pre><code>178939
+</code></pre><p>从上面的词频直方图可以看到, 有非常多词频低于20, 词频为1的词汇就有约180000. 在不使用其它预训练好的词向量时, 这样的词汇并不能给模型带来多少信息, 所以在进行编码时, 可以将其编码为”其它”, 即设置最大词汇量.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">num = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">21</span>):</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> counter:</span><br><span class="line">        <span class="keyword">if</span> counter[k] == i:</span><br><span class="line">            num += <span class="number">1</span></span><br><span class="line">    print(<span class="string">'词频小于等于%d, 数量%d'</span> % (i, num))</span><br></pre></td></tr></table></figure>
+<pre><code>词频小于等于1, 数量178939
+词频小于等于2, 数量214480
+词频小于等于3, 数量230977
+词频小于等于4, 数量240891
+词频小于等于5, 数量247689
+词频小于等于6, 数量252622
+词频小于等于7, 数量256313
+词频小于等于8, 数量259353
+词频小于等于9, 数量261834
+词频小于等于10, 数量263915
+词频小于等于11, 数量265736
+词频小于等于12, 数量267269
+词频小于等于13, 数量268590
+词频小于等于14, 数量269758
+词频小于等于15, 数量270821
+词频小于等于16, 数量271705
+词频小于等于17, 数量272548
+词频小于等于18, 数量273317
+词频小于等于19, 数量273995
+词频小于等于20, 数量274651
+</code></pre><p>可以看到, 词频小于等于20有约27万, 联系到总词汇量约29万, 所以后续将最大词汇量设置为1万.</p>
+<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><p>利用TensorFlow完成文本数据预处理的常用方法一般可以有如下两种.</p>
+<ul>
+<li>使用<code>tf.keras.preprocessing</code>中的<code>Tokenizer</code>词典构建工具, 和<code>tf.keras.utils.Sequence</code>构建文本数据生成器管道.</li>
+<li>使用<code>tf.data.Dataset</code>搭配<code>tf.keras.layers.experimental.preprocessing.TextVectorization</code>预处理层, 有点类似于结构化数据那里的<code>DenseFeatures</code>层.<br>第二种方式是TensorFlow的原生方式, 相对简单一些, 这里使用第二种方式.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">train_path = <span class="string">'./data/imdb/train.txt'</span></span><br><span class="line">test_path = <span class="string">'./data/imdb/test.txt'</span></span><br><span class="line"></span><br><span class="line">MAX_WORDS = <span class="number">10000</span>  <span class="comment"># 指定最高频的10000个词</span></span><br><span class="line">MAX_LEN = <span class="number">200</span>  <span class="comment"># 每个句子保留200个词的长度</span></span><br><span class="line">BATCH_SIZE = <span class="number">128</span></span><br><span class="line"></span><br><span class="line">tf.random.set_seed(<span class="number">7</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建管道</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_line</span><span class="params">(line)</span>:</span></span><br><span class="line">    res = tf.strings.split(line, <span class="string">'\t'</span>)</span><br><span class="line">    label, text = res[<span class="number">0</span>], res[<span class="number">1</span>]</span><br><span class="line">    label = tf.expand_dims(tf.cast(tf.strings.to_number(label), tf.int32),</span><br><span class="line">                           axis=<span class="number">0</span>)</span><br><span class="line">    text = tf.expand_dims(text, axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> text, label</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ds_train = tf.data.TextLineDataset(filenames=train_path) \</span><br><span class="line">    .map(split_line, num_parallel_calls=tf.data.experimental.AUTOTUNE) \</span><br><span class="line">    .shuffle(buffer_size=<span class="number">1024</span>) \</span><br><span class="line">    .batch(BATCH_SIZE) \</span><br><span class="line">    .prefetch(buffer_size=tf.data.experimental.AUTOTUNE)</span><br><span class="line"></span><br><span class="line">ds_test = tf.data.TextLineDataset(filenames=test_path) \</span><br><span class="line">    .map(split_line, num_parallel_calls=tf.data.experimental.AUTOTUNE) \</span><br><span class="line">    .shuffle(buffer_size=<span class="number">1024</span>) \</span><br><span class="line">    .batch(BATCH_SIZE) \</span><br><span class="line">    .prefetch(buffer_size=tf.data.experimental.AUTOTUNE).cache()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建词向量化层, 包括预处理(小写, 去除特殊字符/标点, 按空格分词), 构建词典, 构建指定长度(截断/填充)的向量</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers.experimental.preprocessing <span class="keyword">import</span> TextVectorization</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clean_text</span><span class="params">(text)</span>:</span></span><br><span class="line">    <span class="comment"># 小写转换</span></span><br><span class="line">    text = tf.strings.lower(text)</span><br><span class="line">    <span class="comment"># 去掉特殊符号</span></span><br><span class="line">    text = tf.strings.regex_replace(text, <span class="string">'&lt;br /&gt;'</span>, <span class="string">' '</span>)</span><br><span class="line">    <span class="comment"># 去掉标点符号</span></span><br><span class="line">    text = tf.strings.regex_replace(text,</span><br><span class="line">                                    <span class="string">'[%s]'</span> % re.escape(string.punctuation), <span class="string">''</span>)</span><br><span class="line">    <span class="keyword">return</span> text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">text_vec_layer = TextVectorization(standardize=clean_text,</span><br><span class="line">                                   split=<span class="string">'whitespace'</span>,</span><br><span class="line">                                   max_tokens=MAX_WORDS,</span><br><span class="line">                                   output_mode=<span class="string">'int'</span>,</span><br><span class="line">                                   output_sequence_length=MAX_LEN)</span><br><span class="line">text_vec_layer.adapt(ds_train.map(<span class="keyword">lambda</span> text, label: text))</span><br><span class="line"></span><br><span class="line">text_vec_layer.get_vocabulary()[<span class="number">0</span>: <span class="number">20</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;&#39;,
+ &#39;[UNK]&#39;,
+ &#39;the&#39;,
+ &#39;and&#39;,
+ &#39;a&#39;,
+ &#39;of&#39;,
+ &#39;to&#39;,
+ &#39;is&#39;,
+ &#39;in&#39;,
+ &#39;it&#39;,
+ &#39;i&#39;,
+ &#39;this&#39;,
+ &#39;that&#39;,
+ &#39;was&#39;,
+ &#39;as&#39;,
+ &#39;for&#39;,
+ &#39;with&#39;,
+ &#39;movie&#39;,
+ &#39;but&#39;,
+ &#39;film&#39;]
+</code></pre><h1 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h1><p>针对文本分类, 在深度学习中有不少方法与模型, 这里使用比较简单的双向LSTM模型.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> models, regularizers, callbacks</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Embedding, LSTM, Bidirectional, Dropout, Dense</span><br><span class="line"></span><br><span class="line">tf.keras.backend.clear_session()</span><br><span class="line"></span><br><span class="line">model = models.Sequential()</span><br><span class="line">model.add(text_vec_layer)</span><br><span class="line">model.add(Embedding(MAX_WORDS, <span class="number">128</span>, input_length=MAX_LEN))</span><br><span class="line">model.add(Bidirectional(LSTM(<span class="number">64</span>, kernel_regularizer=regularizers.l2(<span class="number">0.01</span>))))</span><br><span class="line">model.add(Dropout(<span class="number">0.5</span>))</span><br><span class="line">model.add(Dense(<span class="number">1</span>, activation=<span class="string">'sigmoid'</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.compile(<span class="string">'adam'</span>, <span class="string">'binary_crossentropy'</span>, metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">history = model.fit(ds_train,</span><br><span class="line">                    validation_data=ds_test,</span><br><span class="line">                    epochs=<span class="number">1000</span>,</span><br><span class="line">                    callbacks=[</span><br><span class="line">                        callbacks.EarlyStopping(monitor=<span class="string">'val_loss'</span>,</span><br><span class="line">                                                patience=<span class="number">10</span>,</span><br><span class="line">                                                restore_best_weights=<span class="literal">True</span>),</span><br><span class="line">                        callbacks.ReduceLROnPlateau(factor=<span class="number">0.5</span>, patience=<span class="number">3</span>)</span><br><span class="line">                    ])</span><br></pre></td></tr></table></figure>
+<pre><code>Epoch 1/1000
+157/157 [==============================] - 50s 320ms/step - loss: 1.3471 - accuracy: 0.7157 - val_loss: 0.4484 - val_accuracy: 0.8360
+Epoch 2/1000
+157/157 [==============================] - 47s 300ms/step - loss: 0.3424 - accuracy: 0.8825 - val_loss: 0.3506 - val_accuracy: 0.8664
+Epoch 3/1000
+157/157 [==============================] - 47s 299ms/step - loss: 0.2467 - accuracy: 0.9196 - val_loss: 0.3507 - val_accuracy: 0.8638
+Epoch 4/1000
+157/157 [==============================] - 46s 294ms/step - loss: 0.2021 - accuracy: 0.9379 - val_loss: 0.3884 - val_accuracy: 0.8478
+Epoch 5/1000
+157/157 [==============================] - 45s 288ms/step - loss: 0.1690 - accuracy: 0.9534 - val_loss: 0.4779 - val_accuracy: 0.8516
+Epoch 6/1000
+157/157 [==============================] - 45s 289ms/step - loss: 0.1319 - accuracy: 0.9667 - val_loss: 0.4618 - val_accuracy: 0.8546
+Epoch 7/1000
+157/157 [==============================] - 45s 288ms/step - loss: 0.1159 - accuracy: 0.9714 - val_loss: 0.5181 - val_accuracy: 0.8494
+Epoch 8/1000
+157/157 [==============================] - 45s 287ms/step - loss: 0.0965 - accuracy: 0.9798 - val_loss: 0.4833 - val_accuracy: 0.8556
+Epoch 9/1000
+157/157 [==============================] - 45s 287ms/step - loss: 0.0753 - accuracy: 0.9867 - val_loss: 0.5316 - val_accuracy: 0.8510
+Epoch 10/1000
+157/157 [==============================] - 45s 287ms/step - loss: 0.0680 - accuracy: 0.9883 - val_loss: 0.5539 - val_accuracy: 0.8504
+Epoch 11/1000
+157/157 [==============================] - 45s 287ms/step - loss: 0.0632 - accuracy: 0.9888 - val_loss: 0.5177 - val_accuracy: 0.8482
+Epoch 12/1000
+157/157 [==============================] - 45s 289ms/step - loss: 0.0572 - accuracy: 0.9912 - val_loss: 0.5414 - val_accuracy: 0.8508
+</code></pre><h1 id="评估模型"><a href="#评估模型" class="headerlink" title="评估模型"></a>评估模型</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_metric</span><span class="params">(history, metric)</span>:</span></span><br><span class="line">    train_metrics = history.history[metric]</span><br><span class="line">    val_metrics = history.history[<span class="string">'val_'</span> + metric]</span><br><span class="line">    epochs = range(<span class="number">1</span>, len(train_metrics) + <span class="number">1</span>)</span><br><span class="line">    plt.figure(figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line">    plt.plot(epochs, train_metrics, <span class="string">'bo--'</span>)</span><br><span class="line">    plt.plot(epochs, val_metrics, <span class="string">'ro-'</span>)</span><br><span class="line">    plt.title(<span class="string">'Training and validation '</span> + metric)</span><br><span class="line">    plt.xlabel(<span class="string">"Epochs"</span>)</span><br><span class="line">    plt.ylabel(metric)</span><br><span class="line">    plt.legend([<span class="string">"train_"</span> + metric, <span class="string">'val_'</span> + metric])</span><br><span class="line">    plt.grid()</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_metric(history, <span class="string">"loss"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="output_33_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_metric(history, <span class="string">"accuracy"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="output_34_0.png" alt="png"></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/13/TensorFlow/TensorFlow-结构化数据建模/" rel="next" title="TensorFlow-结构化数据建模">
+                <i class="fa fa-chevron-left"></i> TensorFlow-结构化数据建模
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/13/传统机器学习/概率校准/" rel="prev" title="概率校准">
+                概率校准 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分析"><span class="nav-number">1.</span> <span class="nav-text">数据分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据预处理"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构建模型"><span class="nav-number">3.</span> <span class="nav-text">构建模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#评估模型"><span class="nav-number">4.</span> <span class="nav-text">评估模型</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

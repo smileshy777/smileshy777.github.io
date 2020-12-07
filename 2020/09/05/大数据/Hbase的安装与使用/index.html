@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="使用过Hive的同学一定都有过这样的感受, 有时候想要进行一个非常简单的查询, 也要耗费不少时间, 在一些需要实时查询的场景是用不上的. 而基于谷歌提出的Bigtable数据模型, 在HDFS的基础上, 出现了Hbase. 这是一个真正的分布式数据库.">
+<meta name="keywords" content="大数据,数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hbase的安装与使用">
+<meta property="og:url" content="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="使用过Hive的同学一定都有过这样的感受, 有时候想要进行一个非常简单的查询, 也要耗费不少时间, 在一些需要实时查询的场景是用不上的. 而基于谷歌提出的Bigtable数据模型, 在HDFS的基础上, 出现了Hbase. 这是一个真正的分布式数据库.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/fig_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/fig_2.jpg">
+<meta property="og:updated_time" content="2020-10-10T15:01:21.979Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hbase的安装与使用">
+<meta name="twitter:description" content="使用过Hive的同学一定都有过这样的感受, 有时候想要进行一个非常简单的查询, 也要耗费不少时间, 在一些需要实时查询的场景是用不上的. 而基于谷歌提出的Bigtable数据模型, 在HDFS的基础上, 出现了Hbase. 这是一个真正的分布式数据库.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Hbase的安装与使用 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/09/05/大数据/Hbase的安装与使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hbase的安装与使用
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-05 22:53:49" itemprop="dateCreated datePublished" datetime="2020-09-05T22:53:49+08:00">2020-09-05</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-10 23:01:21" itemprop="dateModified" datetime="2020-10-10T23:01:21+08:00">2020-10-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/大数据/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用过Hive的同学一定都有过这样的感受, 有时候想要进行一个非常简单的查询, 也要耗费不少时间, 在一些需要实时查询的场景是用不上的.</p>
+<p>而基于谷歌提出的Bigtable数据模型, 在HDFS的基础上, 出现了Hbase. 这是一个真正的分布式数据库.</p>
+<a id="more"></a>
+<h1 id="Hbase简介"><a href="#Hbase简介" class="headerlink" title="Hbase简介"></a>Hbase简介</h1><p>首先, 为什么会有Hbase这样的分布式数据库呢? 很简单, 因为单机的数据库在大数据时代不能胜任所有任务. 一般来说, 像MySQL这样的数据库, 大概可以处理TB级别的数据, 但是有些互联网公司一天的数据量可能就是TB级别.</p>
+<p>然后又问, 不是已经有了HDFS以及Hive了吗, 数据量已经不是问题了呀. 因为HDFS和Hive属于文件系统, 或者数据仓库, 而数据库是以某种有组织的方式储存的数据集合. 作为数据库的Hbase的一个很明显的特点就是, 能够高并发地随机写和支持实时查询, 这是HDFS不具备的.</p>
+<p>下面来介绍Hbase的架构, Hbase是一种基于Key-Value的NoSQL数据库, 这样设计的好处是, 可以避免数据稀疏带来的储存空间浪费, 同时可以非常方便地对字段进行扩展.</p>
+<p>在Hbase里面也有表的概念, 表的结构如下图:</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>其中的几个关键元素:</p>
+<ul>
+<li><p>列族.</p>
+<p>可以理解为列的归类. 在一个列族下可以创建多个列.</p>
+</li>
+<li><p>列.</p>
+<p>就是一般意义上的列, 字段名.</p>
+</li>
+<li><p>行键.</p>
+<p>用于标识一行的标识. 用有相同行键的数据, 属于一行. 需要保证唯一, 且设计合理, 方便加速查询.</p>
+</li>
+</ul>
+<p>上面虽然以类似二维表的形式来展示, 但是Hbase本质是NoSQL, 所以一般来说Key就是”行键-列族-列”, Value就是对应的值.</p>
+<p>此外, 还有一个元素是时间戳, 当数据写入Hbase, 更改, 甚至删除的时候, 都会有一个时间戳, 可以当成一个数据的版本. 所以在查询时, 可以根据时间戳查询过去的值.</p>
+<p>Hbase整体的结构如下图:</p>
+<p><img src="fig_1.png" alt="fig"></p>
+<ul>
+<li><p>Client.</p>
+<p>客户端, 提供Hbase的访问接口.</p>
+</li>
+<li><p>Zookeeper.</p>
+<p>储存Hbase的元数据(meta表), 在读写数据时, 去Zookeeper中拿到meta数据, 告诉客户端去哪台机器读写数据.</p>
+</li>
+<li><p>HRegion.</p>
+<p>在上面介绍表结构时候, 说到了列族, 行键的概念, 而在具体储存时, 会按照行键进行切分, 划分为多个HRegion.</p>
+</li>
+<li><p>HMaster.</p>
+<p>监控HRegionServer的状态, 处理元数据的变更, 处理HRegion的分配或转移. 如当某个HRegion过大时, 自动切分为多个HRegion.</p>
+</li>
+<li><p>HRegionServer.</p>
+<p>真正干活的节点, 负责与HDFS底层交互, 处理客户端请求. 一个HRegionServer中有多个HRegion.</p>
+</li>
+</ul>
+<p>在每个HRegion内部, 有多个按列族划分的Store, 每个Store内, 又有Mem Store和Store File. 其中Mem Store负责在内存接收数据, 当超过一定阈值时, 再刷写到硬盘的Store File上.</p>
+<p><img src="fig_2.jpg" alt="fig"></p>
+<p>还漏了一个Hlog, 这是干嘛用的呢. 其实就是在写数据的时候, 会先写到内存, 但为了防止机器宕机, 内存中的数据没刷到硬盘就挂了, 所以在写Mem Store时还会写一份Hlog, 按顺序快速写到硬盘.</p>
+<p>总结一下Hbase的特点:</p>
+<ul>
+<li>采用Key-Value列式存储, 节约空间.</li>
+<li>可自动切分数据, 能够水平拓展.</li>
+<li>可提供高并发, 低延迟的读写操作.</li>
+<li>不支持丰富的条件筛选查询, 比较依赖行键.</li>
+</ul>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>在<a href="https://hbase.apache.org/downloads.html" target="_blank" rel="noopener">这里</a>下载, 我选择的是2.3.1版本.</p>
+<p>下载完成后, 解压放置到目录<code>/usr/local/hbase</code>.</p>
+<p>在Ubuntu操作系统上, <code>.bashrc</code>添加如下内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># hbase</span><br><span class="line">export HBASE_HOME=/usr/local/hbase</span><br><span class="line">export PATH=$PATH:$HBASE_HOME/bin</span><br></pre></td></tr></table></figure>
+<p>在<code>/usr/local/hbase/conf</code>下的<code>hbase-env.sh</code>文件进行修改, 具体路径根据实际情况改动:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The java implementation to use.  Java 1.8+ required.</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64</span><br><span class="line"><span class="comment"># Tell HBase whether it should manage it's own instance of ZooKeeper or not.</span></span><br><span class="line"><span class="built_in">export</span> HBASE_MANAGES_ZK=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>其中<code>HBASE_MANAGES_ZK</code>表示设置由Hbase自己管理Zookeeper, 不需要单独配置.</p>
+<p>再配置<code>hbase-site.xml</code>文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.cluster.distributed<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.rootdir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000/hbase<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其中<code>hbase.tmp.dir</code>需要与HDFS的地址端口相匹配.</p>
+<p>启动Hbase:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动Hadoop</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> start-all.sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动Hbase</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> start-hbase.sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看进程</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> jps</span></span><br><span class="line">7012 HQuorumPeer</span><br><span class="line">4661 NameNode</span><br><span class="line">5542 ResourceManager</span><br><span class="line">7625 HRegionServer</span><br><span class="line">5242 SecondaryNameNode</span><br><span class="line">7260 HMaster</span><br><span class="line">7965 Jps</span><br><span class="line">4911 DataNode</span><br><span class="line">5759 NodeManager</span><br></pre></td></tr></table></figure>
+<p>在浏览器上<code>IP:60010</code>可以看到交互界面.</p>
+<p>进入Hbase Shell:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hbase shell</span></span><br></pre></td></tr></table></figure>
+<p>使用<code>help</code>查看帮助, <code>help &#39;cmd&#39;</code>查看具体命令帮助, <code>exit</code>退出shell.</p>
+<p>在关闭时, 也是<code>stop-hbase.sh</code>先关闭Hbase, 再<code>stop-all.sh</code>关闭Hadoop.</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h2><p>下面列举一些Hbase的常用命令行操作.</p>
+<ul>
+<li><p>表操作.</p>
+<p>创建.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 创建表, 以及对应的列族</span><br><span class="line">&gt; create &apos;tb_name&apos;, &apos;col_family_0&apos;, &apos;col_family_0&apos;, ...</span><br><span class="line"># 添加列族</span><br><span class="line">&gt; alter &apos;tb_name&apos;, &apos;col_family&apos;</span><br></pre></td></tr></table></figure>
+<p>删除.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 删除列族</span><br><span class="line">&gt; alter &apos;tb_name&apos;, &apos;delete&apos;=&gt;&apos;col_family&apos;</span><br><span class="line"># 删除表</span><br><span class="line">&gt; disable &apos;tb_name&apos;</span><br><span class="line">&gt; drop &apos;tb_name&apos;</span><br></pre></td></tr></table></figure>
+<p>查看.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 显示Hbase中的表</span><br><span class="line">&gt; list</span><br><span class="line"># 查看表结构</span><br><span class="line">&gt; describe &apos;tb_name&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据操作.</p>
+<p>插入/覆盖数据.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; put &apos;tb_name&apos;, &apos;row_key&apos;, &apos;col_family:col&apos;, val</span><br></pre></td></tr></table></figure>
+<p>获取数据.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 获取指定行数据</span><br><span class="line">&gt; get &apos;tb_name&apos;, &apos;row_key&apos;</span><br><span class="line"># 获取指定行, 指定列族数据</span><br><span class="line">&gt; get &apos;tb_name&apos;, &apos;row_key&apos;, &apos;col_family&apos;</span><br><span class="line"># 获取指定单元格数据</span><br><span class="line">&gt; get &apos;tb_name&apos;, &apos;row_key&apos;, &apos;col_family:col&apos;</span><br><span class="line"></span><br><span class="line">&gt; 获取指定行, 指定多个列族或列的数据</span><br><span class="line">&gt; get &apos;tb_name&apos;, &apos;row_key&apos;, &#123;COLUMN=&gt;[&apos;col_family_0:col_0&apos;, &apos;col_family_1&apos;, ...]&#125;</span><br><span class="line"></span><br><span class="line"># 查看表中所有数据, &#123;FORMATTER =&gt; &apos;toString&apos;&#125;可识别中文</span><br><span class="line">&gt; scan &apos;tb_name&apos;, &#123;FORMATTER =&gt; &apos;toString&apos;&#125;</span><br><span class="line"># 获取指定多个列族或列的数据</span><br><span class="line">&gt; scan &apos;tb_name&apos;, &#123;COLUMN=&gt;[&apos;col_family_0:col_0&apos;, &apos;col_family_1&apos;, ...]&#125;</span><br></pre></td></tr></table></figure>
+<p>删除数据.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 指定单元格内容</span><br><span class="line">&gt; delete &apos;tb_name&apos;, &apos;row_key&apos;, &apos;col_family:col&apos;</span><br><span class="line"># 整行删除</span><br><span class="line">&gt; deleteall &apos;tb_name&apos;, &apos;row_key&apos;</span><br><span class="line"># 清空数据表</span><br><span class="line">&gt; truncate &apos;tb_name&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Python接口"><a href="#Python接口" class="headerlink" title="Python接口"></a>Python接口</h2><p>如果要对Hbase进行一些复杂的流程处理或者操作, 命令行的方式是比较麻烦的, 其原生的编程接口语言是Java, 不过借助thrift接口服务器, 因此也可以采用其他语言来使用Hbase, 这里使用Python.</p>
+<p>在使用Python包之前, 需要启动Hbase的thrift-server:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hbase-daemon.sh start thrift</span><br><span class="line">$ jps</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">34533 ThriftServer</span><br></pre></td></tr></table></figure>
+<p>不止一个Python包可以操作Hbase, 不过个人觉得<a href="https://happybase.readthedocs.io/en/latest/index.html" target="_blank" rel="noopener">HappyBase</a>比较好用, 不需要再进行更多的额外配置, 比如安装系统的thrift和对应依赖, 直接连接即可使用.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> happybase</span><br><span class="line"></span><br><span class="line"><span class="comment"># thrift默认端口9090</span></span><br><span class="line">connection = happybase.Connection(<span class="string">'hostname'</span>)</span><br><span class="line">table = connection.table(<span class="string">'table-name'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加/修改</span></span><br><span class="line">table.put(<span class="string">b'row-key'</span>, &#123;<span class="string">b'family:qual1'</span>: <span class="string">b'value1'</span>,</span><br><span class="line">                       <span class="string">b'family:qual2'</span>: <span class="string">b'value2'</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询</span></span><br><span class="line">row = table.row(<span class="string">b'row-key'</span>)</span><br><span class="line">print(row[<span class="string">b'family:qual1'</span>])  <span class="comment"># prints 'value1'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> key, data <span class="keyword">in</span> table.rows([<span class="string">b'row-key-1'</span>, <span class="string">b'row-key-2'</span>]):</span><br><span class="line">    print(key, data)  <span class="comment"># prints row key and data for each row</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> key, data <span class="keyword">in</span> table.scan(row_prefix=<span class="string">b'row'</span>):</span><br><span class="line">    print(key, data)  <span class="comment"># prints 'value1' and 'value2'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除指定row-key</span></span><br><span class="line">row = table.delete(<span class="string">b'row-key'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="comment"># 更多API可以查询文档</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/05/大数据/Hive的安装与使用/" rel="next" title="Hive的安装与使用">
+                <i class="fa fa-chevron-left"></i> Hive的安装与使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/05/大数据/Redis的安装与使用/" rel="prev" title="Redis的安装与使用">
+                Redis的安装与使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase简介"><span class="nav-number">1.</span> <span class="nav-text">Hbase简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行"><span class="nav-number">3.1.</span> <span class="nav-text">命令行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python接口"><span class="nav-number">3.2.</span> <span class="nav-text">Python接口</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

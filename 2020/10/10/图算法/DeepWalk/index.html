@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="今天来介绍一种比较重要和实用的图算法, DeepWalk. 一看这名称中带有deep, 那么八九不离十和深度学习会有关, 是的, DeepWalk可以看做是深度学习算法在图算法领域的延伸. 下面就来介绍DeepWalk算法的原理, 以及代码实现.">
+<meta name="keywords" content="图算法,word2vec,召回,推荐系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeepWalk">
+<meta property="og:url" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="今天来介绍一种比较重要和实用的图算法, DeepWalk. 一看这名称中带有deep, 那么八九不离十和深度学习会有关, 是的, DeepWalk可以看做是深度学习算法在图算法领域的延伸. 下面就来介绍DeepWalk算法的原理, 以及代码实现.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/fig_1.jpeg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/fig_2.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/fig_3.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/fig_4.png">
+<meta property="og:updated_time" content="2020-12-01T11:03:41.827Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DeepWalk">
+<meta name="twitter:description" content="今天来介绍一种比较重要和实用的图算法, DeepWalk. 一看这名称中带有deep, 那么八九不离十和深度学习会有关, 是的, DeepWalk可以看做是深度学习算法在图算法领域的延伸. 下面就来介绍DeepWalk算法的原理, 以及代码实现.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>DeepWalk | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/10/10/图算法/DeepWalk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DeepWalk
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-10 22:27:01" itemprop="dateCreated datePublished" datetime="2020-10-10T22:27:01+08:00">2020-10-10</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-12-01 19:03:41" itemprop="dateModified" datetime="2020-12-01T19:03:41+08:00">2020-12-01</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/图算法/" itemprop="url" rel="index"><span itemprop="name">图算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天来介绍一种比较重要和实用的图算法, DeepWalk.</p>
+<p>一看这名称中带有deep, 那么八九不离十和深度学习会有关, 是的, DeepWalk可以看做是深度学习算法在图算法领域的延伸. 下面就来介绍DeepWalk算法的原理, 以及代码实现.</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在前面介绍图相关的文章中, 有一些方法, 可以衡量节点的重要性(如PageRank), 还有一些方法可以衡量两两节点之间的相似性. 这些方法得到的结果, 在一些特定的领域, 是有效果的, 但是并不具备泛用性, 这里泛用性的意思是, 能否像NLP中的词向量一样, 也用一些Embedding来表示图中的每个节点, 然后利用这个Embedding, 可以用来做各种下游任务呢? 可以的, 这就是图表示学习.</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>众所周知, word2vec是一种经典且好用的Embedding方法, 可以用在NLP中的单词上. 也可以用在其它一些数据呈现离散序列的场景, 比如item2vec方法, 我的<a href="whitemoonlight.top/2020/10/10/推荐系统/item2vec召回/">这篇文章</a>中有介绍.</p>
+<p>那么, 如果把word2vec也应用在图中, 来使得图中的每个节点学习到对应的Embedding, 好像是一个不错的点子. 而word2vec的输入, 是离散的序列, 所以现在问题就变成了, 如何在一个图中, 产生出一些可供word2vec学习的序列.</p>
+<p>此时, 随机游走第一个站了出来: 没错, 正是在下! ♪(^∇^*)</p>
+<p>所谓随机游走, 通俗地来说, 就是在当前的一个节点上, 没次随机选择一个相邻的节点, 进行移动. 具体说来, 在一个图中, 可以先随机地选取一个节点, 作为初始节点, 然后进行随机游走, 得到一个路径, 当走到设定的最大步数时停止, 而这个路径就是可以用word2vec来学习的序列.</p>
+<p>DeepWalk具体的算法流程为:</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>其中的$\gamma$表示整体的过程重复次数, 类似于训练神经网络时的epoch参数. 每次对所有节点形成的列表进行乱序, 然后依次选取节点作为初始节点, 开始随机行走, 得到训练用的序列数据.</p>
+<p>DeepWalk简单来说, 等价于随机游走, 加word2vec, 随机游走从图中抽取序列, word2vec再从序列中学习Embedding. 假设相连的节点之间, 存在着更高的相似性, 而这种共现关系, 就可以体现在学习到的Embedding上.</p>
+<p>是不是非常简单呢, 如果明白了word2vec的原理, 那么确实挺简单的. 但是我觉得其实还有一些值得注意或者讨论的地方.</p>
+<h2 id="序列-图-序列"><a href="#序列-图-序列" class="headerlink" title="序列-图-序列"></a>序列-图-序列</h2><p>首先, 如果的数据, 本身就呈现一个图的形式, 比如社交网络, 那么就可以直接使用DeepWalk来进行图表示学习, 这是很自然的. 但如果初始数据不是天然的图, 还能够使用DeepWalk来进行学习吗?</p>
+<p>在问这个问题之前, 其实应该问一下, 都不是图结构的数据了, 硬要用图算法来做, 图个啥? 炫技吗♪(^∇^*) 当然不是, 这里举个栗子, 在item2vec那篇文章中, 是将用户的行为序列, 当成word2vec直接的输入, 通过序列中物品的共现关系, 来学习对应向量, 最后用向量来做召回. 然鹅这里有个小问题, 即每一个序列, 都是仅仅局限于一个用户得到的, 这可能会带来一些局限性.</p>
+<p>考虑一个场景, 比如两个人要去菜市场买菜做饭, 就做…番茄炒鸡蛋吧, 那么原材料肯定是需要番茄和鸡蛋了, 假设这时候番茄分为国产番茄和进口番茄, 这时候一个人就习惯买鸡蛋加国产番茄, 另外一个人就喜欢买鸡蛋加进口番茄. 即形成了(鸡蛋, 国产番茄)和(鸡蛋, 进口番茄)两个序列, 我们知道同属番茄, 它们的Embedding应该非常相似, 如果这时候将他们的行为序列使用item2vec来计算, 那么由于属于两个不同的序列, 最终结果理论上仍然具有一定的相似度, 毕竟已知A与B相似, B与C相似, 可得A与C也可能相似, 但是相似度可能不够高.</p>
+<p>而如果采用了图表示学习会怎么样呢? 那就先想办法把原本的序列变成图, 再使用DeepWalk来学习. 还是上面那个栗子, 把原本的(鸡蛋, 国产番茄)和(鸡蛋, 进口番茄)两个序列转变成图, 序列中相邻的两个物品, 在图中对应节点上有连边, 那么在图中, 国产番茄和进口番茄, 就通过鸡蛋这个节点得到了连接, 而在使用随机游走后, 它们就可以同属一个序列中且距离较近, 就可以获得更加相似的Embedding向量.</p>
+<p><img src="fig_1.jpeg" alt="fig"></p>
+<p>如上图, 将原本的序列转变为图, 再从图中抽取出新的序列, 来使用word2vec进行学习, 可以在原本序列呈现的共现关系之上, 挖掘出更深层次的共现关系, 这通常是更有益的.</p>
+<p>这里还有一个小问题, 由于从序列到图再到序列, 可以获取到更多的共现关系, 那么如果原始序列比较长, 同时一条序列中如果有大部分物品, 那么在形成图以后, 可能这个图会接近一个完全图(两两节点之间都存在连接). 这时候进行图表示学习, 得到的结果可能不尽人意. 如何处理这个问题呢? 我个人认为在原始序列那里, 就要将序列的切分做好, 即通过一些规则, 将原本相关的一些物品/行为, 划到一个子序列中, 这样相当于会使得基于原始序列构建的图中的连边被切断一些, 最终学习效果会更好.</p>
+<h2 id="完全随机-带权重"><a href="#完全随机-带权重" class="headerlink" title="完全随机/带权重"></a>完全随机/带权重</h2><p>原本的DeepWalk, 节点之间的连边是不带权重的, 即只要与当前节点相连的节点, 都有相同的概率成为下一个节点.</p>
+<p>但是在一些情况下, 带权重的可能会更好一些. 比如现在这个图是有一些原始序列得到的, 那么可能在原始序列中, 节点A经常与节点B出现在一起, 和其它一些节点可能只是一起出现一次, 这说明节点A与节点B是有很大关联的. 而如果在图中使用完全随机的方法, 可能就会削弱这种关联性, 使得节点B对于A来说和其它节点没有明显区别.</p>
+<p>而在对连边加入权重后, 可以对类似这种情况进行调整. 比如让连边的值等于两个节点在原始序列中, 相邻出现的次数, 在形成图以后, 对于每个节点而言, 对其相邻节点的连边权重做归一化, 归一化后的值可以看做跳转概率.</p>
+<p>当然这只是简单的一种加权重的方法, 真正是否加权重, 怎么样加权重, 需要由具体的数据与任务(下游任务)来决定.</p>
+<h2 id="无向-有向"><a href="#无向-有向" class="headerlink" title="无向/有向"></a>无向/有向</h2><p>图属于无向图还是有向图, 或者说在构造图的时候, 选择构造成怎样的图, 对使用DeepWalk这样的图表示学习算法, 也是有一定的影响的.</p>
+<p>个人认为, 构造为有向或者无向, 可以根据业务以及数据本身的性质来决定. 比如社交网络中, 以好友关系来构建, 无向网络会自然一些, 比较朋友是相互的; 而已关注来构建, 那么有向网络可能会好一些, 因为关注有时候是单方面的.</p>
+<p>此外, 如果把关注点放在图表示学习后的一些下游任务上, 那么可以对无向/有向这两种形式的图都进行尝试, 比较它们的差别, 选择其中一种.</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>这里对比item2vec那里, 仍然使用了相同的MovieLens 1M Dataset.</p>
+<p>在构建图的时候, 使用了最简单的无向, 完全随机(不带权重)的方式.</p>
+<p>在图上进行随机游走, 抽取序列时, 为了使与原始序列在数据量上尽量相等, 即总序列长度(各序列长度之和)相当, 设置的$\gamma$为2, 序列最大长度为100.</p>
+<h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df = []</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/ml-1m/ratings.dat'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        line = line.strip()</span><br><span class="line">        df.append(line.split(<span class="string">'::'</span>))</span><br><span class="line">    f.close()</span><br><span class="line">df = pd.DataFrame(df, columns=[<span class="string">'user_id'</span>, <span class="string">'item_id'</span>, <span class="string">'score'</span>, <span class="string">'time'</span>])</span><br><span class="line">df[<span class="string">'score'</span>] = df[<span class="string">'score'</span>].astype(<span class="string">'int'</span>)</span><br><span class="line">df.head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">user_id</th>
+<th style="text-align:right">item_id</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1193</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">978300760</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">661</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">978302109</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">914</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">978301968</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">3408</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">978300275</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2355</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">978824291</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按时间分为训练集和测试集</span></span><br><span class="line">df = df.sort_values(<span class="string">'time'</span>)</span><br><span class="line">df_train = df.iloc[:<span class="number">700000</span>]</span><br><span class="line">df_test = df.iloc[<span class="number">700000</span>:]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 整合每个用户的观看序列</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">user_items_func</span><span class="params">(x)</span>:</span></span><br><span class="line">    x = list(zip(x[<span class="string">'item_id'</span>], x[<span class="string">'time'</span>]))</span><br><span class="line">    x = sorted(x, key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> list(x)</span><br><span class="line"></span><br><span class="line">user_items = df_train.groupby(<span class="string">'user_id'</span>).apply(user_items_func)</span><br><span class="line">user_items = dict(zip(user_items.index, user_items.values))</span><br><span class="line">user_items[<span class="string">'1980'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[(&apos;85&apos;, &apos;974691498&apos;),</span><br><span class="line"> (&apos;2671&apos;, &apos;974691498&apos;),</span><br><span class="line"> (&apos;1680&apos;, &apos;974691498&apos;),</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 序列长度分布</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"></span><br><span class="line">sns.distplot([len(user_items[x]) <span class="keyword">for</span> x <span class="keyword">in</span> user_items], bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_2.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对长于200的序列进行截断</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> user_items:</span><br><span class="line">    user_items[k] = user_items[k][: <span class="number">200</span>]</span><br><span class="line">sns.distplot([len(user_items[x]) <span class="keyword">for</span> x <span class="keyword">in</span> user_items], bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_3.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对小于5的序列进行剔除</span></span><br><span class="line">drop_list = []</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> user_items:</span><br><span class="line">    <span class="keyword">if</span> len(user_items[k]) &lt; <span class="number">5</span>:</span><br><span class="line">        drop_list.append(k)</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> drop_list:</span><br><span class="line">    <span class="keyword">del</span> user_items[k]</span><br><span class="line">sns.distplot([len(user_items[x]) <span class="keyword">for</span> x <span class="keyword">in</span> user_items], bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_4.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集中新出现的用户与电影过滤掉</span></span><br><span class="line">user_list = user_items.keys()</span><br><span class="line">item_list = list(set([y[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> user_items.values() <span class="keyword">for</span> y <span class="keyword">in</span> x ]))</span><br><span class="line">df_test = df_test.loc[df_test[<span class="string">'user_id'</span>].isin(user_list)]</span><br><span class="line">df_test = df_test.loc[df_test[<span class="string">'item_id'</span>].isin(item_list)]</span><br><span class="line">df_test.shape</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(129815, 4)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 训练数据序列</span></span><br><span class="line">train_data = []</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> user_items:</span><br><span class="line">    train_data.append([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> user_items[k]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建图</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">random.seed(<span class="number">7</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_edge_file</span><span class="params">(data, file)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    生成包含连边的文件.</span></span><br><span class="line"><span class="string">    :param data: list[list[seq...], ...]</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">with</span> open(file, <span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> seq <span class="keyword">in</span> data:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(len(seq) - <span class="number">1</span>):</span><br><span class="line">                tmp = seq[i] + <span class="string">' '</span> + seq[i + <span class="number">1</span>] + <span class="string">'\n'</span></span><br><span class="line">                f.write(tmp)</span><br><span class="line">        f.close()</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_graph</span><span class="params">(file)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    构建图.</span></span><br><span class="line"><span class="string">    :param file: 节点连边文件路径.</span></span><br><span class="line"><span class="string">    :return: dict, 图.</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    graph = defaultdict(set)</span><br><span class="line">    <span class="keyword">with</span> open(file, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">            node_0, node_1 = line.strip().split()</span><br><span class="line">            <span class="keyword">if</span> node_0 != node_1:</span><br><span class="line">                graph[node_0].add(node_1)</span><br><span class="line">                graph[node_1].add(node_0)</span><br><span class="line">        f.close()</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        graph[node] = list(graph[node])</span><br><span class="line">    <span class="keyword">return</span> graph</span><br><span class="line"></span><br><span class="line">create_edge_file(train_data, <span class="string">'tmp.txt'</span>)</span><br><span class="line">graph = create_graph(<span class="string">'tmp.txt'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进行随机游走构建序列</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_walk</span><span class="params">(graph, epoch=<span class="number">2</span>, max_len=<span class="number">100</span>)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    在图中随机游走, 返回生成的序列数据.</span></span><br><span class="line"><span class="string">    :param graph: dict, 图.</span></span><br><span class="line"><span class="string">    :param epoch: 遍历多少次所以节点.</span></span><br><span class="line"><span class="string">    :param max_len: 序列最大长度.</span></span><br><span class="line"><span class="string">    :return: list[list[seq...], ...]</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    nodes = list(graph.keys())</span><br><span class="line">    res_data = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(epoch):</span><br><span class="line">        random.shuffle(nodes)</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodes:</span><br><span class="line">            seq = [node]</span><br><span class="line">            cur_node = node</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(max_len - <span class="number">1</span>):</span><br><span class="line">                cur_node = random.choice(graph[cur_node])</span><br><span class="line">                seq.append(cur_node)</span><br><span class="line">            res_data.append(seq)</span><br><span class="line">    random.shuffle(res_data)</span><br><span class="line">    <span class="keyword">return</span> res_data</span><br><span class="line"></span><br><span class="line">train_data_deep_walk = random_walk(graph, epoch=<span class="number">1</span>, max_len=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h2><p>这里使用gensim中的word2vec来进行计算, 简单方便~</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 训练模型</span></span><br><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> word2vec</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># os.system("taskset -p 0xff %d" % os.getpid())</span></span><br><span class="line">dim = <span class="number">32</span></span><br><span class="line">model = word2vec.Word2Vec(sentences=train_data_deep_walk,</span><br><span class="line">                          size=dim,  <span class="comment"># 向量维度</span></span><br><span class="line">                          alpha=<span class="number">0.025</span>,  <span class="comment"># 学习率</span></span><br><span class="line">                          window=<span class="number">1</span>,  <span class="comment"># 窗口大小</span></span><br><span class="line">                          min_count=<span class="number">5</span>,</span><br><span class="line">                          sample=<span class="number">0.001</span>,</span><br><span class="line">                          seed=<span class="number">7</span>,</span><br><span class="line">                          workers=<span class="number">12</span>,</span><br><span class="line">                          min_alpha=<span class="number">0.0001</span>,</span><br><span class="line">                          sg=<span class="number">1</span>,  <span class="comment"># 使用skip-gram</span></span><br><span class="line">                          hs=<span class="number">0</span>,  <span class="comment"># 使用neg-sample</span></span><br><span class="line">                          negative=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取词表, 以及每个词汇的词向量</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">vocab = model.wv.index2word</span><br><span class="line"></span><br><span class="line">print(<span class="string">'词表大小为%d'</span> % len(vocab))</span><br><span class="line">item_embedding = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> vocab:</span><br><span class="line">    item_embedding[k] = model[k]</span><br><span class="line">item_id_2_ids_dict = &#123;k:i  <span class="keyword">for</span> i, k <span class="keyword">in</span> enumerate(item_embedding)&#125;</span><br><span class="line">ids_2_item_id_dict = dict(zip(item_id_2_ids_dict.values(), item_id_2_ids_dict.keys()))</span><br><span class="line"></span><br><span class="line">item_embedding_mat = np.zeros((len(vocab), dim))</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> item_embedding:</span><br><span class="line">    item_embedding_mat[item_id_2_ids_dict[k]] = item_embedding[k]</span><br><span class="line">item_embedding_mat = item_embedding_mat.astype(<span class="string">'float32'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">词表大小为3154</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对每个用户统计已经看过的电影</span></span><br><span class="line">user_items_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_items:</span><br><span class="line">    user_items_dict[user] = set([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> user_items[user]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计测试集上每个用户点击的物品</span></span><br><span class="line"></span><br><span class="line">user_clicked_item_set_on_test = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> df_test.iterrows():</span><br><span class="line">    line = line[<span class="number">1</span>]</span><br><span class="line">    user = line[<span class="string">'user_id'</span>]</span><br><span class="line">    item = line[<span class="string">'item_id'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> user <span class="keyword">not</span> <span class="keyword">in</span> user_clicked_item_set_on_test:</span><br><span class="line">        user_clicked_item_set_on_test[user] = set([])</span><br><span class="line">    user_clicked_item_set_on_test[user].add(item)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将用户近期观看的100部影片的Embedding进行平均池化</span></span><br><span class="line"></span><br><span class="line">user_embedding_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_clicked_item_set_on_test:</span><br><span class="line">    tmp_item_list = [x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> user_items[user][:<span class="number">100</span>]]</span><br><span class="line">    tmp_embedding = np.zeros(dim)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> tmp_item_list:</span><br><span class="line">        tmp_embedding += item_embedding.get(item, np.zeros(dim))</span><br><span class="line">    user_embedding_dict[user] = tmp_embedding / len(tmp_item_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为每个用户寻找感兴趣的200电影(去除已观看)</span></span><br><span class="line"><span class="keyword">import</span> faiss</span><br><span class="line"></span><br><span class="line"><span class="comment"># index = faiss.IndexFlatL2(32)  # 创建索引</span></span><br><span class="line">index = faiss.IndexFlatIP(dim)  <span class="comment"># 创建索引</span></span><br><span class="line"></span><br><span class="line">index.add(item_embedding_mat)  <span class="comment"># 添加向量</span></span><br><span class="line"></span><br><span class="line">k = <span class="number">1000</span>  <span class="comment"># 最近邻个数</span></span><br><span class="line"></span><br><span class="line">user_match_item_set_filter = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_clicked_item_set_on_test:</span><br><span class="line">    D, I = index.search(user_embedding_dict[user].reshape((<span class="number">1</span>, dim)).astype(<span class="string">'float32'</span>), k)  <span class="comment"># 用真实查询向量进行搜索</span></span><br><span class="line">    user_match_item_set_filter[user] = [ids_2_item_id_dict[x] <span class="keyword">for</span> x <span class="keyword">in</span> I[<span class="number">0</span>] <span class="keyword">if</span> ids_2_item_id_dict[x] <span class="keyword">not</span> <span class="keyword">in</span> user_items_dict[user]][:<span class="number">200</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算查准率, 查全率, F1</span></span><br><span class="line"></span><br><span class="line">true_pos = <span class="number">0</span></span><br><span class="line">total_recommend = <span class="number">0</span></span><br><span class="line">total_pos = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_clicked_item_set_on_test:</span><br><span class="line">    clicked_items = user_clicked_item_set_on_test[user]</span><br><span class="line">    recommend_items = user_match_item_set_filter[user]</span><br><span class="line">    true_pos += len(clicked_items.intersection(recommend_items))</span><br><span class="line">    total_recommend += len(recommend_items)</span><br><span class="line">    total_pos += len(clicked_items)</span><br><span class="line">precision = true_pos / total_recommend</span><br><span class="line">recall = true_pos / total_pos</span><br><span class="line">f1 = <span class="number">2</span> * precision * recall / (precision + recall)</span><br><span class="line">print(<span class="string">'Precision: %.4f, Recall: %.4f, F1: %.4f'</span> % (precision, recall, f1))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Precision: 0.1463, Recall: 0.2488, F1: 0.1843</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>以上, 通过对DeepWalk原理的介绍, 知道了这是一种相对简单而有效的图表示学习方法, 即可以将图中的节点, 利用其共现关系, 学习得到Embedding.</p>
+<p>然后用代码来对算法流程进行实现, 并在相近的参数下, 对比item2vec在召回中的效果:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">item2vec</th>
+<th style="text-align:center">DeepWalk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Precision</td>
+<td style="text-align:center">0.1213</td>
+<td style="text-align:center">0.1463</td>
+</tr>
+<tr>
+<td style="text-align:center">Recall</td>
+<td style="text-align:center">0.2064</td>
+<td style="text-align:center">0.2488</td>
+</tr>
+<tr>
+<td style="text-align:center">F1</td>
+<td style="text-align:center">0.1528</td>
+<td style="text-align:center">0.1843</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>从结果上对比, DeepWalk是要比item2vec效果更好的, 这表明在使用图表示学习后, 确实挖掘出了更多潜藏的共现关系.</p>
+<p>同时, 对于item2vec来说, 其主要能够调节的超参数有:</p>
+<ul>
+<li><p>原始序列的长度.</p>
+<p>可以对一些较短的序列进行过滤, 对一些较长的序列进行截断或者分成多个序列.</p>
+</li>
+<li><p>word2vec算法.</p>
+<p>包括Embedding向量的维度, 邻近词的窗口大小, 负采样数量等.</p>
+</li>
+<li><p>用户Embedding的表示.</p>
+<p>如何利用物品的Embedding来表示用户的Embedding. 可以取近期点击物品的Embedding平均, 或者加权平均等.</p>
+</li>
+</ul>
+<p>而对于DeepWalk来, 在item2vec的基础上, 增加了更多可调节超参数:</p>
+<ul>
+<li><p>用于构建图的样本.</p>
+<p>包括原始序列的长度以及数量, 构建出来的图的不同, 会影响到采样的序列及后续的训练.</p>
+</li>
+<li><p>图中序列的采样.</p>
+<p>采样多少样本序列, 每个序列长度为多少, 也是需要调节的.</p>
+</li>
+</ul>
+<p>综上, DeepWalk是一种值得使用的算法, 同时在使用时, 需要根据一些下游任务, 来对其超参数进行调节, 以达到更好的效果.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/图算法/" rel="tag"># 图算法</a>
+          
+            <a href="/tags/word2vec/" rel="tag"># word2vec</a>
+          
+            <a href="/tags/召回/" rel="tag"># 召回</a>
+          
+            <a href="/tags/推荐系统/" rel="tag"># 推荐系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/10/推荐系统/item2vec召回/" rel="next" title="item2vec召回">
+                <i class="fa fa-chevron-left"></i> item2vec召回
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/10/图算法/node2vec/" rel="prev" title="node2vec">
+                node2vec <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列-图-序列"><span class="nav-number">2.1.</span> <span class="nav-text">序列-图-序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完全随机-带权重"><span class="nav-number">2.2.</span> <span class="nav-text">完全随机/带权重</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无向-有向"><span class="nav-number">2.3.</span> <span class="nav-text">无向/有向</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据准备"><span class="nav-number">3.1.</span> <span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练"><span class="nav-number">3.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

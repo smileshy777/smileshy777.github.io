@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="在TensorFlow1.x的时代, 采用的是静态计算图, 需要首先使用TensorFlow的各种算子创建计算图, 然后再开启一个会话Session, 显式执行计算图. 在静态图构建完成之后, 几乎全在TensorFlow内核上使用C++代码执行, 效率较高. 此外静态图还会对计算步骤进行一定的优化, 略去和结果无关的步骤.">
+<meta name="keywords" content="TensorFlow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow-计算图">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/07/TensorFlow/TensorFlow-计算图/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="在TensorFlow1.x的时代, 采用的是静态计算图, 需要首先使用TensorFlow的各种算子创建计算图, 然后再开启一个会话Session, 显式执行计算图. 在静态图构建完成之后, 几乎全在TensorFlow内核上使用C++代码执行, 效率较高. 此外静态图还会对计算步骤进行一定的优化, 略去和结果无关的步骤.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/07/TensorFlow/TensorFlow-计算图/fig_0.png">
+<meta property="og:updated_time" content="2020-10-10T14:35:50.075Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow-计算图">
+<meta name="twitter:description" content="在TensorFlow1.x的时代, 采用的是静态计算图, 需要首先使用TensorFlow的各种算子创建计算图, 然后再开启一个会话Session, 显式执行计算图. 在静态图构建完成之后, 几乎全在TensorFlow内核上使用C++代码执行, 效率较高. 此外静态图还会对计算步骤进行一定的优化, 略去和结果无关的步骤.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/08/07/TensorFlow/TensorFlow-计算图/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/07/TensorFlow/TensorFlow-计算图/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>TensorFlow-计算图 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/07/TensorFlow/TensorFlow-计算图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TensorFlow-计算图
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-07 21:01:25" itemprop="dateCreated datePublished" datetime="2020-08-07T21:01:25+08:00">2020-08-07</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-10 22:35:50" itemprop="dateModified" datetime="2020-10-10T22:35:50+08:00">2020-10-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/TensorFlow/" itemprop="url" rel="index"><span itemprop="name">TensorFlow</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在TensorFlow1.x的时代, 采用的是<strong>静态计算图</strong>, 需要首先使用TensorFlow的各种算子创建计算图, 然后再开启一个会话Session, 显式执行计算图. 在静态图构建完成之后, 几乎全在TensorFlow内核上使用C++代码执行, 效率较高. 此外静态图还会对计算步骤进行一定的优化, 略去和结果无关的步骤.</p>
+<a id="more"></a>
+<p>而在TensorFlow2.x时代, 使用的是<strong>动态计算图</strong>, 即每使用一个算子后, 该算子都会被动态地加入到隐含的默认计算图中, 立即执行得到结果, 而无需开启Session. 使用动态计算图即Eager Excution的好处是方便调试程序, 它会让TensorFlow代码的表现和Python原生代码的表现一样, 写起来就像写numpy一样, 各种日志打印, 控制流全部都是可以使用. 不过动态图的缺点是运行效率会相对低一些, 因为使用动态图会有许多次Python进程和TensorFlow的C++进程之间的通信.</p>
+<p>如果需要在TensorFlow2.x中使用静态图, 可以使用<code>@tf.function</code>装饰器将普通Python函数转换成对应的TensorFlow计算图构建代码. 运行该函数就相当于在TensorFlow1.x中用Session执行代码. 使用tf.function构建静态图的方式叫做 Autograph.</p>
+<p>在TensorFlow2.x中, 有三种计算图的构建方式: 静态计算图, 动态计算图, 以及Autograph.</p>
+<h1 id="计算图简介"><a href="#计算图简介" class="headerlink" title="计算图简介"></a>计算图简介</h1><p>计算图由节点(nodes)和边(edges)组成. 节点表示操作符Operator, 或者称之为算子, 边表示算子之间的依赖关系.</p>
+<p>实线表示有数据传递, 即张量. 虚线表示控制依赖, 即先后顺序.</p>
+<p><img src="fig_0.png" alt="fig_0"></p>
+<h1 id="静态计算图"><a href="#静态计算图" class="headerlink" title="静态计算图"></a>静态计算图</h1><p>TensorFlow2.x为了确保对TensorFlow1.x项目的兼容性, 在tf.compat.v1子模块中保留了对TensorFlow1.x那种静态计算图构建风格的支持. 可称之为怀旧版静态计算图, 不推荐使用.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义计算图</span></span><br><span class="line">g = tf.compat.v1.Graph()</span><br><span class="line"><span class="keyword">with</span> g.as_default():</span><br><span class="line">    x = tf.compat.v1.placeholder(name=<span class="string">'x'</span>, shape=[], dtype=tf.string)</span><br><span class="line">    y = tf.compat.v1.placeholder(name=<span class="string">'y'</span>, shape=[], dtype=tf.string)</span><br><span class="line">    z = tf.strings.join([x,y],name = <span class="string">"join"</span>,separator = <span class="string">" "</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行计算图</span></span><br><span class="line"><span class="keyword">with</span> tf.compat.v1.Session(graph = g) <span class="keyword">as</span> sess:</span><br><span class="line">    <span class="comment"># fetches的结果非常像一个函数的返回值，而feed_dict中的占位符相当于函数的参数序列。</span></span><br><span class="line">    result = sess.run(fetches = z,feed_dict = &#123;x:<span class="string">"hello"</span>,y:<span class="string">"world"</span>&#125;)</span><br><span class="line">    print(result)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b&apos;hello world&apos;</span><br></pre></td></tr></table></figure>
+<h1 id="动态计算图"><a href="#动态计算图" class="headerlink" title="动态计算图"></a>动态计算图</h1><p>在TensorFlow2.x中, 使用的是动态计算图和Autograph. 动态计算图已经不区分计算图的定义和执行了, 而是定义后立即执行. 因此称之为 Eager Excution, Eager这个英文单词的原意是”迫不及待的”, 也就是立即执行的意思.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 动态计算图在每个算子处都进行构建, 构建后立即执行</span></span><br><span class="line"></span><br><span class="line">x = tf.constant(<span class="string">'hello'</span>)</span><br><span class="line">y = tf.constant(<span class="string">'world'</span>)</span><br><span class="line">z = tf.strings.join([x, y], separator=<span class="string">' '</span>)</span><br><span class="line">tf.print(z)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以将动态计算图代码的输入和输出封装成函数</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">(x, y)</span>:</span></span><br><span class="line">    z = tf.strings.join([x, y], separator=<span class="string">' '</span>)</span><br><span class="line">    tf.print(z)</span><br><span class="line">    <span class="keyword">return</span> z</span><br><span class="line"></span><br><span class="line">res = hello_world(tf.constant(<span class="string">'hello'</span>), tf.constant(<span class="string">'world'</span>))</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">tf.Tensor(b&apos;hello world&apos;, shape=(), dtype=string)</span><br></pre></td></tr></table></figure>
+<h1 id="Autograph"><a href="#Autograph" class="headerlink" title="Autograph"></a>Autograph</h1><p>动态计算图运行效率相对较低, 可以用<code>@tf.function</code>装饰器将普通Python函数转换成和TensorFlow1.x对应的静态计算图构建代码.</p>
+<p>在TensorFlow1.x中, 使用计算图分两步, 第一步<strong>定义计算图</strong>, 第二步在会话中<strong>执行计算图</strong>.</p>
+<p>在TensorFlow2.x中, 如果采用Autograph的方式使用计算图, 第一步定义计算图变成了<strong>定义函数</strong>, 第二步执行计算图变成了<strong>调用函数</strong>. 不需要使用会话了, 一切都像原始的Python语法一样自然.</p>
+<p>实践中, 一般会先用动态计算图调试代码, 然后在需要提高性能的的地方利用<code>@tf.function</code>切换成Autograph获得更高的效率.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用autograph创建静态图</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">(x, y)</span>:</span></span><br><span class="line">    z = tf.strings.join([x, y], separator=<span class="string">' '</span>)</span><br><span class="line">    tf.print(z)</span><br><span class="line">    <span class="keyword">return</span> z</span><br><span class="line"></span><br><span class="line">res = hello_world(tf.constant(<span class="string">'hello'</span>), tf.constant(<span class="string">'world'</span>))</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">tf.Tensor(b&apos;hello world&apos;, shape=(), dtype=string)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建日志</span></span><br><span class="line">logdir = <span class="string">'./data/autograph/test'</span></span><br><span class="line">writer = tf.summary.create_file_writer(logdir)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启autograph跟踪</span></span><br><span class="line">tf.summary.trace_on(graph=<span class="literal">True</span>, profiler=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行autograph</span></span><br><span class="line">res = hello_world(<span class="string">'hello'</span>, <span class="string">'world'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将计算图信息写入日志</span></span><br><span class="line"><span class="keyword">with</span> writer.as_default():</span><br><span class="line">    tf.summary.trace_export(name=<span class="string">'autograph'</span>, </span><br><span class="line">                            step=<span class="number">0</span>, </span><br><span class="line">                            profiler_outdir=logdir)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在jupyter中用魔法命令启动tensorboard</span><br><span class="line">%reload_ext tensorboard</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 启动tensorboard</span><br><span class="line">%tensorboard --logdir &apos;./data/autograph/&apos;</span><br></pre></td></tr></table></figure>
+<h2 id="AutoGraph的使用规范"><a href="#AutoGraph的使用规范" class="headerlink" title="AutoGraph的使用规范"></a>AutoGraph的使用规范</h2><p>Autograph机制能够转换的代码并不是没有任何约束的, 有一些编码规范需要遵循, 否则可能会转换失败或者不符合预期.</p>
+<p>总体来说, 使用AutoGraph需要遵循如下规则:</p>
+<ul>
+<li>被<code>@tf.function</code>修饰的函数应尽可能使用TensorFlow中的函数而不是Python中的其他函数. 例如使用<code>tf.print</code>而不是<code>print</code>, 使用<code>tf.range</code>而不是<code>range</code>, 使用<code>tf.constant(True)</code>而不是<code>True</code>.</li>
+<li>避免在<code>@tf.function</code>修饰的函数内部定义<code>tf.Variable</code>.</li>
+<li>被<code>@tf.function</code>修饰的函数不可修改该函数外部的Python列表或字典等数据结构变量.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 被@tf.function修饰的函数应尽可能使用TensorFlow中的函数而不是Python中的其他函数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">np_random</span><span class="params">()</span>:</span></span><br><span class="line">    a = np.random.randn(<span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">    tf.print(a)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tf_random</span><span class="params">()</span>:</span></span><br><span class="line">    a = tf.random.normal((<span class="number">2</span>, <span class="number">2</span>))</span><br><span class="line">    tf.print(a)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#np_random每次执行都是一样的结果。</span></span><br><span class="line">np_random()</span><br><span class="line">np_random()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[ 0.61978529,  0.48959305],</span><br><span class="line">       [-0.1440161 ,  1.72774268]])</span><br><span class="line">array([[ 0.61978529,  0.48959305],</span><br><span class="line">       [-0.1440161 ,  1.72774268]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#tf_random每次执行都会有重新生成随机数。</span></span><br><span class="line">tf_random()</span><br><span class="line">tf_random()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[0.37242806 -1.14954114]</span><br><span class="line"> [-0.806226909 1.40349495]]</span><br><span class="line">[[0.226775587 1.14588106]</span><br><span class="line"> [0.647506893 1.2036798]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 避免在@tf.function修饰的函数内部定义tf.Variable.</span></span><br><span class="line"></span><br><span class="line">x = tf.Variable(<span class="number">1.0</span>, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">outer_var</span><span class="params">()</span>:</span></span><br><span class="line">    x.assign_add(<span class="number">1.0</span>)</span><br><span class="line">    tf.print(x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">outer_var()</span><br><span class="line">outer_var()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@tf.function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inner_var</span><span class="params">()</span>:</span></span><br><span class="line">    x = tf.Variable(<span class="number">1.0</span>, dtype=tf.float32)</span><br><span class="line">    x.assign_add(<span class="number">1.0</span>)</span><br><span class="line">    tf.print(x)</span><br><span class="line">    <span class="keyword">return</span> (x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#执行将报错</span></span><br><span class="line"><span class="comment"># inner_var()</span></span><br><span class="line"><span class="comment"># inner_var()</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 被@tf.function修饰的函数不可修改该函数外部的Python列表或字典等结构类型变量</span></span><br><span class="line"></span><br><span class="line">tensor_list = []</span><br><span class="line"></span><br><span class="line"><span class="comment">#@tf.function #加上这一行切换成Autograph结果将不符合预期！！！</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">append_tensor</span><span class="params">(x)</span>:</span></span><br><span class="line">    tensor_list.append(x)</span><br><span class="line">    <span class="keyword">return</span> tensor_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">append_tensor(tf.constant(<span class="number">5.0</span>))</span><br><span class="line">append_tensor(tf.constant(<span class="number">6.0</span>))</span><br><span class="line">print(tensor_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;tf.Tensor: shape=(), dtype=float32, numpy=5.0&gt;, &lt;tf.Tensor: shape=(), dtype=float32, numpy=6.0&gt;]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">tensor_list = []</span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function #加上这一行切换成Autograph结果将不符合预期！！！</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">append_tensor</span><span class="params">(x)</span>:</span></span><br><span class="line">    tensor_list.append(x)</span><br><span class="line">    <span class="keyword">return</span> tensor_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">append_tensor(tf.constant(<span class="number">5.0</span>))</span><br><span class="line">append_tensor(tf.constant(<span class="number">6.0</span>))</span><br><span class="line">print(tensor_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;tf.Tensor &apos;x:0&apos; shape=() dtype=float32&gt;]</span><br></pre></td></tr></table></figure>
+<h2 id="AutoGraph的机制原理"><a href="#AutoGraph的机制原理" class="headerlink" title="AutoGraph的机制原理"></a>AutoGraph的机制原理</h2><p><strong>当我们使用<code>@tf.function</code>装饰一个函数的时候, 后面到底发生了什么呢?</strong></p>
+<p>例如我们写下如下代码.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function(autograph=True)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">myadd</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> tf.range(<span class="number">3</span>):</span><br><span class="line">        tf.print(i)</span><br><span class="line">    c = a + b</span><br><span class="line">    print(<span class="string">"tracing"</span>)</span><br><span class="line">    <span class="keyword">return</span> c</span><br></pre></td></tr></table></figure>
+<p>后面什么都没有发生. 仅仅是在Python堆栈中记录了这样一个函数的签名.</p>
+<p><strong>当我们第一次调用这个被<code>@tf.function</code>装饰的函数时, 后面到底发生了什么?</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myadd(tf.constant(<span class="string">"hello"</span>), tf.constant(<span class="string">"world"</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tracing</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>发生了两件事情.</p>
+<p><strong>第一件事情是创建计算图.</strong> 即创建一个静态计算图, 跟踪执行一遍函数体中的Python代码, 确定各个变量的Tensor类型, 并根据执行顺序将算子添加到计算图中. 在这个过程中, 如果开启了<code>autograph=True</code>(默认开启), 会将Python控制流转换成TensorFlow图内控制流. 主要是将<code>if</code>语句转换成 <code>tf.cond</code>算子表达, 将<code>while</code>和<code>for</code>循环语句转换成<code>tf.while_loop</code>算子表达, 并在必要的时候添加 <code>tf.control_dependencies</code>指定执行顺序依赖关系.</p>
+<p><strong>第二件事情是执行计算图.</strong></p>
+<p>因此我们先看到的是第一个步骤的结果: 即Python调用标准输出流打印”tracing”语句. 然后看到第二个步骤的结果: TensorFlow调用标准输出流打印0, 1, 2.</p>
+<p><strong>当我们再次用相同的输入参数类型调用这个被<code>@tf.function</code>装饰的函数时, 后面到底发生了什么?</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myadd(tf.constant(<span class="string">"good"</span>), tf.constant(<span class="string">"morning"</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>只会发生一件事情, 那就是上面步骤的第二步, 执行计算图. 所以这一次我们没有看到打印”tracing”的结果.</p>
+<p><strong>当我们再次用不同的的输入参数类型调用这个被<code>@tf.function</code>装饰的函数时, 后面到底发生了什么?</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myadd(tf.constant(<span class="number">1</span>), tf.constant(<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tracing</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>由于输入参数的类型已经发生变化, 已经创建的计算图不能够再次使用.</p>
+<p>需要重新做两件事情: 创建新的计算图, 执行计算图, </p>
+<p>所以我们又会先看到的是第一个步骤的结果: 即Python调用标准输出流打印”tracing”语句. 然后再看到第二个步骤的结果: TensorFlow调用标准输出流打印0, 1, 2.</p>
+<p><strong>需要注意的是, 如果调用被<code>@tf.function</code>装饰的函数时输入的参数不是Tensor类型, 则每次都会重新创建计算图.</strong></p>
+<p>例如我们写下如下代码, 两次都会重新创建计算图. 因此, 一般建议调用<code>@tf.function</code>时应传入Tensor类型.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myadd(<span class="string">"hello"</span>, <span class="string">"world"</span>)</span><br><span class="line">myadd(<span class="string">"good"</span>, <span class="string">"morning"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tracing</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">tracing</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>了解了以上Autograph的机制原理, 我们也就能够理解Autograph编码规范的三条建议了.</p>
+<ul>
+<li><p>被<code>@tf.function</code>修饰的函数应尽可能使用TensorFlow中的函数而不是Python中的其他函数. 例如使用<code>tf.print</code>而不是<code>print</code>, 使用<code>tf.range</code>而不是<code>range</code>, 使用<code>tf.constant(True)</code>而不是<code>True</code>.</p>
+<p>解释: Python中的函数仅仅会在跟踪执行函数以创建静态图的阶段使用, 普通Python函数是无法嵌入到静态计算图中的. 所以在计算图构建好之后再次调用的时候, 这些Python函数并没有被计算. 而TensorFlow中的函数则可以嵌入到计算图中. </p>
+</li>
+<li><p>避免在<code>@tf.function</code>修饰的函数内部定义<code>tf.Variable</code>.</p>
+<p>解释: 我们创建静态计算图的目的, 是反复使用其进行正向传播, 然后计算梯度后反向传播. 而如果在静态计算图中, 有创建<code>tf.Variable</code>的操作存在, 那将与上面的目的相违背, 因为每次正向传播时, 都会再初始化一个变量张量.</p>
+</li>
+<li><p>被<code>@tf.function</code>修饰的函数不可修改该函数外部的Python列表或字典等数据结构变量.</p>
+<p>静态计算图是被编译成C++代码在TensorFlow内核中执行的. Python中的列表和字典等数据结构变量是无法嵌入到计算图中, 它们仅仅能够在创建计算图时被读取, 在执行计算图时是无法修改Python中的列表或字典这样的数据结构变量的. </p>
+</li>
+</ul>
+<h2 id="AutoGraph和tf-Module"><a href="#AutoGraph和tf-Module" class="headerlink" title="AutoGraph和tf.Module"></a>AutoGraph和tf.Module</h2><p>前面在介绍Autograph的编码规范时提到构建Autograph时应该避免在<code>@tf.function</code>修饰的函数内部定义<code>tf.Variable</code>. 但是如果在函数外部定义<code>tf.Variable</code>的话, 又会显得这个函数有外部变量依赖, 封装不够完美.</p>
+<p>一种简单的思路是定义一个类, 并将相关的<code>tf.Variable</code>创建放在类的初始化方法中. 而将函数的逻辑放在其他方法中. TensorFlow提供了一个基类<code>tf.Module</code>, 通过继承它构建子类, 可以非常方便地管理变量, 还可以非常方便地管理它引用的其它Module. 最重要的是, 我们能够利用<code>tf.saved_model</code>保存模型并实现跨平台部署使用.</p>
+<p>实际上, <code>tf.keras.models.Model</code>, <code>tf.keras.layers.Layer</code>都是继承自<code>tf.Module</code>的, 提供了方便的变量管理和所引用的子模块管理的功能.</p>
+<p><strong>因此, 利用<code>tf.Module</code>提供的封装, 再结合TensoFlow丰富的低阶API, 实际上我们能够基于TensorFlow开发任意机器学习模型(而非仅仅是神经网络模型), 并实现跨平台部署使用.</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义一个简单的function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">x = tf.Variable(<span class="number">1.0</span>, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在tf.function中用input_signature限定输入张量的签名类型：shape和dtype</span></span><br><span class="line"><span class="meta">@tf.function(input_signature=[tf.TensorSpec(shape=[], dtype=tf.float32)])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_print</span><span class="params">(a)</span>:</span></span><br><span class="line">    x.assign_add(a)</span><br><span class="line">    tf.print(x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add_print(tf.constant(<span class="number">3.0</span>))</span><br><span class="line"><span class="comment">#add_print(tf.constant(3))  # 输入不符合张量签名的参数将报错</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 利用tf.Module的子类化将其封装一下</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoModule</span><span class="params">(tf.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, init_value=tf.constant<span class="params">(<span class="number">0.0</span>)</span>)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.x = tf.Variable(init_value, dtype=tf.float32, trainable=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @tf.function(input_signature=[tf.TensorSpec(shape=[], dtype=tf.float32)])</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addprint</span><span class="params">(self, a)</span>:</span></span><br><span class="line">        self.x.assign_add(a)</span><br><span class="line">        tf.print(self.x)</span><br><span class="line">        <span class="keyword">return</span> self.x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行</span></span><br><span class="line">demo = DemoModule(init_value=tf.constant(<span class="number">1.0</span>))</span><br><span class="line">result = demo.addprint(tf.constant(<span class="number">5.0</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看模块中的全部变量和全部可训练变量</span></span><br><span class="line">print(demo.variables)</span><br><span class="line">print(demo.trainable_variables)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(&lt;tf.Variable &apos;Variable:0&apos; shape=() dtype=float32, numpy=6.0&gt;,)</span><br><span class="line">(&lt;tf.Variable &apos;Variable:0&apos; shape=() dtype=float32, numpy=6.0&gt;,)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看模块中的全部子模块</span></span><br><span class="line">demo.submodules</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用tf.saved_model保存模型, 并指定需要跨平台部署的方法</span></span><br><span class="line">tf.saved_model.save(demo,</span><br><span class="line">                    <span class="string">"./model/demo/1"</span>,</span><br><span class="line">                    signatures=&#123;<span class="string">"serving_default"</span>: demo.addprint&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO:tensorflow:Assets written to: ./model/demo/1/assets</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载模型</span></span><br><span class="line">demo2 = tf.saved_model.load(<span class="string">"./model/demo/1"</span>)</span><br><span class="line">demo2.addprint(tf.constant(<span class="number">5.0</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">11</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 查看模型文件相关信息, 红框标出来的输出信息在模型部署和跨平台使用时有可能会用到</span><br><span class="line">!saved_model_cli show --dir ./model/demo/1 --all</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">MetaGraphDef with tag-set: &apos;serve&apos; contains the following SignatureDefs:</span><br><span class="line"></span><br><span class="line">signature_def[&apos;__saved_model_init_op&apos;]:</span><br><span class="line">  The given SavedModel SignatureDef contains the following input(s):</span><br><span class="line">  The given SavedModel SignatureDef contains the following output(s):</span><br><span class="line">    outputs[&apos;__saved_model_init_op&apos;] tensor_info:</span><br><span class="line">        dtype: DT_INVALID</span><br><span class="line">        shape: unknown_rank</span><br><span class="line">        name: NoOp</span><br><span class="line">  Method name is: </span><br><span class="line"></span><br><span class="line">signature_def[&apos;serving_default&apos;]:</span><br><span class="line">  The given SavedModel SignatureDef contains the following input(s):</span><br><span class="line">    inputs[&apos;a&apos;] tensor_info:</span><br><span class="line">        dtype: DT_FLOAT</span><br><span class="line">        shape: ()</span><br><span class="line">        name: serving_default_a:0</span><br><span class="line">  The given SavedModel SignatureDef contains the following output(s):</span><br><span class="line">    outputs[&apos;output_0&apos;] tensor_info:</span><br><span class="line">        dtype: DT_FLOAT</span><br><span class="line">        shape: ()</span><br><span class="line">        name: StatefulPartitionedCall:0</span><br><span class="line">  Method name is: tensorflow/serving/predict</span><br></pre></td></tr></table></figure>
+<p>除了利用<code>tf.Module</code>的子类化实现封装, 我们也可以通过给<code>tf.Module</code>添加属性和方法进行封装.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mymodule = tf.Module()</span><br><span class="line">mymodule.x = tf.Variable(<span class="number">0.0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@tf.function(input_signature=[tf.TensorSpec(shape=[], dtype=tf.float32)])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">addprint</span><span class="params">(a)</span>:</span></span><br><span class="line">    mymodule.x.assign_add(a)</span><br><span class="line">    tf.print(mymodule.x)</span><br><span class="line">    <span class="keyword">return</span> (mymodule.x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mymodule.addprint = addprint</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/05/TensorFlow/TensorFlow-自动微分机制/" rel="next" title="TensorFlow-自动微分机制">
+                <i class="fa fa-chevron-left"></i> TensorFlow-自动微分机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/08/TensorFlow/TensorFlow-数据管道/" rel="prev" title="TensorFlow-数据管道">
+                TensorFlow-数据管道 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#计算图简介"><span class="nav-number">1.</span> <span class="nav-text">计算图简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态计算图"><span class="nav-number">2.</span> <span class="nav-text">静态计算图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态计算图"><span class="nav-number">3.</span> <span class="nav-text">动态计算图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Autograph"><span class="nav-number">4.</span> <span class="nav-text">Autograph</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoGraph的使用规范"><span class="nav-number">4.1.</span> <span class="nav-text">AutoGraph的使用规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoGraph的机制原理"><span class="nav-number">4.2.</span> <span class="nav-text">AutoGraph的机制原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoGraph和tf-Module"><span class="nav-number">4.3.</span> <span class="nav-text">AutoGraph和tf.Module</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

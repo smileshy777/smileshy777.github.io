@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="这一篇中, 将在泰坦尼克数据集(可以在kaggle上下载)上, 利用PySpark进行处理与建模.">
+<meta name="keywords" content="大数据,Spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PySpark学习笔记(三)">
+<meta property="og:url" content="https://smileshy777.github.io/2020/09/13/大数据/PySpark学习笔记-三/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="这一篇中, 将在泰坦尼克数据集(可以在kaggle上下载)上, 利用PySpark进行处理与建模.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-11-17T11:44:01.212Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PySpark学习笔记(三)">
+<meta name="twitter:description" content="这一篇中, 将在泰坦尼克数据集(可以在kaggle上下载)上, 利用PySpark进行处理与建模.">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/09/13/大数据/PySpark学习笔记-三/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>PySpark学习笔记(三) | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/09/13/大数据/PySpark学习笔记-三/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PySpark学习笔记(三)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-13 23:08:04" itemprop="dateCreated datePublished" datetime="2020-09-13T23:08:04+08:00">2020-09-13</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-11-17 19:44:01" itemprop="dateModified" datetime="2020-11-17T19:44:01+08:00">2020-11-17</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/大数据/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一篇中, 将在泰坦尼克数据集(可以在kaggle上下载)上, 利用PySpark进行处理与建模.</p>
+<a id="more"></a>
+<h1 id="初始化环境"><a href="#初始化环境" class="headerlink" title="初始化环境"></a>初始化环境</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession</span><br><span class="line">spark = SparkSession.builder \</span><br><span class="line">                    .master(<span class="string">'local'</span>) \</span><br><span class="line">                    .appName(<span class="string">'titanic'</span>) \</span><br><span class="line">                    .getOrCreate()</span><br></pre></td></tr></table></figure>
+<h1 id="读取数据集"><a href="#读取数据集" class="headerlink" title="读取数据集"></a>读取数据集</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df = spark.read.csv(<span class="string">'./data/train.csv'</span>, header=<span class="literal">True</span>, inferSchema=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">print(df.count())</span><br><span class="line">print(df.printSchema())</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">891</span><br><span class="line">root</span><br><span class="line"> |-- PassengerId: integer (nullable = true)</span><br><span class="line"> |-- Survived: integer (nullable = true)</span><br><span class="line"> |-- Pclass: integer (nullable = true)</span><br><span class="line"> |-- Name: string (nullable = true)</span><br><span class="line"> |-- Sex: string (nullable = true)</span><br><span class="line"> |-- Age: double (nullable = true)</span><br><span class="line"> |-- SibSp: integer (nullable = true)</span><br><span class="line"> |-- Parch: integer (nullable = true)</span><br><span class="line"> |-- Ticket: string (nullable = true)</span><br><span class="line"> |-- Fare: double (nullable = true)</span><br><span class="line"> |-- Cabin: string (nullable = true)</span><br><span class="line"> |-- Embarked: string (nullable = true)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> col <span class="keyword">in</span> df.columns:</span><br><span class="line">    print(df[[col]].describe().show())</span><br></pre></td></tr></table></figure>
+<h1 id="EDA"><a href="#EDA" class="headerlink" title="EDA"></a>EDA</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupBy(<span class="string">'Survived'</span>).count().show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+--------+-----+</span><br><span class="line">|Survived|count|</span><br><span class="line">+--------+-----+</span><br><span class="line">|       1|  342|</span><br><span class="line">|       0|  549|</span><br><span class="line">+--------+-----+</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupBy(<span class="string">'Sex'</span>).avg(<span class="string">'Survived'</span>).sort(<span class="string">'avg(Survived)'</span>).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+------+-------------------+</span><br><span class="line">|   Sex|      avg(Survived)|</span><br><span class="line">+------+-------------------+</span><br><span class="line">|  male|0.18890814558058924|</span><br><span class="line">|female| 0.7420382165605095|</span><br><span class="line">+------+-------------------+</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupBy(<span class="string">'Pclass'</span>).avg(<span class="string">'Survived'</span>).sort(<span class="string">'avg(Survived)'</span>).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+------+-------------------+</span><br><span class="line">|Pclass|      avg(Survived)|</span><br><span class="line">+------+-------------------+</span><br><span class="line">|     3|0.24236252545824846|</span><br><span class="line">|     2|0.47282608695652173|</span><br><span class="line">|     1| 0.6296296296296297|</span><br><span class="line">+------+-------------------+</span><br></pre></td></tr></table></figure>
+<h1 id="缺失值处理"><a href="#缺失值处理" class="headerlink" title="缺失值处理"></a>缺失值处理</h1><p>查看哪些列有缺失值, 缺失多少数量.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">null_value_count</span><span class="params">(df)</span>:</span></span><br><span class="line">    null_columns_counts = []</span><br><span class="line">    numRows = df.count()</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> df.columns:</span><br><span class="line">        nullRows = df.where(df[col].isNull()).count()</span><br><span class="line">        <span class="keyword">if</span>(nullRows &gt; <span class="number">0</span>):</span><br><span class="line">            temp = col, nullRows</span><br><span class="line">            null_columns_counts.append(temp)</span><br><span class="line">    <span class="keyword">return</span> null_columns_counts</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">null_columns_count_list = null_value_count(df)</span><br><span class="line">spark.createDataFrame(null_columns_count_list, [<span class="string">'Column_With_Null_Value'</span>, <span class="string">'Null_Values_Count'</span>]).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+----------------------+-----------------+</span><br><span class="line">|Column_With_Null_Value|Null_Values_Count|</span><br><span class="line">+----------------------+-----------------+</span><br><span class="line">|                   Age|              177|</span><br><span class="line">|                 Cabin|              687|</span><br><span class="line">|              Embarked|                2|</span><br><span class="line">+----------------------+-----------------+</span><br></pre></td></tr></table></figure>
+<p>发现有3列缺失, 且缺失程度不同.</p>
+<p>根据缺失程度的不同, 这里采取不同的处理方式. 对于<code>Cabin</code>, 缺失过多, 直接删除. 对于<code>Embarked</code>, 缺失很少, 可使用众数填充. 对于<code>Age</code>, 小部分缺失, 如果直接使用均值填充, 在这里不太好, 注意到有一列<code>Name</code>, 其中有一些称谓如<code>Mr</code>, 可以反映一个人的年龄, 所以可以结合其它信息进行填充.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[[<span class="string">'Name'</span>]].show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">+--------------------+</span><br><span class="line">|                Name|</span><br><span class="line">+--------------------+</span><br><span class="line">|Braund, Mr. Owen ...|</span><br><span class="line">|Cumings, Mrs. Joh...|</span><br><span class="line">|Heikkinen, Miss. ...|</span><br><span class="line">|Futrelle, Mrs. Ja...|</span><br><span class="line">|Allen, Mr. Willia...|</span><br><span class="line">|    Moran, Mr. James|</span><br><span class="line">|McCarthy, Mr. Tim...|</span><br><span class="line">|Palsson, Master. ...|</span><br><span class="line">|Johnson, Mrs. Osc...|</span><br><span class="line">|Nasser, Mrs. Nich...|</span><br><span class="line">|Sandstrom, Miss. ...|</span><br><span class="line">|Bonnell, Miss. El...|</span><br><span class="line">|Saundercock, Mr. ...|</span><br><span class="line">|Andersson, Mr. An...|</span><br><span class="line">|Vestrom, Miss. Hu...|</span><br><span class="line">|Hewlett, Mrs. (Ma...|</span><br><span class="line">|Rice, Master. Eugene|</span><br><span class="line">|Williams, Mr. Cha...|</span><br><span class="line">|Vander Planke, Mr...|</span><br><span class="line">|Masselmani, Mrs. ...|</span><br><span class="line">+--------------------+</span><br><span class="line">only showing top 20 rows</span><br></pre></td></tr></table></figure>
+<p>使用正则表达式, 将<code>Name</code>中的称谓提取出来.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> regexp_extract</span><br><span class="line">df = df.withColumn(<span class="string">"Initial"</span>,regexp_extract(df[<span class="string">"Name"</span>], <span class="string">"([A-Za-z]+)\."</span>, <span class="number">1</span>))</span><br><span class="line">df[[<span class="string">'Initial'</span>]].distinct().show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">+--------+</span><br><span class="line">| Initial|</span><br><span class="line">+--------+</span><br><span class="line">|     Don|</span><br><span class="line">|    Miss|</span><br><span class="line">|Countess|</span><br><span class="line">|     Col|</span><br><span class="line">|     Rev|</span><br><span class="line">|    Lady|</span><br><span class="line">|  Master|</span><br><span class="line">|     Mme|</span><br><span class="line">|    Capt|</span><br><span class="line">|      Mr|</span><br><span class="line">|      Dr|</span><br><span class="line">|     Mrs|</span><br><span class="line">|     Sir|</span><br><span class="line">|Jonkheer|</span><br><span class="line">|    Mlle|</span><br><span class="line">|   Major|</span><br><span class="line">|      Ms|</span><br><span class="line">+--------+</span><br></pre></td></tr></table></figure>
+<p>有一些不同的称谓, 其实表达的是同一个意思, 因此这里进行整合.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df = df.replace([<span class="string">'Mlle'</span>,<span class="string">'Mme'</span>, <span class="string">'Ms'</span>, <span class="string">'Dr'</span>,<span class="string">'Major'</span>,<span class="string">'Lady'</span>,<span class="string">'Countess'</span>,<span class="string">'Jonkheer'</span>,<span class="string">'Col'</span>,<span class="string">'Rev'</span>,<span class="string">'Capt'</span>,<span class="string">'Sir'</span>,<span class="string">'Don'</span>],</span><br><span class="line">            [<span class="string">'Miss'</span>,<span class="string">'Miss'</span>,<span class="string">'Miss'</span>,<span class="string">'Mr'</span>,<span class="string">'Mr'</span>,  <span class="string">'Mrs'</span>,  <span class="string">'Mrs'</span>,  <span class="string">'Other'</span>,  <span class="string">'Other'</span>,<span class="string">'Other'</span>,<span class="string">'Mr'</span>,<span class="string">'Mr'</span>,<span class="string">'Mr'</span>])</span><br><span class="line">df[[<span class="string">'Initial'</span>]].distinct().show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+-------+</span><br><span class="line">|Initial|</span><br><span class="line">+-------+</span><br><span class="line">|   Miss|</span><br><span class="line">|  Other|</span><br><span class="line">| Master|</span><br><span class="line">|     Mr|</span><br><span class="line">|    Mrs|</span><br><span class="line">+-------+</span><br></pre></td></tr></table></figure>
+<p>看一下各个称谓的平均年龄.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupBy(<span class="string">'Initial'</span>).avg(<span class="string">'Age'</span>).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+-------+------------------+</span><br><span class="line">|Initial|          avg(Age)|</span><br><span class="line">+-------+------------------+</span><br><span class="line">|   Miss|             21.86|</span><br><span class="line">|  Other|45.888888888888886|</span><br><span class="line">| Master| 4.574166666666667|</span><br><span class="line">|     Mr| 32.73960880195599|</span><br><span class="line">|    Mrs|35.981818181818184|</span><br><span class="line">+-------+------------------+</span><br></pre></td></tr></table></figure>
+<p>利用以上结果, 对缺失部分的年龄进行填充.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> when</span><br><span class="line">df = df.withColumn(</span><br><span class="line">    <span class="string">"Age"</span>,</span><br><span class="line">    when((df[<span class="string">"Initial"</span>] == <span class="string">"Miss"</span>) &amp; (df[<span class="string">"Age"</span>].isNull()),</span><br><span class="line">         <span class="number">22</span>).otherwise(df[<span class="string">"Age"</span>]))</span><br><span class="line">df = df.withColumn(</span><br><span class="line">    <span class="string">"Age"</span>,</span><br><span class="line">    when((df[<span class="string">"Initial"</span>] == <span class="string">"Other"</span>) &amp; (df[<span class="string">"Age"</span>].isNull()),</span><br><span class="line">         <span class="number">46</span>).otherwise(df[<span class="string">"Age"</span>]))</span><br><span class="line">df = df.withColumn(</span><br><span class="line">    <span class="string">"Age"</span>,</span><br><span class="line">    when((df[<span class="string">"Initial"</span>] == <span class="string">"Master"</span>) &amp; (df[<span class="string">"Age"</span>].isNull()),</span><br><span class="line">         <span class="number">5</span>).otherwise(df[<span class="string">"Age"</span>]))</span><br><span class="line">df = df.withColumn(</span><br><span class="line">    <span class="string">"Age"</span>,</span><br><span class="line">    when((df[<span class="string">"Initial"</span>] == <span class="string">"Mr"</span>) &amp; (df[<span class="string">"Age"</span>].isNull()),</span><br><span class="line">         <span class="number">33</span>).otherwise(df[<span class="string">"Age"</span>]))</span><br><span class="line">df = df.withColumn(</span><br><span class="line">    <span class="string">"Age"</span>,</span><br><span class="line">    when((df[<span class="string">"Initial"</span>] == <span class="string">"Mrs"</span>) &amp; (df[<span class="string">"Age"</span>].isNull()),</span><br><span class="line">         <span class="number">36</span>).otherwise(df[<span class="string">"Age"</span>]))</span><br></pre></td></tr></table></figure>
+<p>填充<code>Embarked</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupBy(<span class="string">"Embarked"</span>).count().show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------+-----+</span><br><span class="line">|Embarked|count|</span><br><span class="line">+--------+-----+</span><br><span class="line">|       Q|   77|</span><br><span class="line">|    null|    2|</span><br><span class="line">|       C|  168|</span><br><span class="line">|       S|  644|</span><br><span class="line">+--------+-----+</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = df.fillna(&#123;<span class="string">"Embarked"</span> : <span class="string">'S'</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>删除<code>Cabin</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = df.drop(<span class="string">'Cabin'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="构造特征"><a href="#构造特征" class="headerlink" title="构造特征"></a>构造特征</h1><p>对于<code>SibSp</code>与<code>Parch</code>这两列, 分别表示不与自己同辈以及与自己同辈的亲人数量.</p>
+<p>那么可以考虑它们的和,来构造一个特征.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df = df.withColumn(<span class="string">"Family_Size"</span>, df[<span class="string">'SibSp'</span>] + df[<span class="string">'Parch'</span>])</span><br><span class="line">df.groupBy(<span class="string">"Family_Size"</span>).count().show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">+-----------+-----+</span><br><span class="line">|Family_Size|count|</span><br><span class="line">+-----------+-----+</span><br><span class="line">|          1|  161|</span><br><span class="line">|          6|   12|</span><br><span class="line">|          3|   29|</span><br><span class="line">|          5|   22|</span><br><span class="line">|          4|   15|</span><br><span class="line">|          7|    6|</span><br><span class="line">|         10|    7|</span><br><span class="line">|          2|  102|</span><br><span class="line">|          0|  537|</span><br><span class="line">+-----------+-----+</span><br></pre></td></tr></table></figure>
+<p>进一步可以构造是否一个人的特征.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> lit</span><br><span class="line">df = df.withColumn(<span class="string">'Alone'</span>, lit(<span class="number">0</span>))</span><br><span class="line">df = df.withColumn(<span class="string">"Alone"</span>,</span><br><span class="line">                   when(df[<span class="string">"Family_Size"</span>] == <span class="number">0</span>, <span class="number">1</span>).otherwise(df[<span class="string">"Alone"</span>]))</span><br><span class="line">df.groupBy(<span class="string">'Alone'</span>).avg(<span class="string">'survived'</span>).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+-----+-------------------+</span><br><span class="line">|Alone|      avg(survived)|</span><br><span class="line">+-----+-------------------+</span><br><span class="line">|    1|0.30353817504655495|</span><br><span class="line">|    0| 0.5056497175141242|</span><br><span class="line">+-----+-------------------+</span><br></pre></td></tr></table></figure>
+<p>从这里可以看到, 独自一人的生存率要…低…??? 懂了, 谈恋爱可以增加生存率!</p>
+<h1 id="类别特征编码"><a href="#类别特征编码" class="headerlink" title="类别特征编码"></a>类别特征编码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.ml <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> pyspark.ml.feature <span class="keyword">import</span> StringIndexer</span><br><span class="line">indexers = [StringIndexer(inputCol=column, outputCol=column+<span class="string">"_index"</span>) <span class="keyword">for</span> column <span class="keyword">in</span> [<span class="string">"Sex"</span>,<span class="string">"Embarked"</span>,<span class="string">"Initial"</span>]]</span><br><span class="line">pipeline = Pipeline(stages=indexers)</span><br><span class="line">df = pipeline.fit(df).transform(df)</span><br><span class="line"></span><br><span class="line">df = df.drop(<span class="string">"PassengerId"</span>,<span class="string">"Name"</span>,<span class="string">"Ticket"</span>,<span class="string">"Cabin"</span>,<span class="string">"Embarked"</span>,<span class="string">"Sex"</span>,<span class="string">"Initial"</span>)</span><br><span class="line"></span><br><span class="line">df.columns</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[&apos;Survived&apos;,</span><br><span class="line"> &apos;Pclass&apos;,</span><br><span class="line"> &apos;Age&apos;,</span><br><span class="line"> &apos;SibSp&apos;,</span><br><span class="line"> &apos;Parch&apos;,</span><br><span class="line"> &apos;Fare&apos;,</span><br><span class="line"> &apos;Family_Size&apos;,</span><br><span class="line"> &apos;Alone&apos;,</span><br><span class="line"> &apos;Sex_index&apos;,</span><br><span class="line"> &apos;Embarked_index&apos;,</span><br><span class="line"> &apos;Initial_index&apos;]</span><br></pre></td></tr></table></figure>
+<h1 id="整合特征-amp-标签"><a href="#整合特征-amp-标签" class="headerlink" title="整合特征 &amp; 标签"></a>整合特征 &amp; 标签</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.ml.feature <span class="keyword">import</span> VectorAssembler</span><br><span class="line">vector_assembler = VectorAssembler(inputCols=df.columns[<span class="number">1</span>:],</span><br><span class="line">                                   outputCol=<span class="string">"features"</span>)</span><br><span class="line">df = feature.transform(df)</span><br><span class="line"></span><br><span class="line">df = df.withColumnRenamed(<span class="string">'Survived'</span>, <span class="string">'label'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 划分训练集/测试集.</span></span><br><span class="line">train, test = df[[<span class="string">'features'</span>, <span class="string">'label'</span>]].randomSplit([<span class="number">0.8</span>, <span class="number">0.2</span>], seed=<span class="number">7</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h1><h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载逻辑回归模块.</span></span><br><span class="line"><span class="keyword">from</span> pyspark.ml.classification <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建逻辑回归实例.</span></span><br><span class="line">lr = LogisticRegression(labelCol=<span class="string">"label"</span>,</span><br><span class="line">                        featuresCol=<span class="string">"features"</span>,</span><br><span class="line">                        maxIter=<span class="number">10</span>,</span><br><span class="line">                        regParam=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练模型.</span></span><br><span class="line">lr_model = lr.fit(train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出模型信息.</span></span><br><span class="line"><span class="comment"># print("Coefficients: " + str(lr_model.coefficients))</span></span><br><span class="line">print(<span class="string">"Intercept: "</span> + str(lr_model.intercept))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 利用模型进行预测.</span></span><br><span class="line">preds = lr_model.transform(test)</span><br><span class="line">preds.printSchema()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root</span><br><span class="line"> |-- features: vector (nullable = true)</span><br><span class="line"> |-- label: integer (nullable = true)</span><br><span class="line"> |-- rawPrediction: vector (nullable = true)</span><br><span class="line"> |-- probability: vector (nullable = true)</span><br><span class="line"> |-- prediction: double (nullable = false)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AUC</span></span><br><span class="line"><span class="keyword">from</span> pyspark.ml.evaluation <span class="keyword">import</span> BinaryClassificationEvaluator</span><br><span class="line"></span><br><span class="line">evaluator = BinaryClassificationEvaluator(rawPredictionCol=<span class="string">"rawPrediction"</span>, metricName=<span class="string">'areaUnderROC'</span>)</span><br><span class="line">print(evaluator.getMetricName())</span><br><span class="line">print(evaluator.evaluate(preds))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">areaUnderROC</span><br><span class="line">0.8511334610472546</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.ml.tuning <span class="keyword">import</span> ParamGridBuilder, CrossValidator</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建调参网格.</span></span><br><span class="line">paramGrid = (ParamGridBuilder()</span><br><span class="line">             .addGrid(lr.regParam, [<span class="number">0.01</span>, <span class="number">0.1</span>, <span class="number">1</span>, <span class="number">10</span>])</span><br><span class="line">             .addGrid(lr.elasticNetParam, [<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">             .build())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建交叉验证.</span></span><br><span class="line">cv = CrossValidator(estimator=lr,</span><br><span class="line">                    estimatorParamMaps=paramGrid,</span><br><span class="line">                    evaluator=evaluator, numFolds=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行交叉验证 &amp; 网格调参.</span></span><br><span class="line">cvModel = cv.fit(train)</span><br><span class="line">print(evaluator.evaluate(cvModel.transform(test)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.8584770114942533</span><br></pre></td></tr></table></figure>
+<h1 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.ml.classification <span class="keyword">import</span> GBTClassifier</span><br><span class="line"></span><br><span class="line">gbdt = GBTClassifier(seed=<span class="number">7</span>)</span><br><span class="line">gbdt_model = gbdt.fit(train)</span><br><span class="line">print(evaluator.evaluate(gbdt_model.transform(test)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.8702107279693482</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.ml.tuning <span class="keyword">import</span> ParamGridBuilder, CrossValidator</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建调参网格.</span></span><br><span class="line">paramGrid = (ParamGridBuilder()</span><br><span class="line">             .addGrid(gbdt.maxDepth, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line">             .addGrid(gbdt.minInstancesPerNode, [<span class="number">1</span>, <span class="number">20</span>])</span><br><span class="line">             .addGrid(gbdt.maxIter, [<span class="number">20</span>, <span class="number">100</span>])</span><br><span class="line">             .addGrid(gbdt.stepSize, [<span class="number">0.1</span>, <span class="number">0.05</span>, <span class="number">1</span>])</span><br><span class="line">             .addGrid(gbdt.subsamplingRate, [<span class="number">0.7</span>, <span class="number">1</span>])</span><br><span class="line">             .build())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建交叉验证.</span></span><br><span class="line">cv = CrossValidator(estimator=gbdt,</span><br><span class="line">                    estimatorParamMaps=paramGrid,</span><br><span class="line">                    evaluator=evaluator, numFolds=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行交叉验证 &amp; 网格调参.</span></span><br><span class="line">cvModel = cv.fit(train)</span><br><span class="line">print(evaluator.evaluate(cvModel.transform(test)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.8785919540229884</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark.stop()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/13/大数据/PySpark学习笔记-二/" rel="next" title="PySpark学习笔记(二)">
+                <i class="fa fa-chevron-left"></i> PySpark学习笔记(二)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/13/大数据/Faiss/" rel="prev" title="Faiss">
+                Faiss <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初始化环境"><span class="nav-number">1.</span> <span class="nav-text">初始化环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读取数据集"><span class="nav-number">2.</span> <span class="nav-text">读取数据集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EDA"><span class="nav-number">3.</span> <span class="nav-text">EDA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缺失值处理"><span class="nav-number">4.</span> <span class="nav-text">缺失值处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造特征"><span class="nav-number">5.</span> <span class="nav-text">构造特征</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类别特征编码"><span class="nav-number">6.</span> <span class="nav-text">类别特征编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整合特征-amp-标签"><span class="nav-number">7.</span> <span class="nav-text">整合特征 &amp; 标签</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#建模"><span class="nav-number">8.</span> <span class="nav-text">建模</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑回归"><span class="nav-number">8.1.</span> <span class="nav-text">逻辑回归</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GBDT"><span class="nav-number">9.</span> <span class="nav-text">GBDT</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

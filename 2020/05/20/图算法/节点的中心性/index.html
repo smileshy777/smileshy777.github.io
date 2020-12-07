@@ -95,7 +95,7 @@
 </script>
 
   <meta name="description" content="在一个由节点和边组成的网络中, 很多时候想知道哪些节点是相对重要的, 或者进一步对所有节点的重要性进行排序. 根据不同的场景需求, 可以选择不同的方式来度量节点的中心性(重要性).">
-<meta name="keywords" content="统计分析, 机器学习, 资源分享">
+<meta name="keywords" content="图算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="节点的中心性">
 <meta property="og:url" content="https://smileshy777.github.io/2020/05/20/图算法/节点的中心性/index.html">
@@ -103,7 +103,7 @@
 <meta property="og:description" content="在一个由节点和边组成的网络中, 很多时候想知道哪些节点是相对重要的, 或者进一步对所有节点的重要性进行排序. 根据不同的场景需求, 可以选择不同的方式来度量节点的中心性(重要性).">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://smileshy777.github.io/2020/05/20/图算法/节点的中心性/fig_0.png">
-<meta property="og:updated_time" content="2020-05-23T09:38:23.708Z">
+<meta property="og:updated_time" content="2020-10-10T14:54:02.620Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="节点的中心性">
 <meta name="twitter:description" content="在一个由节点和边组成的网络中, 很多时候想知道哪些节点是相对重要的, 或者进一步对所有节点的重要性进行排序. 根据不同的场景需求, 可以选择不同的方式来度量节点的中心性(重要性).">
@@ -242,6 +242,22 @@
     
 
     <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -408,7 +424,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-05-23 17:38:23" itemprop="dateModified" datetime="2020-05-23T17:38:23+08:00">2020-05-23</time>
+                <time title="修改时间：2020-10-10 22:54:02" itemprop="dateModified" datetime="2020-10-10T22:54:02+08:00">2020-10-10</time>
               </span>
             
           
@@ -438,14 +454,6 @@
           
           
 
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-                 阅读次数： 
-                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
-              </span>
-            </span>
           
 
           
@@ -541,6 +549,15 @@ PR_i=(1-\beta)+\beta(\sum_{j\in I}PR_j/C_j)</script><p>其中, $PR_i$表示节�
 
     <footer class="post-footer">
       
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/图算法/" rel="tag"># 图算法</a>
+          
+        </div>
+      
 
       
       
@@ -550,8 +567,8 @@ PR_i=(1-\beta)+\beta(\sum_{j\in I}PR_j/C_j)</script><p>其中, $PR_i$表示节�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/20/LeetCode/N-th-Tribonacci-Number/" rel="next" title="N-th Tribonacci Number">
-                <i class="fa fa-chevron-left"></i> N-th Tribonacci Number
+              <a href="/2020/05/17/图算法/图基本概念/" rel="next" title="图基本概念">
+                <i class="fa fa-chevron-left"></i> 图基本概念
               </a>
             
           </div>
@@ -560,8 +577,8 @@ PR_i=(1-\beta)+\beta(\sum_{j\in I}PR_j/C_j)</script><p>其中, $PR_i$表示节�
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/05/21/LeetCode/Maximum-Number-of-Balloons/" rel="prev" title="Maximum Number of Balloons">
-                Maximum Number of Balloons <i class="fa fa-chevron-right"></i>
+              <a href="/2020/05/21/图算法/网络的传递性/" rel="prev" title="网络的传递性">
+                网络的传递性 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -632,7 +649,7 @@ PR_i=(1-\beta)+\beta(\sum_{j\in I}PR_j/C_j)</script><p>其中, $PR_i$表示节�
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -667,38 +684,99 @@ PR_i=(1-\beta)+\beta(\sum_{j\in I}PR_j/C_j)</script><p>其中, $PR_i$表示节�
         
           
         
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
     
 
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
     
   </nav>
 
@@ -776,32 +854,6 @@ PR_i=(1-\beta)+\beta(\sum_{j\in I}PR_j/C_j)</script><p>其中, $PR_i$表示节�
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 
