@@ -178,7 +178,7 @@
 <p>这一篇介绍一种可以带来稀疏性的优化算法, FTRL.</p>
 <a id="more"></a>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>首先说说为啥需要模型稀疏性, 或者说稀疏性的好处有哪些.</p>
-<p>比如对于线性模型来说, 可能原本在训练的时候, 输入的特征维度是十分巨大的, 上万甚至上亿都有可能. 而如果在线上使用模型时, 每次都要传输这么多的特征, 还是会带来一些麻烦的. 所以如果将模型中的一些, 甚至大量参数变成0, 并还能够保存模型的效果, 那么对于参数为0的特征, 就没必要输入, 从而简化了模型, 方便了部署与在线调用.</p>
+<p>比如对于线性模型来说, 可能原本在训练的时候, 输入的特征维度是十分巨大的, 上万甚至上亿都有可能. 而如果在线上使用模型时, 每次都要传输这么多的特征, 还是会带来一些麻烦的. 所以如果将模型中的一些, 甚至大量参数变成0, 并还能够保证模型的效果, 那么对于参数为0的特征, 就没必要输入, 从而简化了模型, 方便了部署与在线调用.</p>
 <p>同时, 模型参数的稀疏性, 还能一定程度上提高模型的可解释性, 使人知道哪些特征是与任务最相关的.</p>
 <p>此外, 使用能够让模型参数具有稀疏性的方法(如L1正则), 来训练模型时, 相比其它一些方法(如L2), 可以在保持模型效果的同时, 对模型参数带来更大的改变, 以适应新的数据变化, 这在Online Learning(在线学习)中, 也是比较重要的.</p>
 <p>既然模型参数稀疏性有这么多好处, 那么使用L1正则不就行了吗, 为什么还要扯感觉挺复杂的FTRL呢?</p>
@@ -1045,8 +1045,8 @@ Function=p(s)\cdot s+\big(1-p(s)\big)\cdot\alpha s \\[7mm]</script><p><img src="
       </categories>
       <tags>
         <tag>推荐系统</tag>
-        <tag>排序</tag>
         <tag>Attention</tag>
+        <tag>排序</tag>
       </tags>
   </entry>
   <entry>
@@ -3333,27 +3333,27 @@ Loss=\sum_iL(y_i,f_{K,i})+\sum_k\Omega(T_k)</script><p>损失函数包含两项,
 <script type="math/tex; mode=display">
 \begin{aligned}
 Loss&=\sum_iL(y_i,f_{K,i})+\sum_k\Omega(T_k) \\
-&=\sum_iL(y_i,f_{k-1,i}+T_k)+\Omega(T_k)+Constant  \\
-&=\sum_iL(y_i,f_{k-1,i}+T_k)+\Omega(T_k)
+&=\sum_iL(y_i,f_{K-1,i}+T_K)+\Omega(T_K)+Constant  \\
+&=\sum_iL(y_i,f_{K-1,i}+T_K)+\Omega(T_K)
 \end{aligned}</script><p>然后利用泰勒二阶展开:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-Loss=&=\sum_iL(y_i,f_{k-1,i}+T_k(x_i))+\Omega(T_k) \\
-&=\sum_i\bigg[L(y_i,f_{k-1,i})+g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k) \\
+Loss=&=\sum_iL(y_i,f_{K-1,i}+T_K(x_i))+\Omega(T_K) \\
+&=\sum_i\bigg[L(y_i,f_{K-1,i})+g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K) \\
 \end{aligned}</script><p>其中:</p>
 <script type="math/tex; mode=display">
-g_i=\frac{\partial L(y_i,f_{i})}{\partial f_i}\bigg|_{f_i=f_{k-1,i}} \quad h_i=\frac{\partial^2 L(y_i,f_{i})}{\partial f_i^2}\bigg|_{f_i=f_{k-1,i}}</script><p>除去常数项, 简化损失函数:</p>
+g_i=\frac{\partial L(y_i,f_{i})}{\partial f_i}\bigg|_{f_i=f_{K-1,i}} \quad h_i=\frac{\partial^2 L(y_i,f_{i})}{\partial f_i^2}\bigg|_{f_i=f_{K-1,i}}</script><p>除去常数项, 简化损失函数:</p>
 <script type="math/tex; mode=display">
-Loss=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k)</script><p>现在定义正则项具体形式:</p>
+Loss=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K)</script><p>现在定义正则项具体形式:</p>
 <script type="math/tex; mode=display">
-\Omega(T_k)=\gamma J+\frac{1}{2}\lambda \sum_jw_j^2</script><p>其中的$\gamma$和$\lambda$为正则系数, $J$表示叶子节点数量, $w$表示叶子节点输出值.</p>
-<p>现在注意啊, 要开始变形了, 定义一个函数$q$, 表示将输入$x_i$映射到某个叶子节点上, 即$T_k(x_i)=w_{q(x_i)}$.</p>
+\Omega(T_K)=\gamma J+\frac{1}{2}\lambda \sum_jw_j^2</script><p>其中的$\gamma$和$\lambda$为正则系数, $J$表示叶子节点数量, $w$表示叶子节点输出值.</p>
+<p>现在注意啊, 要开始变形了, 定义一个函数$q$, 表示将输入$x_i$映射到某个叶子节点上, 即$T_K(x_i)=w_{q(x_i)}$.</p>
 <p>然后在定义叶子节点$j$上面的样本集合为$p_j=\{i|q(x_i)=j\}$.</p>
 <p>可得:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-Loss&=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k) \\
-&=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
+Loss&=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K) \\
+&=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
 &=\sum_i\bigg[g_iw_{q(x_i)}+\frac{1}{2}h_iw_{q(x_i)}^2\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
 &=\sum_j\bigg[\sum_{i\in p_j}g_iw_j+\frac{1}{2}\sum_{i\in p_j}h_iw_j^2\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
 &=\sum_j\bigg[G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2\bigg]+\gamma J
@@ -3380,10 +3380,10 @@ Gain&=Loss_{before\ split}-Loss_{after\ split} \\
 (a+b)^2=a^2+2ab+b^2</script><p>可推导得:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\underbrace{\arg\min}_{T_k}\ Loss&=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k) \\
-&=\sum_i\frac{1}{2}h_i\bigg[T_k^2(x_i)+2\frac{g_i}{h_i}T_k(x_i)\bigg]+\Omega(T_k) \\
-&=\sum_i\frac{1}{2}h_i\bigg[T_k^2(x_i)+2\frac{g_i}{h_i}T_k(x_i)+\frac{g_i^2}{h_i^2}\bigg]+\Omega(T_k) \\
-&=\sum_i\frac{1}{2}h_i\bigg[T_k(x_i)-(-\frac{g_i}{h_i})\bigg]^2+\Omega(T_k) \\
+\underbrace{\arg\min}_{T_K}\ Loss&=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K) \\
+&=\sum_i\frac{1}{2}h_i\bigg[T_K^2(x_i)+2\frac{g_i}{h_i}T_K(x_i)\bigg]+\Omega(T_K) \\
+&=\sum_i\frac{1}{2}h_i\bigg[T_K^2(x_i)+2\frac{g_i}{h_i}T_K(x_i)+\frac{g_i^2}{h_i^2}\bigg]+\Omega(T_K) \\
+&=\sum_i\frac{1}{2}h_i\bigg[T_K(x_i)-(-\frac{g_i}{h_i})\bigg]^2+\Omega(T_K) \\
 \end{aligned}</script><p>上面这个式子有木有觉得很眼熟. 是的, 这形式上就是回归树的损失函数(平方损失函数), 其中每个样本的样本权重为$h_i$, 每个样本的学习目标为$-g_i/h_i$.</p>
 <p>是的, GBDT引入了一阶梯度来提高模型效果, 而XGB这里通过引入二阶梯度, 不仅能够随着学习的进行(决策树的增加), 改变样本的学习目标, 并且还能够改变样本的权重, 进一步提升模型效果.</p>
 <p>所以, 根据具体的任务, 定义损失函数, 然后得到关于模型一阶导数和二阶导数的信息, 交给回归树学习即可.</p>
@@ -3504,8 +3504,8 @@ Gain&=Loss_{before\ split}-Loss_{after\ split} \\
 <li><p>目标/损失函数.</p>
 <p>指数函数.</p>
 </li>
-<li><p>学习\优化算法.</p>
-<p>前向分布学习算法.</p>
+<li><p>学习/优化算法.</p>
+<p>前向分步学习算法.</p>
 </li>
 </ul>
 <p>下面进行具体的数学公式推导, 加法模型:</p>
@@ -3560,14 +3560,14 @@ f_0=c=\underbrace{\arg\min}_c\sum_iL(y_i,c)</script><p>上面的$c$为一个常�
 </li>
 <li><p>计算样本负梯度.</p>
 <script type="math/tex; mode=display">
-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}</script><p>若为回归问题, 且损失函数为平方误差函数, 则负梯度为残差.</p>
+-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}</script><p>若为回归问题, 且损失函数为平方误差函数, 则负梯度为残差.</p>
 <script type="math/tex; mode=display">
 L(y_i,\hat{y}_i)=L\big(y_i,f(x_i)\big)=\frac{1}{2}\big(y_i-f(x_i)\big)^2 \\[3mm]
-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-f(x_i)</script><p>若为二分类问题, 且损失函数为对数损失函数, 则梯度为目标变量与输出概率的差.</p>
+-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-f(x_i)</script><p>若为二分类问题, 且损失函数为对数损失函数, 则梯度为目标变量与输出概率的差.</p>
 <script type="math/tex; mode=display">
 L'(y_i,\hat{y}_i)=-y_i\ln \hat{y}_i-(1-y_i)\ln(1-\hat{y}_i) \\[3mm]
 \hat{y}_i=\frac{1}{1+\exp\big(-f(x_i)\big)}  \\[3mm]
-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-\frac{1}{1+\exp\big(-f(x_i)\big)}=y_i-\hat{y}_i</script></li>
+-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-\frac{1}{1+\exp\big(-f(x_i)\big)}=y_i-\hat{y}_i</script></li>
 <li><p>学习新的树.</p>
 <p>利用每个样本的特征和得到的负梯度作为学习目标, 生成一棵回归树.</p>
 </li>
@@ -6646,9 +6646,9 @@ x^\top y=\cos(x,y)=\frac{x^\top y}{||x||_2||y||_2}</script><p>并且两个向量
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>这里不配置真正分布式的Hadoop, 一来比较麻烦, 需要多台电脑或者多个虚拟机, 二来更多的是想使用基于Hadoop的Hive等大数据套件.</p>
 <p>所以这里安装的是伪分布式, 意思就是其系统是按真正的分布式去运作的, 不过所有流程都在一台电脑上执行. 这里的操作系统为Ubuntu.</p>
 <p>由于Hadoop的底层语言为Java, 所以需要事先安装Java.</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> sudo apt-get update</span><br><span class="line"><span class="meta">$</span> sudo apt-get install openjdk-8-jdk</span><br><span class="line"><span class="meta">$</span> java -version</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get update</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install openjdk-8-jdk</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> java -version</span></span><br></pre></td></tr></table></figure>
 <p>同时还要配置<code>JAVA_HOME</code>, 寻找Java安装路径:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> which java</span><br><span class="line">/usr/bin/java</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> ls -lrt /usr/bin/java</span><br><span class="line">lrwxrwxrwx 1 root root 22 9月  11 14:05 /usr/bin/java -&gt; /etc/alternatives/java</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> ls -lrt /etc/alternatives/java</span><br><span class="line">lrwxrwxrwx 1 root root 46 9月  11 14:05 /etc/alternatives/java -&gt; /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">which</span> java</span></span><br><span class="line">/usr/bin/java</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls -lrt /usr/bin/java</span></span><br><span class="line">lrwxrwxrwx 1 root root 22 9月  11 14:05 /usr/bin/java -&gt; /etc/alternatives/java</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls -lrt /etc/alternatives/java</span></span><br><span class="line">lrwxrwxrwx 1 root root 46 9月  11 14:05 /etc/alternatives/java -&gt; /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java</span><br></pre></td></tr></table></figure>
 <p>编辑<code>.bashrc</code>:</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># java</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64</span><br><span class="line"><span class="built_in">export</span> JRE_HOME=<span class="variable">$JAVA_HOME</span>/jre</span><br><span class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib:<span class="variable">$JRE_HOME</span>/lib:<span class="variable">$CLASSPATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$JRE_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># hadoop</span></span><br><span class="line"><span class="built_in">export</span> HADOOP_HOME=/usr/<span class="built_in">local</span>/hadoop</span><br><span class="line"><span class="built_in">export</span> HADOOP_COMMON_LIB_NATIVE_DIR=<span class="variable">$HADOOP_HOME</span>/lib/native</span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/hadoop/lib/native:<span class="variable">$LD_LIBRARY_PATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_HOME</span>/sbin:<span class="variable">$HADOOP_HOME</span>/bin</span><br><span class="line"><span class="built_in">export</span> HADOOP_OPTS=<span class="string">"<span class="variable">$HADOOP_OPTS</span> -Djava.library.path=<span class="variable">$HADOOP_HOME</span>/lib/native"</span></span><br></pre></td></tr></table></figure>
 <p>在<a href="https://mirrors.bfsu.edu.cn/apache/hadoop/common/" target="_blank" rel="noopener">这里</a>选择要下载的Hadoop版本, 我选择的是2.10.0版本. 下载好以后解压到<code>/usr/local/hadoop</code>.</p>
@@ -7472,7 +7472,7 @@ Recall=\frac{\sum_{u\in U}|R(u)|\cap|T(u)|}{\sum_{u\in U}|T(u)|}</script><p>其�
 <h1 id="MLE与EM"><a href="#MLE与EM" class="headerlink" title="MLE与EM"></a>MLE与EM</h1><p>MLE(Maximum Likelihood Estimation), 是极大似然估计的缩写.</p>
 <p>EM(Expectation Maximization), 是期望最大化的缩写.</p>
 <p>我们肯定对MLE都非常熟悉, 而在这里将它们放在一起, 目的其实是想从MLE引出ME.</p>
-<p>举一个栗子, 考虑一个投硬币的实验,  现在有两枚硬币$A$和$B$, 这两枚硬币和普通硬币不同, 他们抛出正反面的概率是不一样的, 记分别抛出正面的概率为$\theta_A$和$\theta_B$, 参数分布服从伯努利分布.</p>
+<p>举一个栗子, 考虑一个投硬币的实验,  现在有两枚硬币$A$和$B$, 这两枚硬币和普通硬币不同, 他们抛出正反面的概率是不一样的, 记分别抛出正面的概率为$\theta_A$和$\theta_B$, 服从伯努利分布.</p>
 <p>接下来独立地做5次实验, 每次先随机从两枚硬币中选择1枚, 然后用该硬币连抛10次, 统计正面出现的次数, 得到实验结果表如下:</p>
 <div class="table-container">
 <table>
@@ -8671,8 +8671,8 @@ TF-IDF&=TF\times IDF \\
       <tags>
         <tag>文本分类</tag>
         <tag>自然语言处理</tag>
-        <tag>TF-IDF</tag>
         <tag>关键词提取</tag>
+        <tag>TF-IDF</tag>
       </tags>
   </entry>
   <entry>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="阿枂蛋糕店">
 <meta property="og:description" content="好的, 今天在讲一下GBDT, 梯度提升树模型. 虽然重点是将GBDT, 但是也会把与之有关的其它一些模型一并进行讲解.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-10-24T15:12:31.737Z">
+<meta property="og:updated_time" content="2020-12-07T11:06:35.147Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GBDT(一)">
 <meta name="twitter:description" content="好的, 今天在讲一下GBDT, 梯度提升树模型. 虽然重点是将GBDT, 但是也会把与之有关的其它一些模型一并进行讲解.">
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-24 23:12:31" itemprop="dateModified" datetime="2020-10-24T23:12:31+08:00">2020-10-24</time>
+                <time title="修改时间：2020-12-07 19:06:35" itemprop="dateModified" datetime="2020-12-07T19:06:35+08:00">2020-12-07</time>
               </span>
             
           
@@ -562,8 +562,8 @@
 <li><p>目标/损失函数.</p>
 <p>指数函数.</p>
 </li>
-<li><p>学习\优化算法.</p>
-<p>前向分布学习算法.</p>
+<li><p>学习/优化算法.</p>
+<p>前向分步学习算法.</p>
 </li>
 </ul>
 <p>下面进行具体的数学公式推导, 加法模型:</p>
@@ -618,14 +618,14 @@ f_0=c=\underbrace{\arg\min}_c\sum_iL(y_i,c)</script><p>上面的$c$为一个常�
 </li>
 <li><p>计算样本负梯度.</p>
 <script type="math/tex; mode=display">
-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}</script><p>若为回归问题, 且损失函数为平方误差函数, 则负梯度为残差.</p>
+-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}</script><p>若为回归问题, 且损失函数为平方误差函数, 则负梯度为残差.</p>
 <script type="math/tex; mode=display">
 L(y_i,\hat{y}_i)=L\big(y_i,f(x_i)\big)=\frac{1}{2}\big(y_i-f(x_i)\big)^2 \\[3mm]
-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-f(x_i)</script><p>若为二分类问题, 且损失函数为对数损失函数, 则梯度为目标变量与输出概率的差.</p>
+-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-f(x_i)</script><p>若为二分类问题, 且损失函数为对数损失函数, 则梯度为目标变量与输出概率的差.</p>
 <script type="math/tex; mode=display">
 L'(y_i,\hat{y}_i)=-y_i\ln \hat{y}_i-(1-y_i)\ln(1-\hat{y}_i) \\[3mm]
 \hat{y}_i=\frac{1}{1+\exp\big(-f(x_i)\big)}  \\[3mm]
-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-\frac{1}{1+\exp\big(-f(x_i)\big)}=y_i-\hat{y}_i</script></li>
+-g_{k,i}=-\bigg[\frac{\partial L\big(y_i,f(x_i)\big)}{\partial f(x_i)}\bigg]_{f=f_{k-1}}=y_i-\frac{1}{1+\exp\big(-f(x_i)\big)}=y_i-\hat{y}_i</script></li>
 <li><p>学习新的树.</p>
 <p>利用每个样本的特征和得到的负梯度作为学习目标, 生成一棵回归树.</p>
 </li>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="阿枂蛋糕店">
 <meta property="og:description" content="在上一篇中, 讲了GBDT, 嗯, 这一篇接着讲♪(^∇^*)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-10-24T15:13:24.655Z">
+<meta property="og:updated_time" content="2020-12-07T11:35:25.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GBDT(二)">
 <meta name="twitter:description" content="在上一篇中, 讲了GBDT, 嗯, 这一篇接着讲♪(^∇^*)">
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-24 23:13:24" itemprop="dateModified" datetime="2020-10-24T23:13:24+08:00">2020-10-24</time>
+                <time title="修改时间：2020-12-07 19:35:25" itemprop="dateModified" datetime="2020-12-07T19:35:25+08:00">2020-12-07</time>
               </span>
             
           
@@ -525,27 +525,27 @@ Loss=\sum_iL(y_i,f_{K,i})+\sum_k\Omega(T_k)</script><p>损失函数包含两项,
 <script type="math/tex; mode=display">
 \begin{aligned}
 Loss&=\sum_iL(y_i,f_{K,i})+\sum_k\Omega(T_k) \\
-&=\sum_iL(y_i,f_{k-1,i}+T_k)+\Omega(T_k)+Constant  \\
-&=\sum_iL(y_i,f_{k-1,i}+T_k)+\Omega(T_k)
+&=\sum_iL(y_i,f_{K-1,i}+T_K)+\Omega(T_K)+Constant  \\
+&=\sum_iL(y_i,f_{K-1,i}+T_K)+\Omega(T_K)
 \end{aligned}</script><p>然后利用泰勒二阶展开:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-Loss=&=\sum_iL(y_i,f_{k-1,i}+T_k(x_i))+\Omega(T_k) \\
-&=\sum_i\bigg[L(y_i,f_{k-1,i})+g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k) \\
+Loss=&=\sum_iL(y_i,f_{K-1,i}+T_K(x_i))+\Omega(T_K) \\
+&=\sum_i\bigg[L(y_i,f_{K-1,i})+g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K) \\
 \end{aligned}</script><p>其中:</p>
 <script type="math/tex; mode=display">
-g_i=\frac{\partial L(y_i,f_{i})}{\partial f_i}\bigg|_{f_i=f_{k-1,i}} \quad h_i=\frac{\partial^2 L(y_i,f_{i})}{\partial f_i^2}\bigg|_{f_i=f_{k-1,i}}</script><p>除去常数项, 简化损失函数:</p>
+g_i=\frac{\partial L(y_i,f_{i})}{\partial f_i}\bigg|_{f_i=f_{K-1,i}} \quad h_i=\frac{\partial^2 L(y_i,f_{i})}{\partial f_i^2}\bigg|_{f_i=f_{K-1,i}}</script><p>除去常数项, 简化损失函数:</p>
 <script type="math/tex; mode=display">
-Loss=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k)</script><p>现在定义正则项具体形式:</p>
+Loss=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K)</script><p>现在定义正则项具体形式:</p>
 <script type="math/tex; mode=display">
-\Omega(T_k)=\gamma J+\frac{1}{2}\lambda \sum_jw_j^2</script><p>其中的$\gamma$和$\lambda$为正则系数, $J$表示叶子节点数量, $w$表示叶子节点输出值.</p>
-<p>现在注意啊, 要开始变形了, 定义一个函数$q$, 表示将输入$x_i$映射到某个叶子节点上, 即$T_k(x_i)=w_{q(x_i)}$.</p>
+\Omega(T_K)=\gamma J+\frac{1}{2}\lambda \sum_jw_j^2</script><p>其中的$\gamma$和$\lambda$为正则系数, $J$表示叶子节点数量, $w$表示叶子节点输出值.</p>
+<p>现在注意啊, 要开始变形了, 定义一个函数$q$, 表示将输入$x_i$映射到某个叶子节点上, 即$T_K(x_i)=w_{q(x_i)}$.</p>
 <p>然后在定义叶子节点$j$上面的样本集合为$p_j=\{i|q(x_i)=j\}$.</p>
 <p>可得:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-Loss&=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k) \\
-&=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
+Loss&=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K) \\
+&=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
 &=\sum_i\bigg[g_iw_{q(x_i)}+\frac{1}{2}h_iw_{q(x_i)}^2\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
 &=\sum_j\bigg[\sum_{i\in p_j}g_iw_j+\frac{1}{2}\sum_{i\in p_j}h_iw_j^2\bigg]+\gamma J+\frac{1}{2}\lambda \sum_jw_j^2 \\
 &=\sum_j\bigg[G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2\bigg]+\gamma J
@@ -572,10 +572,10 @@ Gain&=Loss_{before\ split}-Loss_{after\ split} \\
 (a+b)^2=a^2+2ab+b^2</script><p>可推导得:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\underbrace{\arg\min}_{T_k}\ Loss&=\sum_i\bigg[g_iT_k(x_i)+\frac{1}{2}h_iT_k^2(x_i)\bigg]+\Omega(T_k) \\
-&=\sum_i\frac{1}{2}h_i\bigg[T_k^2(x_i)+2\frac{g_i}{h_i}T_k(x_i)\bigg]+\Omega(T_k) \\
-&=\sum_i\frac{1}{2}h_i\bigg[T_k^2(x_i)+2\frac{g_i}{h_i}T_k(x_i)+\frac{g_i^2}{h_i^2}\bigg]+\Omega(T_k) \\
-&=\sum_i\frac{1}{2}h_i\bigg[T_k(x_i)-(-\frac{g_i}{h_i})\bigg]^2+\Omega(T_k) \\
+\underbrace{\arg\min}_{T_K}\ Loss&=\sum_i\bigg[g_iT_K(x_i)+\frac{1}{2}h_iT_K^2(x_i)\bigg]+\Omega(T_K) \\
+&=\sum_i\frac{1}{2}h_i\bigg[T_K^2(x_i)+2\frac{g_i}{h_i}T_K(x_i)\bigg]+\Omega(T_K) \\
+&=\sum_i\frac{1}{2}h_i\bigg[T_K^2(x_i)+2\frac{g_i}{h_i}T_K(x_i)+\frac{g_i^2}{h_i^2}\bigg]+\Omega(T_K) \\
+&=\sum_i\frac{1}{2}h_i\bigg[T_K(x_i)-(-\frac{g_i}{h_i})\bigg]^2+\Omega(T_K) \\
 \end{aligned}</script><p>上面这个式子有木有觉得很眼熟. 是的, 这形式上就是回归树的损失函数(平方损失函数), 其中每个样本的样本权重为$h_i$, 每个样本的学习目标为$-g_i/h_i$.</p>
 <p>是的, GBDT引入了一阶梯度来提高模型效果, 而XGB这里通过引入二阶梯度, 不仅能够随着学习的进行(决策树的增加), 改变样本的学习目标, 并且还能够改变样本的权重, 进一步提升模型效果.</p>
 <p>所以, 根据具体的任务, 定义损失函数, 然后得到关于模型一阶导数和二阶导数的信息, 交给回归树学习即可.</p>
