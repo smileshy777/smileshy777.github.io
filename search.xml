@@ -7927,8 +7927,8 @@ Epoch 36/1000
       <tags>
         <tag>BERT</tag>
         <tag>Transformer</tag>
-        <tag>文本分类</tag>
         <tag>自然语言处理</tag>
+        <tag>文本分类</tag>
       </tags>
   </entry>
   <entry>
@@ -8261,8 +8261,8 @@ s(q,k)=v\cdot\tanh(W[q;k])</script></li>
       </categories>
       <tags>
         <tag>Attention</tag>
-        <tag>文本分类</tag>
         <tag>自然语言处理</tag>
+        <tag>文本分类</tag>
       </tags>
   </entry>
   <entry>
@@ -8411,8 +8411,8 @@ ELMo_i^{task}=\gamma^{task}\sum_js_j^{task}h_{i,j}</script><p>其中$\gamma^{tas
       </categories>
       <tags>
         <tag>word2vec</tag>
-        <tag>文本分类</tag>
         <tag>自然语言处理</tag>
+        <tag>文本分类</tag>
       </tags>
   </entry>
   <entry>
@@ -8668,10 +8668,10 @@ TF-IDF&=TF\times IDF \\
         <category>自然语言处理</category>
       </categories>
       <tags>
-        <tag>文本分类</tag>
         <tag>自然语言处理</tag>
-        <tag>TF-IDF</tag>
+        <tag>文本分类</tag>
         <tag>关键词提取</tag>
+        <tag>TF-IDF</tag>
       </tags>
   </entry>
   <entry>
