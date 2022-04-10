@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="在上一篇介绍Attention时, 就提到了Transformer, 那么什么是Transformer呢, 一句话概括的话, 大概就是用Self-Attention实现的Encoder-Decoder, 下面进行详细的讲解.">
+<meta name="keywords" content="Attention,自然语言处理,Transformer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="在上一篇介绍Attention时, 就提到了Transformer, 那么什么是Transformer呢, 一句话概括的话, 大概就是用Self-Attention实现的Encoder-Decoder, 下面进行详细的讲解.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_0.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_2.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_3.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_4.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_5.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_6.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_7.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_8.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_9.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_10.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_11.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_12.jpg">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_13.webp">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_14.jpg">
+<meta property="og:updated_time" content="2020-10-10T15:07:13.002Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Transformer">
+<meta name="twitter:description" content="在上一篇介绍Attention时, 就提到了Transformer, 那么什么是Transformer呢, 一句话概括的话, 大概就是用Self-Attention实现的Encoder-Decoder, 下面进行详细的讲解.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/fig_0.jpg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Transformer | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/16/自然语言处理/Transformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Transformer
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-16 22:50:15" itemprop="dateCreated datePublished" datetime="2020-08-16T22:50:15+08:00">2020-08-16</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-10 23:07:13" itemprop="dateModified" datetime="2020-10-10T23:07:13+08:00">2020-10-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/自然语言处理/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在上一篇介绍Attention时, 就提到了Transformer, 那么什么是Transformer呢, 一句话概括的话, 大概就是用Self-Attention实现的Encoder-Decoder, 下面进行详细的讲解.</p>
+<a id="more"></a>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><attention is all you need>, 感兴趣的同学可以阅读原文.</attention></p>
+<p>在讲具体的结构之前, 来整体看一下Transformer的模型结构, 如下图:</p>
+<p><img src="fig_0.jpg" alt="fig"></p>
+<p>作为Encoder-Decoder框架, 比较明显的, 其左边部分是Encoder, 而右边部分是Decoder.</p>
+<p>Transformer一个经典的自然语言处理任务就是翻译, 比如从中文翻译到英文. 左边Encoder可以并行输入, 计算和输出, 右边Decoder需要按顺序进行解码输出.</p>
+<p>在图中的${\rm N}\times$的标识, 标识该模块重复N次, 如同全连接网络中的多层隐藏层一样.</p>
+<p>用橙色填充的部分, 就是Self-Attention, Encoder中有一种, Decoder中有两种, 这三种有一些差别. Self-Attention是Transformer的核心. 下面就首先讲解Self-Attention.</p>
+<h1 id="Self-Attention"><a href="#Self-Attention" class="headerlink" title="Self-Attention"></a>Self-Attention</h1><p>在<a href="whitemoonlight.top/2020/08/16/自然语言处理/Attention/">Attention</a>中, 就提到过Self-Attention, 作为Attention家族中的一员, 它的独特之处在于, 其计算Attention Value用到的Query, Key, Value, 均来自同一数据源.</p>
+<p>一般的Attention结构如下:</p>
+<p><img src="fig_1.png" alt="fig"></p>
+<p>而在Transformer中, Query, Key, Value都是通过输入得到的:</p>
+<p><img src="fig_2.png" alt="fig"></p>
+<p>在有了Query, Key, Value以后, 就可以按照通用的Attention计算方式继续计算了. 在Self-Attention这里用矩阵来表示, 流程如下:</p>
+<p><img src="fig_3.png" alt="fig"></p>
+<p>其中的I表示输入矩阵, 维度为(向量维度$\times$序列长度), 在分别与三个矩阵相乘以后, 得到了Q, K, V三个矩阵, 维度为(向量维度$\times$序列长度). 用Q矩阵与K矩阵的转置相乘后, 得到维度为(序列长度$\times$序列长度)的矩阵, 然后再经过softmax得到概率分布矩阵. 最后V矩阵与概率分布矩阵相乘, 得到输出矩阵.</p>
+<h1 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h1><h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><p>在Encoder中, 首先要说明的是Encoder的输入, 其实和一般的RNN类似, 通过一个lookup table, 将原本序列的编号转换为对应的Embedding向量.</p>
+<p>而一般来说此时又有两种方法, 一种是使用预训练好的向量, 一种是随机初始化然后随着模型进行训练. Transformer在这里使用的第二种方法.</p>
+<p>然鹅这时候出现了一个严重的问题, 如果以这种形式输入, 再经过Self-Attention Layer的话, 哪来的位置信息呢, 如果没有位置信息, 就不算处理序列问题呀.</p>
+<p>在RNN中, 天然地存在随时间的序列关系, 相同的一些单词, 以不同的顺序输入, 会得到不同的结果. 但是在Transformer这里却不行, 不同的顺序得到的结果最后是一样的.</p>
+<p>所以作者想了一个办法, 就是在原本的Embedding上, 添加”位置信息”, 或者说位置的Embedding. 这里又有两种方法来添加位置Embedding, 一种是每个位置随机初始化, 然后跟着模型一起学; 还有一种是给一个连续变化的数学公式, 根据不同的位置来给定不同的Embedding, 并不跟随模型训练, 即固定不变. 之所以这样选择, 是因为作者发现两种做法得到的模型表现差不多, 且后者需要学习的参数较少, 有更强的泛用性.</p>
+<p>具体的添加位置信息的方式, 是与原输入的Embedding直接按位相加. 我想此时细心的同学可能就要问了, 为什么是相加而不是拼接呢, 可以用下图来进行解释:</p>
+<p><img src="fig_4.png" alt="fig"></p>
+<p>原本的输入和位置信息, 都可以看做one-hot编码, 将它们拼接在一起, 再去乘以对应的Embedding矩阵, 最终的效果其实就等价于, 分别将两者的lookup table上得到的向量, 按位相加.</p>
+<p>同时位置编码的数学公式如下:</p>
+<script type="math/tex; mode=display">
+PE(pos,2i)=\sin(pos\times10000^{2i/d_{model}}) \\
+PE(pos,2i+1)=\cos(pos\times10000^{2i/d_{model}})</script><p>其中$pos$表示在序列中的位置, $2i, 2i+1$表示某一个序列位置对应的位置向量上的位置, $d_{model}$表示向量维度大小.</p>
+<h2 id="Multi-head-Attention"><a href="#Multi-head-Attention" class="headerlink" title="Multi-head Attention"></a>Multi-head Attention</h2><p><img src="fig_5.jpg" alt="fig"></p>
+<p>好的, 现在说明了Encoder的输入以后, 接下来就是Multi-head Attention.</p>
+<p>其实没啥好说的, 就是说由原本的一组Query, Key, Value, 变成了多组的Query, Key, Value, 每一组重点去关注数据中不同的模式, 最后输出时将结果进行拼接.</p>
+<p>用数学表示如下:</p>
+<script type="math/tex; mode=display">
+head_i=Attention(q_i,K,V) \\
+MultiHead(Q,K,V)=Concat(head_1,\dots,head_n)W^O</script><p>原文中, 在使用Query和Key计算Attention时, 具体方式如下:</p>
+<script type="math/tex; mode=display">
+Attention(Q,K,V)={\rm softmax}(\frac{QK^T}{\sqrt{d}})V</script><p>其中的$d$表示向量维度.</p>
+<h2 id="Add-amp-Norm"><a href="#Add-amp-Norm" class="headerlink" title="Add &amp; Norm"></a>Add &amp; Norm</h2><p><img src="fig_6.jpg" alt="fig"></p>
+<p>在Multi-head Attention之后便是Add &amp; Norm.</p>
+<p>其中的Add, 其实就是类似残差网络的结构, 将原本的输入直接加到Multi-head Attention的输出上. 可以解决多层神经网络训练困难的问题, 通过将前一层的信息无差的传递到下一层, 可以有效的仅关注差异部分.</p>
+<p><img src="fig_7.png" alt="fig"></p>
+<p>这里的Norm, 表示Layer Norm, 与Batch Norm作用在同一维度的batch上不同, Layer Norm作用在同一样本的不同维度上. 一般来说在序列任务中, 更多的是使用Layer Norm, 可以加速模型训练和收敛.</p>
+<h2 id="Feed-Forward"><a href="#Feed-Forward" class="headerlink" title="Feed Forward"></a>Feed Forward</h2><p><img src="fig_8.jpg" alt="fig"></p>
+<p>这里就比较寻常的全连接网络, 不过需要注意的是针对每一个Add &amp; Norm输出的向量, 而不是它们拼接而成的向量.</p>
+<p><img src="fig_9.png" alt="fig"></p>
+<p>具体的传播方式, 用数学公式表示如下:</p>
+<script type="math/tex; mode=display">
+FFN(x)=\max(0,xW_1+b_1)W_2+b_2</script><p>本质上就是一层Relu层再加一层线性层.</p>
+<h1 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h1><p>假设现在已经有了Encoder的输出结果, 是一系列的向量, 那么现在来讲解Decoder部分.</p>
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><p><img src="fig_10.jpg" alt="fig"></p>
+<p>这里先说Decoder的输出部分, 图上比较直观, 就是一个全连接层, 再加上一个softmax层, 用以预测当前的输出.</p>
+<h2 id="输入-1"><a href="#输入-1" class="headerlink" title="输入"></a>输入</h2><p><img src="fig_11.jpg" alt="fig"></p>
+<p>然后是输入, 一般来说, 就像一个语言模型一样, 是随着序列逐步输入的. 比如第一次只输入一个起始符<start>, 然后得到新的输出以后, 再将输出添加到输入中.</start></p>
+<p>这里需要像Encoder的输入一样, 也需要添加位置信息, 添加方式与Encoder一致.</p>
+<p>不过还存在两个问题, 一是如果已经把模型训练好了, 在使用的时候每次自然是把上一次的输出添加到新的输入, 但是在训练的时候, 这么做是否合适呢? 其实不太合适, 因为在一开始模型还很不准的时候, 一开始输出就是错的, 然后又将错误的输出作为输入, 只会累计更大的误差. 所以为了帮助模型学习得更好, 一开始是将正确答案作为输入, 随着训练的进行, 才将上次的输出添加到新的输入.</p>
+<p>第二个问题是, 对于Encoder的输入的向量, 是随机初始化的一个lookup table, 那在Decoder这边呢? 难道也是随机初始化的一个look table吗, 查阅了一些资料没有发现对此有说明, 我在这里估计应该是使用softmax那里的矩阵, 来作为Decoder的lookup table. 原因是这本身就是一个天然的一对一关系, 同时当给定某个正确输出时, 会对应地强化其系数向量, 使其计算后得到的概率更大, 所以使用softmax那里的矩阵作为Decoder的lookup table是非常自然的.</p>
+<h2 id="Masked-Multi-Head-Attention"><a href="#Masked-Multi-Head-Attention" class="headerlink" title="Masked Multi-Head Attention"></a>Masked Multi-Head Attention</h2><p><img src="fig_12.jpg" alt="fig"></p>
+<p>在前面Encoder的时候, 说明了Multi-Head Attention, 这里多了一个Masked, 这又是什么意思呢?</p>
+<p>因为Decoder部分整体来说类似一个语言模型, 而语言模型是”从左到右”按顺序进行的, 当前的输出依赖于前面的信息.</p>
+<p>所以这里的Masked, 就是指的在进行Attention计算时, 对于位置在$i$的向量, 只能与位置$i$之前的向量计算Attention. 比如位置1的就与自己计算, 位置2上的与位置1, 2计算, 位置3上的与位置1, 2, 3计算…</p>
+<p>然后每次在Masked Multi-Head Attention输出的结果, 再与Encoder输出的结果一起再经过一个Multi-Head Attention, 这样当前的Decoder输出结果就用到了Encoder的所有信息, 以及Decoder之前的信息, 逐步完成序列输出.</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>这里放一张Transformer整体的流程动态度, 也许可以帮助更好地理解其运作方式:</p>
+<p><img src="fig_13.webp" alt="fig"></p>
+<p>第一步是在Encoder上完成编码, 输出序列的编码信息; 第二步是在Decoder上, 逐步地进行解码, 每次用到之前输出的信息以及Encoder的输出信息.</p>
+<p>Transformer的优点, 首先是效果确实好, Attention is all you need, 能够摒弃CNN, RNN, 具有足够的创新; 其次是结构(Encoder)是可以并行化的, 加速了模型的训练与推断; 此外还具有一定的可解释性:</p>
+<p><img src="fig_14.jpg" alt="fig"></p>
+<p>上图为Self-Attention中权重概率分布的一个栗子, 从中其实可以看出在训练好的Self-Attention上, 是具有对应的可解释性的, 可以知道每个位置上的词在语法/语义上与其它哪些词相关.</p>
+<p>而Transformer的缺点, 非要说的话, Transformer的位置信息的处理可能还有改进之处, 使用数学公式在输入向量中加入位置向量有点权宜之计的意思.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Attention/" rel="tag"># Attention</a>
+          
+            <a href="/tags/自然语言处理/" rel="tag"># 自然语言处理</a>
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/16/自然语言处理/Attention/" rel="next" title="Attention">
+                <i class="fa fa-chevron-left"></i> Attention
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/16/自然语言处理/BERT-一/" rel="prev" title="BERT(一)">
+                BERT(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Self-Attention"><span class="nav-number">2.</span> <span class="nav-text">Self-Attention</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Encoder"><span class="nav-number">3.</span> <span class="nav-text">Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入"><span class="nav-number">3.1.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-head-Attention"><span class="nav-number">3.2.</span> <span class="nav-text">Multi-head Attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-amp-Norm"><span class="nav-number">3.3.</span> <span class="nav-text">Add &amp; Norm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feed-Forward"><span class="nav-number">3.4.</span> <span class="nav-text">Feed Forward</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Decoder"><span class="nav-number">4.</span> <span class="nav-text">Decoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输出"><span class="nav-number">4.1.</span> <span class="nav-text">输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入-1"><span class="nav-number">4.2.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Masked-Multi-Head-Attention"><span class="nav-number">4.3.</span> <span class="nav-text">Masked Multi-Head Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

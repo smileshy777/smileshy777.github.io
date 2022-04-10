@@ -98,11 +98,11 @@
 <meta name="keywords" content="大数据">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pandas读写大文件">
-<meta property="og:url" content="https://smileshy777.github.io/2020/08/10/大数据/Pandas读写大文件/index.html">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/10/大数据/pandas读写大文件/index.html">
 <meta property="og:site_name" content="阿枂蛋糕店">
 <meta property="og:description" content="在日常处理数据时, 可能会遇到一份数据比较大, 不能整个读进内存. 同时又不方便用一些”正规军”(如spark)来进行处理, 那应该怎么办呢? 这时候仍然可以使用pandas进行处理, 注意一些细节就行.  让我们一起喊出来, pandas, 永远滴神╰(°▽°)╯">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-11-17T11:45:42.776Z">
+<meta property="og:updated_time" content="2021-09-03T14:30:35.068Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pandas读写大文件">
 <meta name="twitter:description" content="在日常处理数据时, 可能会遇到一份数据比较大, 不能整个读进内存. 同时又不方便用一些”正规军”(如spark)来进行处理, 那应该怎么办呢? 这时候仍然可以使用pandas进行处理, 注意一些细节就行.  让我们一起喊出来, pandas, 永远滴神╰(°▽°)╯">
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="https://smileshy777.github.io/2020/08/10/大数据/Pandas读写大文件/">
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/10/大数据/pandas读写大文件/">
 
 
 
@@ -364,7 +364,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/10/大数据/Pandas读写大文件/">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/10/大数据/pandas读写大文件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="月小白">
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-11-17 19:45:42" itemprop="dateModified" datetime="2020-11-17T19:45:42+08:00">2020-11-17</time>
+                <time title="修改时间：2021-09-03 22:30:35" itemprop="dateModified" datetime="2021-09-03T22:30:35+08:00">2021-09-03</time>
               </span>
             
           
@@ -702,10 +702,14 @@
 </table>
 </div>
 <h1 id="多进程处理数据"><a href="#多进程处理数据" class="headerlink" title="多进程处理数据"></a>多进程处理数据</h1><p>当数据量多的时候, 或者处理过程比较复杂的时候, 单进程的处理会显得非常吃力. 这时候除了要尽可能优化处理方法代码本身, 一个更通用的方法就是利用多进程. 而pandas本身不带多进程功能, 所以需要我们自己实现多进程.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing <span class="keyword">as</span> mp</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ordered_multiprocess_task</span><span class="params">(func=None, data=None, max_process=None)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    func: 任务函数, 必需的参数为数据(单个).</span></span><br><span class="line"><span class="string">    data: 数据, 类list.</span></span><br><span class="line"><span class="string">    max_process: 最大进程数.</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    n_cpu = mp.cpu_count()</span><br><span class="line">    <span class="keyword">if</span> max_process <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        max_process = n_cpu</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> max_process &gt; n_cpu:</span><br><span class="line">            max_process = n_cpu</span><br><span class="line">    <span class="keyword">with</span> mp.Pool(max_process) <span class="keyword">as</span> pool:</span><br><span class="line">        res = pool.map(func, data)</span><br><span class="line">        pool.close()</span><br><span class="line">        pool.join()</span><br><span class="line">        pool.terminate()</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">square</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">ordered_multiprocess_task(square, data, <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1, 4, 9, 16, 25]</span><br></pre></td></tr></table></figure>
 <p>以我的经验来说, 当样本量在100万以下时, 直接对pandas的列进行处理, 时间在可接受范围内, 而当样本量达到百万量级时, 优先考虑多进程加速.</p>
+<h2 id="多进程函数"><a href="#多进程函数" class="headerlink" title="多进程函数"></a>多进程函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多进程函数.</span></span><br><span class="line"><span class="keyword">import</span> multiprocessing <span class="keyword">as</span> mp</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ordered_multiprocess_task</span><span class="params">(func=None, data=None, max_process=None)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    func: 任务函数, 必需的参数为数据(单个).</span></span><br><span class="line"><span class="string">    data: 数据, 类list.</span></span><br><span class="line"><span class="string">    max_process: 最大进程数.</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    n_cpu = mp.cpu_count()</span><br><span class="line">    <span class="keyword">if</span> max_process <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        max_process = n_cpu</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> max_process &gt; n_cpu:</span><br><span class="line">            max_process = n_cpu</span><br><span class="line">    <span class="keyword">with</span> mp.Pool(max_process) <span class="keyword">as</span> pool:</span><br><span class="line">        res = pool.map(func, data)</span><br><span class="line">        pool.close()</span><br><span class="line">        pool.join()</span><br><span class="line">        pool.terminate()</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多进程简单示例.</span></span><br><span class="line">data = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">square</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">ordered_multiprocess_task(square, data, <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1, 4, 9, 16, 25]</span><br></pre></td></tr></table></figure>
+<h2 id="多进程读取"><a href="#多进程读取" class="headerlink" title="多进程读取"></a>多进程读取</h2><p>有时候原始数据能够全部读入内存, 且需要读取的文件数据分散为许多份零碎的数据时, 也可以使用多进程读取.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取单份文件.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_csv</span><span class="params">(path)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> pd.read_csv(path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历返回文件路径列表.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_file_list</span><span class="params">(path)</span>:</span></span><br><span class="line">    file_list = []</span><br><span class="line">    <span class="keyword">for</span> parents, dirnames, filenames <span class="keyword">in</span> os.walk(path):</span><br><span class="line">        <span class="keyword">for</span> filename <span class="keyword">in</span> filenames:</span><br><span class="line">            file_list.append(os.path.join(parents, filename))</span><br><span class="line">    <span class="keyword">return</span> file_list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多进程读取数据.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mp_read_csv</span><span class="params">(path)</span>:</span></span><br><span class="line">    file_list = get_file_list(path)</span><br><span class="line">    res = ordered_multiprocess_task(func=read_csv, data=file_list)</span><br><span class="line">    df = pd.concat(res, axis=<span class="number">0</span>, ignore_index=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> df</span><br><span class="line"></span><br><span class="line">df = mp_read_csv(file_path)</span><br></pre></td></tr></table></figure>
+<h2 id="多进程处理"><a href="#多进程处理" class="headerlink" title="多进程处理"></a>多进程处理</h2><p>多进程处理单列/多列数据.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多进程.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mp_func</span><span class="params">(func, df, n_split=<span class="number">4</span>, max_process=None)</span>:</span></span><br><span class="line">    <span class="comment"># 切分数据.</span></span><br><span class="line">    n_sample = df.shape[<span class="number">0</span>]</span><br><span class="line">    n_sample_per_split = n_sample // n_split + <span class="number">1</span></span><br><span class="line">    data_list = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n_split):</span><br><span class="line">        data_list.append(df.iloc[i * n_sample_per_split: (i + <span class="number">1</span>) * n_sample_per_split])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 多进程处理.</span></span><br><span class="line">    res = ordered_multiprocess_task(func, data_list, max_process)</span><br><span class="line"></span><br><span class="line">    df = pd.concat(res, axis=<span class="number">0</span>, ignore_index=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> df</span><br><span class="line"></span><br><span class="line"><span class="comment"># 单进程函数.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(data)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> ...</span><br><span class="line">  </span><br><span class="line">df = mp_func(func, df)</span><br></pre></td></tr></table></figure>
 <h1 id="分批保存数据"><a href="#分批保存数据" class="headerlink" title="分批保存数据"></a>分批保存数据</h1><p>在分批读取, 分批处理完数据后, 需要进行分批保存.</p>
 <p>可以将每次分批处理的数据以不同的文件名分别保存, 也可以仍然统一保存到一个文件里. 这里主要介绍第二种方法, 主要就是利用<code>to_csv</code>方法中的<code>mode</code>参数.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!rm ./data/tmp.csv</span><br></pre></td></tr></table></figure>
@@ -879,7 +883,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">112</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -908,7 +912,19 @@
         
           
         
-        <span class="site-state-item-count">6</span>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -953,7 +969,87 @@
         
           
         
-        <span class="site-state-item-count">14</span>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">54</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -988,7 +1084,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分批读入数据"><span class="nav-number">1.</span> <span class="nav-text">分批读入数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chunksize"><span class="nav-number">1.1.</span> <span class="nav-text">chunksize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iterator"><span class="nav-number">1.2.</span> <span class="nav-text">iterator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dtype"><span class="nav-number">1.3.</span> <span class="nav-text">dtype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#usecols"><span class="nav-number">1.4.</span> <span class="nav-text">usecols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nrows"><span class="nav-number">1.5.</span> <span class="nav-text">nrows</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多进程处理数据"><span class="nav-number">2.</span> <span class="nav-text">多进程处理数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分批保存数据"><span class="nav-number">3.</span> <span class="nav-text">分批保存数据</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分批读入数据"><span class="nav-number">1.</span> <span class="nav-text">分批读入数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chunksize"><span class="nav-number">1.1.</span> <span class="nav-text">chunksize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iterator"><span class="nav-number">1.2.</span> <span class="nav-text">iterator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dtype"><span class="nav-number">1.3.</span> <span class="nav-text">dtype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#usecols"><span class="nav-number">1.4.</span> <span class="nav-text">usecols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nrows"><span class="nav-number">1.5.</span> <span class="nav-text">nrows</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多进程处理数据"><span class="nav-number">2.</span> <span class="nav-text">多进程处理数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#多进程函数"><span class="nav-number">2.1.</span> <span class="nav-text">多进程函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多进程读取"><span class="nav-number">2.2.</span> <span class="nav-text">多进程读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多进程处理"><span class="nav-number">2.3.</span> <span class="nav-text">多进程处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分批保存数据"><span class="nav-number">3.</span> <span class="nav-text">分批保存数据</span></a></li></ol></div>
             
 
           </div>
@@ -1009,7 +1105,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

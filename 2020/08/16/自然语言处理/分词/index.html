@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="在做文本挖掘的时候, 一般来说首先要做的就是分词. 英文单词天然有空格, 容易分词, 但有时候也需要把多个单词视作一个单词, 如一些名词”New York”. 中文没有空格, “句读之不知, 惑之不解”, 相比古文, 如今的中文分词相对容易, 不过仍是一个需要专门去解决的问题.">
+<meta name="keywords" content="自然语言处理,分词">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分词">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/16/自然语言处理/分词/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="在做文本挖掘的时候, 一般来说首先要做的就是分词. 英文单词天然有空格, 容易分词, 但有时候也需要把多个单词视作一个单词, 如一些名词”New York”. 中文没有空格, “句读之不知, 惑之不解”, 相比古文, 如今的中文分词相对容易, 不过仍是一个需要专门去解决的问题.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/分词/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/分词/fig_1.png">
+<meta property="og:updated_time" content="2020-10-10T15:03:26.549Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分词">
+<meta name="twitter:description" content="在做文本挖掘的时候, 一般来说首先要做的就是分词. 英文单词天然有空格, 容易分词, 但有时候也需要把多个单词视作一个单词, 如一些名词”New York”. 中文没有空格, “句读之不知, 惑之不解”, 相比古文, 如今的中文分词相对容易, 不过仍是一个需要专门去解决的问题.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/08/16/自然语言处理/分词/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/16/自然语言处理/分词/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>分词 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/16/自然语言处理/分词/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分词
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-16 22:33:40" itemprop="dateCreated datePublished" datetime="2020-08-16T22:33:40+08:00">2020-08-16</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-10 23:03:26" itemprop="dateModified" datetime="2020-10-10T23:03:26+08:00">2020-10-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/自然语言处理/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在做文本挖掘的时候, 一般来说首先要做的就是分词.</p>
+<p>英文单词天然有空格, 容易分词, 但有时候也需要把多个单词视作一个单词, 如一些名词”New York”.</p>
+<p>中文没有空格, “句读之不知, 惑之不解”, 相比古文, 如今的中文分词相对容易, 不过仍是一个需要专门去解决的问题.</p>
+<a id="more"></a>
+<p>分词的方法有很多种, 但常用的基本都是基于词典的分词, 下面讲解最大匹配法, 以及结合语言模型的维特比算法. HMM和CRF使用基于序列标注的方法也能够用来分词, 不过这里不做介绍.</p>
+<h1 id="最大匹配法-Maximum-Matching"><a href="#最大匹配法-Maximum-Matching" class="headerlink" title="最大匹配法(Maximum Matching)"></a>最大匹配法(Maximum Matching)</h1><p>最大匹配法非常简单, 就是以词典为依据, 依次从最长的单词开始进行扫描, 试图获得单词颗粒度较大的划分.</p>
+<p>主要包括正向最大匹配法, 反向最大匹配法, 以及双向最大匹配法.</p>
+<p>只要明白了正向最大匹配法的原理, 反向最大匹配法就是换了一个扫描方向而已. 双向最大匹配法指的是各自执行一次正向/反向最大匹配法, 然后比较两者结果, 取大颗粒度的词越多, 非词典词和单字词越少的划分结果, 作为最终结果.</p>
+<p>所以, 下面主要就说明正向最大匹配法的原理, 举个栗子来说明.</p>
+<p>比如现在有一个待分词的句子”我们在野生动物园玩”.</p>
+<p>同时有一个词典{“我们”, “在”, “在野”, “生动”, “野生”, “动物园”, “野生动物园”, “物”, “玩”}.</p>
+<p>词典最大长度为5.</p>
+<p>第一轮扫描:</p>
+<ul>
+<li>“我们在野生”, 扫描词典, 无.</li>
+<li>“我们在野”, 扫描词典, 无.</li>
+<li>“我们在”, 扫描词典, 无.</li>
+<li>“我们”, 扫描词典, 有.</li>
+</ul>
+<p>第一轮扫描结束, 划分出”我们”, 将”我们”排除后, 进行第二轮扫描.</p>
+<p>第二轮扫描:</p>
+<ul>
+<li>“在野生动物”, 扫描词典, 无.</li>
+<li>“在野生动”, 扫描词典, 无.</li>
+<li>“在野生”, 扫描词典, 无.</li>
+<li>“在野”, 扫描词典, 有.</li>
+</ul>
+<p>第二轮扫描结束, 划分出”在野”, 将”我们在野”排除后, 进行第三轮扫描.</p>
+<p>……</p>
+<p>最终我们得到划分结果为”我们/在野/生动/物/园/玩”, 挺离谱的…</p>
+<p>在这里用同样的语句和词典, 使用反向最大匹配法, 得到的划分结果为”我们/在/野生动物园/玩”, 完全正确!</p>
+<p>那是不是就说反向最大匹配法比正向匹配法好呢, 当然不一样, 所以实际使用时可以尝试双向最大匹配法.</p>
+<p>最大匹配法有如下一些特点:</p>
+<ul>
+<li>优点:<ul>
+<li>算法流程简单, 设计合理可以并行化. 如将不同长度的词典分开, 在扫描时根据长度选择不同词典.</li>
+</ul>
+</li>
+<li>缺点:<ul>
+<li>需要给定词典, 存在OOV, 即未登录词的问题.</li>
+<li>词典中词较少, 则影响准确率; 词典中词较多, 则影响运行效率.</li>
+</ul>
+</li>
+</ul>
+<h1 id="结合语言模型的维特比算法"><a href="#结合语言模型的维特比算法" class="headerlink" title="结合语言模型的维特比算法"></a>结合语言模型的维特比算法</h1><p>在上一篇中, 介绍了语言模型, 其作用通俗来说, 就是可以判断给定的一段语言序列, 是否像是”人话”; 或者也可以对于给的两段语言序列, 判断哪一句更像是”人话”.</p>
+<p>于是, 对于一段待分词的句子, 我们可以穷尽所有可能的划分方式, 然后让语言模型从中找出联合概率分布最大的划分方式, 作为最优的划分.</p>
+<p>然鹅, 我们都知道, 暴力法是不可取的(或许未来量子计算机可以这么玩), 所以需要有更低时间复杂度的算法, 来在众多划分方式中, 搜索得到语言模型认为最优的划分方式.</p>
+<p>算法的名称, 就是大名鼎鼎的<strong>维特比算法</strong>, 是一种动态规划算法, 不仅在这里, 在其它一些与序列相关, 寻找最长/最短路径的场景下, 也能看到它的身影.</p>
+<p>为了清楚地说明维特比算法如何应用于分词, 仍然是举栗子. 这里分别以基于Unigram语言模型, 和Bigram语言模型来讲解.</p>
+<h2 id="基于Unigram"><a href="#基于Unigram" class="headerlink" title="基于Unigram"></a>基于Unigram</h2><p>现在给定一个句子, “人生如梦境”, 正确的划分方式, 应该是”人生/如/梦境”.</p>
+<p>词典为{“人”, “人生”, “生”, “如”, “如梦”, “梦”, “梦境”}.</p>
+<p>语言模型为Unigram.</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>如上图, 首先根据词典以及语言模型构建一个有向无环图, 其中的连边, 代表了连边首尾节点之间的词的概率(图上是随意设置的).</p>
+<p>既然我们想要找到联合概率最大的划分方式, 那么在这里等价于找到一条路径, 使得其对应的长度(概率)最长.</p>
+<p>使用维特比算法, 使用动态规划的方式. 采取如下步骤:</p>
+<ul>
+<li><p>假设到节点6, 最大路径长度为$f(6)$, 其中$f$表示以某节点为最后节点时, 最优划分方式对应的最大路径长度(概率).</p>
+</li>
+<li><p>节点6可以由节点5与节点4到达, 那么可以得到递归方程:</p>
+<script type="math/tex; mode=display">
+f(6)={\rm min}\{f(4)\times 0.02,\ f(5)\times 0.03\}</script></li>
+<li><p>接下来查看$f(5)$, 节点5可以由节点4和节点3到达, 又可以得到递归方程:</p>
+<script type="math/tex; mode=display">
+f(5)={\rm min}\{f(3)\times 0.04,\ f(4)\times 0.06\}</script></li>
+<li><p>逐步向前递归……</p>
+</li>
+<li><p>当碰到$f(1)$时, 返回$f(1)=1$, 从而可以求解出$f(2)\sim f(6)$. 同时, 每次记录到达的节点.</p>
+</li>
+<li><p>对于节点6, 通过反推其到达的节点(节点4, 节点3, 节点1), 即可得到划分结果, “人生/如/梦境”.</p>
+</li>
+</ul>
+<p>以上就是维特比算法的过程, 当然, 细心的同学可能发现了, 万一语言模型给出的概率特别小, 再连乘很多次……所以, 可以先将概率取负对数, 这样可以避免连乘结果趋于零的问题, 不过从原本求最长路径, 变成了求最短路径, 递归方程里面的$\times$需要变成$+$, 并且$f(1)$此时等于0.</p>
+<h2 id="基于Bigram"><a href="#基于Bigram" class="headerlink" title="基于Bigram"></a>基于Bigram</h2><p>在明白了基于Unigram语言模型的维特比算法后, 基于Bigram的算法是类似的, 这里就不做过多讲解了.</p>
+<p><img src="fig_1.png" alt="fig"></p>
+<p>如上图, 发现基于Bigram的有向无环图与基于Unigram的不太一样, 多了起始符$&lt;{\rm start}&gt;$和结束符$&lt;{\rm end}&gt;$, 同时字词本身变成了节点. 其实虽然看起来不一样, 本质上都是有向无环图, 连边表示语言模型的概率, 对于Bigram来说这样分析更加方便.</p>
+<p>在使用维特比算法时, 从$f(&lt;{\rm end}&gt;)$开始向前递归, 然后记录每个节点的最优到达路径, 最后也就得到了最优划分.</p>
+<h1 id="jieba分词"><a href="#jieba分词" class="headerlink" title="jieba分词"></a>jieba分词</h1><p>分词工具有不少, 这里介绍<strong>jieba分词</strong>.</p>
+<blockquote>
+<p>“结巴”中文分词：做最好的 Python 中文分词组件</p>
+</blockquote>
+<h2 id="核心算法"><a href="#核心算法" class="headerlink" title="核心算法"></a>核心算法</h2><ul>
+<li>基于前缀词典(一种树状的数据结构)实现高效的词图扫描, 生成句子中汉字所有可能成词情况所构成的有向无环图 (DAG).</li>
+<li>采用了动态规划查找最大概率路径, 找出基于词频的最大切分组合. 即与上文所讲算法一样.</li>
+<li>对于未登录词, 采用了基于汉字成词能力的 HMM 模型处理. 利用HMM对未出现在词典中的词, 进行序列标注(词首, 词中, 词尾)来进行分词.</li>
+</ul>
+<h2 id="分词"><a href="#分词" class="headerlink" title="分词"></a>分词</h2><p>主要支持四种分词模式, 精确模式, 全模式, 搜索引擎模式, paddle模式. 其中paddle模式需要安装额外的Python包, 这里不做介绍.</p>
+<p>精确模式, 试图将句子最精确地切开, 适合文本分析.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Signature: jieba.cut(sentence, cut_all=False, HMM=True, use_paddle=False)</span><br><span class="line">Docstring:</span><br><span class="line">The main function that segments an entire sentence that contains</span><br><span class="line">Chinese characters into separated words.</span><br><span class="line"></span><br><span class="line">Parameter:</span><br><span class="line">    - sentence: The str(unicode) to be segmented.</span><br><span class="line">    - cut_all: Model type. True for full pattern, False for accurate pattern.</span><br><span class="line">    - HMM: Whether to use the Hidden Markov Model.</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认即为精确模式</span></span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我/来到/北京/清华大学</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 包含"杭研"未登录词时, 关闭HMM的新词发现功能</span></span><br><span class="line">seg_list = jieba.cut(<span class="string">"他来到了网易杭研大厦"</span>, HMM=<span class="literal">False</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">他/来到/了/网易/杭/研/大厦</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 包含"杭研"未登录词时, 打开HMM的新词发现功能</span></span><br><span class="line">seg_list = jieba.cut(<span class="string">"他来到了网易杭研大厦"</span>, HMM=<span class="literal">True</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">他/来到/了/网易/杭研/大厦</span><br></pre></td></tr></table></figure>
+<p>全模式, 把句子中所有的可以成词的词语都扫描出来, 速度非常快, 但是不能解决歧义.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全模式</span></span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>, cut_all=<span class="literal">True</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我/来到/北京/清华/清华大学/华大/大学</span><br></pre></td></tr></table></figure>
+<p>搜索引擎模式, 在精确模式的基础上, 对长词再次切分, 提高召回率, 适合用于搜索引擎分词.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Signature: jieba.cut_for_search(sentence, HMM=True)</span><br><span class="line">Docstring: Finer segmentation for search engines.</span><br><span class="line">File:      ~/opt/anaconda3/lib/python3.7/site-packages/jieba/__init__.py</span><br><span class="line">Type:      method</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索引擎模式</span></span><br><span class="line">seg_list = jieba.cut_for_search(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我/来到/北京/清华/华大/大学/清华大学</span><br></pre></td></tr></table></figure>
+<h2 id="自定义词典"><a href="#自定义词典" class="headerlink" title="自定义词典"></a>自定义词典</h2><p>可以载<strong>入自定义词典</strong>, 以便包含jieba词库里没有的词. 虽然jieba有新词识别能力, 但是自行添加新词可以保证更高的正确率.</p>
+<p>用法为<code>jieba.load_userdict(file_name)</code> , 其中<code>file_name</code>为文件类对象或自定义词典的路径. 或者使用<code>jieba.set_dictionary(file_name)</code>进行永久替换.</p>
+<p>词典格式为一个词占一行, 每一行分三部分: 词语, 词频(可省略), 词性(可省略), 用空格隔开, 顺序不可颠倒. <code>file_name</code> 若为路径或二进制方式打开的文件, 则文件必须为 UTF-8 编码. 例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">云计算 5</span><br><span class="line">李小福 2 nr</span><br><span class="line">创新办 3 i</span><br><span class="line">easy_install 3 eng</span><br><span class="line">好用 300</span><br><span class="line">韩玉赏鉴 3 nz</span><br><span class="line">八一双鹿 3 nz</span><br><span class="line">台中</span><br><span class="line">凱特琳 nz</span><br><span class="line">Edu Trust认证 2000</span><br></pre></td></tr></table></figure>
+<p>词频省略时使用自动计算的能保证分出该词的词频.</p>
+<p>此外, 还可以使用<code>add_word(word, freq=None, tag=None)</code>和<code>del_word(word)</code>可在程序中动态修改词典.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Signature: jieba.add_word(word, freq=None, tag=None)</span><br><span class="line">Docstring:</span><br><span class="line">Add a word to dictionary.</span><br><span class="line"></span><br><span class="line">freq and tag can be omitted, freq defaults to be a calculated value</span><br><span class="line">that ensures the word can be cut out.</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br><span class="line"></span><br><span class="line">jieba.del_word(<span class="string">'清华大学'</span>)</span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br><span class="line"></span><br><span class="line">jieba.add_word(<span class="string">'清华大学'</span>)</span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我/来到/北京/清华大学</span><br><span class="line">我/来到/北京/清华/大学</span><br><span class="line">我/来到/北京/清华大学</span><br></pre></td></tr></table></figure>
+<p>使用<code>suggest_freq(segment, tune=True)</code>可调节单个词语的词频, 使其能(或不能)被分出来. 需要注意的是, 该方法有时候对HMM的结果无效, 所以若分词结果与调整不符, 尝试关闭HMM.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Signature: jieba.suggest_freq(segment, tune=False)</span><br><span class="line">Docstring:</span><br><span class="line">Suggest word frequency to force the characters in a word to be</span><br><span class="line">joined or splitted.</span><br><span class="line"></span><br><span class="line">Parameter:</span><br><span class="line">    - segment : The segments that the word is expected to be cut into,</span><br><span class="line">                If the word should be treated as a whole, use a str.</span><br><span class="line">    - tune : If True, tune the word frequency.</span><br><span class="line"></span><br><span class="line">Note that HMM may affect the final result. If the result doesn&apos;t change,</span><br><span class="line">set HMM=False.</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br><span class="line"></span><br><span class="line">jieba.suggest_freq(<span class="string">'我来到'</span>, tune=<span class="literal">True</span>)</span><br><span class="line">seg_list = jieba.cut(<span class="string">"我来到北京清华大学"</span>)</span><br><span class="line">print(<span class="string">"/"</span>.join(seg_list))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我/来到/北京/清华大学</span><br><span class="line">我来到/北京/清华大学</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/自然语言处理/" rel="tag"># 自然语言处理</a>
+          
+            <a href="/tags/分词/" rel="tag"># 分词</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/16/自然语言处理/语言模型/" rel="next" title="语言模型">
+                <i class="fa fa-chevron-left"></i> 语言模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/16/自然语言处理/隐马尔科夫模型HMM/" rel="prev" title="隐马尔科夫模型HMM">
+                隐马尔科夫模型HMM <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#最大匹配法-Maximum-Matching"><span class="nav-number">1.</span> <span class="nav-text">最大匹配法(Maximum Matching)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结合语言模型的维特比算法"><span class="nav-number">2.</span> <span class="nav-text">结合语言模型的维特比算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于Unigram"><span class="nav-number">2.1.</span> <span class="nav-text">基于Unigram</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于Bigram"><span class="nav-number">2.2.</span> <span class="nav-text">基于Bigram</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jieba分词"><span class="nav-number">3.</span> <span class="nav-text">jieba分词</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心算法"><span class="nav-number">3.1.</span> <span class="nav-text">核心算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分词"><span class="nav-number">3.2.</span> <span class="nav-text">分词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义词典"><span class="nav-number">3.3.</span> <span class="nav-text">自定义词典</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

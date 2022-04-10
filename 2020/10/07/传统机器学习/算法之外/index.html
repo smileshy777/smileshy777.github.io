@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="这篇文章中, 将会对一些机器学习中的问题进行探讨, 包括老生常谈的偏差与方差, 以及loss landscape, 数据分布, 样本划分, 迁移学习. 看起来好像内容比较杂, 但是在我看来, 它们都有一个相同点, 即可以指引我们更好地使用机器学习算法. 下面的内容, 有一些是早有定论, 而一些是我个人的理解与认识, 其中不免有不当甚至错误之处, 同学们可以抱着审视的态度来阅读.">
+<meta name="keywords" content="传统机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法之外">
+<meta property="og:url" content="https://smileshy777.github.io/2020/10/07/传统机器学习/算法之外/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="这篇文章中, 将会对一些机器学习中的问题进行探讨, 包括老生常谈的偏差与方差, 以及loss landscape, 数据分布, 样本划分, 迁移学习. 看起来好像内容比较杂, 但是在我看来, 它们都有一个相同点, 即可以指引我们更好地使用机器学习算法. 下面的内容, 有一些是早有定论, 而一些是我个人的理解与认识, 其中不免有不当甚至错误之处, 同学们可以抱着审视的态度来阅读.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/07/传统机器学习/算法之外/fig_0.png">
+<meta property="og:updated_time" content="2022-04-10T09:17:02.734Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法之外">
+<meta name="twitter:description" content="这篇文章中, 将会对一些机器学习中的问题进行探讨, 包括老生常谈的偏差与方差, 以及loss landscape, 数据分布, 样本划分, 迁移学习. 看起来好像内容比较杂, 但是在我看来, 它们都有一个相同点, 即可以指引我们更好地使用机器学习算法. 下面的内容, 有一些是早有定论, 而一些是我个人的理解与认识, 其中不免有不当甚至错误之处, 同学们可以抱着审视的态度来阅读.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/10/07/传统机器学习/算法之外/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/10/07/传统机器学习/算法之外/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>算法之外 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/10/07/传统机器学习/算法之外/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">算法之外
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-07 20:35:59" itemprop="dateCreated datePublished" datetime="2020-10-07T20:35:59+08:00">2020-10-07</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-04-10 17:17:02" itemprop="dateModified" datetime="2022-04-10T17:17:02+08:00">2022-04-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/传统机器学习/" itemprop="url" rel="index"><span itemprop="name">传统机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章中, 将会对一些机器学习中的问题进行探讨, 包括老生常谈的偏差与方差, 以及loss landscape, 数据分布, 样本划分, 迁移学习. 看起来好像内容比较杂, 但是在我看来, 它们都有一个相同点, 即可以指引我们更好地使用机器学习算法.</p>
+<p>下面的内容, 有一些是早有定论, 而一些是我个人的理解与认识, 其中不免有不当甚至错误之处, 同学们可以抱着审视的态度来阅读.</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>还记得我刚开始学习机器学习相关内容的时候, 我把达叔(吴恩达)网易云以及Coursera上面的&lt;机器学习&gt;课程看了. 当时更多的, 是关注于一些算法的具体原理, 比如线性回归, 而对于一些其它方面的东西, 没有太在意.</p>
+<p>最近在重新阅读了达叔的<machine learning yearning>后, 感觉受益良多, 结合自己的经验和理解, 将一些”算法之外”的东西总结在这里, 希望对大家也能有所帮助.</machine></p>
+<blockquote>
+<p>达叔, 永远滴神♪(^∇^*)</p>
+</blockquote>
+<h1 id="偏差与方差"><a href="#偏差与方差" class="headerlink" title="偏差与方差"></a>偏差与方差</h1><p>在机器学习中, 可以用偏差和方差(和统计学中的有所不同), 来定性地衡量一个模型的好坏, 并可以指导我们往哪些方向进行改进.</p>
+<p>要理解偏差与方差, 可以举一些具体的栗子来进行说明.</p>
+<p>比如现在使用机器学习算法进行建模, 将原本的数据集划分成了训练集, 验证集, 测试集, 并假设它们都来自相同的分布.</p>
+<p>任务是一个二分类任务, 一个”理想的”分类器(比如人类), 在这个任务中能够取得近乎完美的表现, 即错误率接近0, 那么现在有下面一些情况:</p>
+<ul>
+<li><p>训练集错误率$1\%$, 验证集错误率$11\%$.</p>
+<p>这时, 可以说模型的偏差为$1\%$, 方差为$10\%$ ($=11\%-1\%$), 属于低偏差, 高方差.</p>
+<p>虽然在训练集上误差率较低, 但是没有能够很好地泛化到验证集上, 这也叫做过拟合.</p>
+</li>
+<li><p>训练集错误率$15\%$, 验证集错误率$16\%$.</p>
+<p>模型的偏差为$15\%$, 方差为$1\%$, 属于高偏差, 低方差.</p>
+<p>没有能够较好地拟合训练集, 同时在验证集上表现类似, 这也叫做欠拟合.</p>
+</li>
+<li><p>训练集错误率$15\%$, 验证集错误率$30\%$.</p>
+<p>模型的偏差为$15\%$, 方差为$15\%$, 属于高偏差, 高方差.</p>
+<p>没有能够较好地拟合训练集, 同时在验证集上表现更差, 某种程度上可以说是同时过拟合与欠拟合, 过拟合/欠拟合的术语难以准确应用在这里.</p>
+</li>
+<li><p>训练集错误率$0.5\%$, 验证集错误率$1\%$.</p>
+<p>模型的偏差为$0.5\%$, 方差为$0.5\%$, 属于低偏差, 低方差.</p>
+<p>在训练集上拟合很好, 同时能够泛化到验证集上, 即没有过拟合, 也没有欠拟合, 算是很棒的模型了.</p>
+</li>
+</ul>
+<p>总体来说, 偏差反映了模型(在训练集上)的拟合能力, 方差反映了模型(在验证集上)的泛化能力. 它们是模型误差的两个主要来源, 我们的目标就是尽可能获得低偏差, 低方差的模型.</p>
+<p>上面的栗子中, 假设了一个”理想的”分类器, 其错误率接近0, 然鹅很多实际的任务中, 这样的情况是不多见的, 也就是说存在一定的误差率下限, 这一部分最优错误率(贝叶斯错误率)导致的偏差, 也叫做”不可避免偏差”.</p>
+<p>所以, 偏差可以看做是不可避免偏差加上可避免偏差. 而方差则没有不可避免这一说, 因为有一些方法可以有效将方差降得很低, 下面分别列举一些能够降低(可避免)偏差和方差的方法.</p>
+<p>降低可避免偏差的方法:</p>
+<ul>
+<li><p>增加模型复杂度.</p>
+<p>比如对GBDT来说, 就是设置更深的树的层数, 更多的树的棵树; 对神经网络来说, 就是增加更多的神经元数量, 更多的隐藏层等.</p>
+<p>虽然增加模型复杂度一般能够降低偏差, 但也有增加方差的风险.</p>
+</li>
+<li><p>更改模型结构.</p>
+<p>根据具体的任务与数据类型, 选择合适的模型, 更好地学习数据中通用的模式, 降低一些噪音的影响, 也许能够同时降低偏差与方差.</p>
+</li>
+<li><p>减少或去除正则化.</p>
+<p>比如L1和L2正则, dropout等, 这会减小偏差, 但会增大方差.</p>
+</li>
+<li><p>更多的特征.</p>
+<p>更多的特征意味着更多的信息来源, 能够降低偏差, 但如果特征本身有问题(后文详细讨论), 也会增大方差.</p>
+</li>
+</ul>
+<p>降低方差的方法:</p>
+<ul>
+<li><p>降低模型复杂度.</p>
+<p>同上.</p>
+</li>
+<li><p>更改模型结构.</p>
+<p>同上.</p>
+</li>
+<li><p>添加或增加正则化.</p>
+<p>同上.</p>
+</li>
+<li><p>更多的样本.</p>
+<p>更多的样本意味能够让模型”看得”更加全面, 这是能够降低偏差的方法, 同时一般不会增加方差.</p>
+</li>
+<li><p>更少的特征.</p>
+<p>同上.</p>
+</li>
+<li><p>加入提前停止.</p>
+<p>可以降低方差, 有可能会增大偏差. 某种意义上类似于正则化方法.</p>
+</li>
+</ul>
+<p>从上面可以看出, 偏差与方差有时候是难以同时简单地降低的, 某个方法在优化其中一个的时候, 可能使得另外一个变糟了. 所以更多的时候是一种权衡, 找到一个平衡点.</p>
+<h1 id="Loss-Landscape"><a href="#Loss-Landscape" class="headerlink" title="Loss Landscape"></a>Loss Landscape</h1><h2 id="从优化算法说起"><a href="#从优化算法说起" class="headerlink" title="从优化算法说起"></a>从优化算法说起</h2><p>首先说一下loss landscape是个啥, 其实就是损失函数对应的误差随模型参数的分布, 比如对某个一元回归模型, 平方误差损失函数来说, 就是一个凸的曲线. 但是我一时找不到比较合适的中文名称, 所以这里就以loss landscape来指代了.</p>
+<p>那么, loss landscape是个啥我们都知道了, 为什么要在这里提它呢?</p>
+<p>先从一个栗子说起吧, 大伙都知道, 对于深度学习模型, 不像线性模型那样, 其loss landscape是非常复杂的, 一般来说难以找到所谓的最优解, 但是可以用一些次优解代替, 通常也能有不错的效果. 同时可能也听到过说对于优化算法而言, SGD虽然看起来平凡而陈旧, 但是其得到的模型, 相比其它一些优化算法, 比如Adam, 时常能够具有更好的表现和泛化性, 那么这是为什么呢?</p>
+<p>对于一个比较复杂模型的loss landscape来说, 可能会同时有一些比较平坦的极值点, 以及一些比较陡峭的极值点. 一些研究表明, 对于SGD来说, 更容易找到平坦的极值点, 而像Adam这样的优化算法, 相比之下有更大概率陷于陡峭的极值点.</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>如上图, 黑色的曲线表示训练集的loss landscape, 红色的曲线表示测试集的loss landscape. 一般来说, 从同一个分布中获取的训练集和测试集, 如果在样本量不是特别大的情况下, 真实分布仍然会有一些差异. 在这种情况下, 如果是模型学习到平坦的极值点那里, 那么由数据分布的差异, 带来的loss landscape的一些变化, 对应得到的误差会比较接近; 而如果模型学习到平坦的极值点那里, 对应得到的误差会发生比较大的改变, 且通常是更糟.</p>
+<p>上面说明了在loss landscape中, 差不多”深度”(极值点的大小)下, 更加平坦的极值点是更好的. 而为什么Adam会更容易陷入陡峭的极值点呢, 我自己的理解是, Adam这样的自适应(自动调节学习率)优化算法, 在遇到比较陡峭的区域时, 会放慢脚步(降低学习率), 这样就容易陷入. 而SGD并不会这样, 当它遇到比较陡峭的区域时, 由于梯度较大, 步子也会迈得更大, 就更可能越过这样的深坑.</p>
+<p>以上, 结合loss landscape, 解释了不同优化算法表现的差异.</p>
+<p>我认为对于loss landscape, 应该有一些更加深入的理解与研究. 尽管想知道一个复杂模型的loss landscape的全貌是一件困难的事情, 因为高维空间难以展示和想像, 同时可能也没有这个必要, 但是通过对loss landscape的认识, 可以帮助我们更好地去分析与理解模型. 下面提出一些我个人的观点, 如一开始所说, 这里更多的是一些讨论, 并不是定论.</p>
+<h2 id="Loss-Landscape-分布变化"><a href="#Loss-Landscape-分布变化" class="headerlink" title="Loss Landscape 分布变化"></a>Loss Landscape 分布变化</h2><p>上文中也说到了, 除了像线性模型这样简单的模型, 复杂一些模型的loss landscape我们是难以想像的, 但是也许可以做一些定性的分析.</p>
+<p>首先, 给定了损失函数的形式后, loss landscape是与模型本身绑定的, 或者说只与模型相关吗? 当然不是, 我认为还与一个东西紧密相关, 那就是数据. 而进一步, 给定总体数据分布,  loss landscape确定了吗, 只能说理论上确定了, 这等价于从这个数据分布中抽取足够多的样本, 得到对应的loss landscape.</p>
+<p>不过在真实的场景中, 我们拥有的, 是一部分和总体同分布的样本, 但如果样本量不够大, 那么是不足以完全代表总体的, 或者说数据分布会与总体之间存在差异. 假设现在有一个由”无限多”样本得到的loss landscape, 同时还有一个有限多样本得到的loss landscape, 那它们有啥不一样呢? 在模型结构确定的情况下, 前者的loss landscape会相对平滑, 后者的loss landscape相比前者, 可能极值点的位置会发生偏移, 可能会存在更多的陡峭的极值点, 可能会有更深的极值点… 从这里也可以解释, 为什么样本越多总是好的, 为什么同样的模型在小样本上容易过拟合.</p>
+<p>上面说完了给定模型, 样本变化对loss landscape分布的影响, 现在再来说一下另外一种情况. 假设现在给定一份足够多的数据样本, 模型复杂度的变化, 会对loss landscape产生怎样的改变呢? 比如线性模型, 其loss landscape凸的, 当变成神经网络, 并添加更多的神经元和隐藏层后, loss landscape会出现更多的坑, 这其中包含一些陡峭的坑, 也包含一些更深的坑.</p>
+<p>除了模型, 样本外, 特征, 正则项等, 都会对loss landscape带来改变. 一般来说, 这些改变会朝着两个方向变化, 一是更加平坦, 更加浅; 另一种是更加陡峭, 更加深. 而与之对应的, 更加平坦, 更加浅, 可以减小模型方差, 更加陡峭, 更加深可以减小模型偏差.</p>
+<p>利用loss landscape, 可以解释很多东西, 比如可以定性解释为什么添加正则项可以增强模型泛化性. 在loss landscape中搜索最近模型参数时, 正则项可以使参数更加向0处靠拢, 而不是完全落到原本的极值点处. 当应用模型到其它样本(测试集)上时, 由于新的数据分布可能会发生一些变化, 但其loss landscape的极小值一来应该靠近训练集, 二来一般在0附近就有比较好的模型参数, 所以在添加正则项后, 对于分布发生一点变化的数据样本可能更加友好.</p>
+<p>如果有一天, 能够有研究者发现对loss landscape的”探测”方法, 从而针对不同的loss landscape, 根据其特点, 调整使用不同的模型和学习策略, 那么也许可以更进一步.</p>
+<h1 id="数据分布与样本划分"><a href="#数据分布与样本划分" class="headerlink" title="数据分布与样本划分"></a>数据分布与样本划分</h1><h2 id="数据分布一致"><a href="#数据分布一致" class="headerlink" title="数据分布一致"></a>数据分布一致</h2><p>众所周知, 想要建立一个表现较好的模型, 并且能够准确评估其性能, 是需要不止一份样本集的. 通常用训练集, 来学习模型参数; 用验证集来评估模型表现, 并根据表现调整超参数或者说选择模型; 最后用测试集, 来评估模型的泛化性能.</p>
+<p>一般来说, 给定一份数据集, 按照6:2:2的方式, 就是一种可行的划分方法, 但是如果数据量很大, 那么也不一定要这样. 设立验证集的目的是用来选择模型, 那么只要数据集的量能够有效地表现出模型性能的差别就够了, 比如两个模型的准确率相差$1\%$, 那么100个样本是不够的, 怎么也要1000个样本才能更加靠谱地反映出这种差距. 而设立测试集的目的是用于最终评估模型性能, 那么其实也只要根据具体情况, 样本达到一定的量就行了, 将更多的样本放到训练集, 是有益的 ♪(^∇^*)</p>
+<p>在上面的内容中, 基本上都是假设各样本来自一个相同的数据分布, 即训练集/验证集/测试集的分布是一致的, 顶多是由于样本量少一些, 导致的一点点差别.</p>
+<p>在这种情况下, 有啥好说的吗? 没啥好说的!</p>
+<p>其实可以拿一份大一点的数据试一下, 随机打乱, 并随机抽取出训练集/验证集/测试集(验证集和测试集稍微大点), 拿一个GBDT来跑一跑, 超参数别设置得太离谱, 然后观察一下在个样本集上的指标, 会发现验证集和测试集的指标几乎一毛一样(前提别严重过拟合).</p>
+<p>当各样本集的分布一致时, 会有哪些好处呢? 可以用更复杂一些的模型, 尽情地在训练集上找”深坑”; 可以尝试不同的建模方法, 然后查看在验证集表现, 然后选验证集上表现最好的那个, 因为同分布, 测试集上的指标一般是跟着验证集走的.</p>
+<p>有时候, 如果对过拟合拿捏得比较好的话, 可能都不需要测试集, 只要分出训练集和验证集就够了.</p>
+<h2 id="数据分布不一致"><a href="#数据分布不一致" class="headerlink" title="数据分布不一致"></a>数据分布不一致</h2><blockquote>
+<p>但是这个世界总是充满了变化, 不是吗?</p>
+</blockquote>
+<p>在实际的一些场景下, 样本的产生是伴随着时间的, 同时数据分布也可能随时间发生一些变化. 当我们有了一个模型以后, 是需要用这个模型, 去预测未来发生的事情. 也就是说, 我们建模的目的, 是想让模型在未来表现得较好.</p>
+<p>但是我们并没有未来的数据, 如果评估模型在未来的表现呢? 可以截取现有样本中, 最新的一部分样本, 作为测试集, 其余样本用作训练集和验证集, 这样可以通过模型在测试集上的表现, 来进行估计.</p>
+<p>不用太担心训练模型用不上最新的数据, 当完成前面的工作后, 最后可以将测试集也加入训练, 最为最终的模型.</p>
+<p>现在讨论两种情况, 其中一种是, 尽管存在分布的差异, 但随时间变化并不大, 另一种是分布差异比较大的情况.</p>
+<p>那么, 怎么去衡量样本随时间的分布差异大小呢?</p>
+<blockquote>
+<p>实践出真知!</p>
+</blockquote>
+<p>可以在训练集上, 再按时间划分出一个伪测试集, 然后用不同的超参数下, 训练的模型, 记录在训练集, 验证集, 伪测试集上的评估指标. 用这些指标来绘制一些折线图, 比如按训练集指标排序, 查看指标的走势, 或者按训练集指标排序, 单独看训练集和伪测试集对应指标的走势.</p>
+<p>一般来说, 随着训练集上指标升高, 验证集上也会升高, 但是到一定阶段就会开始波动(出现过拟合). 而如果同分布, 或者分布差异不大, 那么验证集的指标和伪测试集的指标也是比较一致的(在没过拟合时). 如果发现不一致, 没有明显相关性, 甚至负相关, 那说明分布差异就比较大了.</p>
+<p>对于第一种情况, 即分布差异不大的时候, 可以按照分布一致的情况来做, 相对比较轻松.</p>
+<p>对于第二种情况, 即分布差异较大的时候, 首先别忙着建模了, 先分析一下, 是确实数据就是差异这么大, 还是说是其它一些因素, 比如某些特征变化太大, 比如信息泄露, 比如存在一些特殊时期的数据把整体拉偏… 结合分析, 去尽可能地减小数据分布的差异, 当看到验证集和伪测试集存在一定相关性时, 说明有效地减小了分布差异. 进一步进行建模的时候, 在划分验证集时, 除了可以在训练集中随机划分, 还可以有一种思路, 即挑选与测试集尽量相似的样本作为验证集(比如训练集中最新的样本), 这样做某种意义上是把数据分布存在差异这个因素考虑进模型训练, 会更加倾向于选择低方差的模型. 但是这两种划分验证集的方式到底哪一种更好, 也是可以根据实践来知道的.</p>
+<p>如果, 一顿操作后, 仍然发现分布差异很大, 怎么办? 随缘吧♪(^∇^*) 这时候可能就不能完全依赖于模型在训练集和验证集上的评估指标来选择模型了, 要有目的地选取低方差的模型, 以保证模型在未来的泛化性. 这样好像就是在说, 效果差点问题不大, 稳定能用就行.</p>
+<h1 id="迁移学习"><a href="#迁移学习" class="headerlink" title="迁移学习"></a>迁移学习</h1><p>在计算机视觉中, 迁移学习指的是在一个很大很复杂的深度学习模型上, 以有监督学习的方式, 来训练一个模型, 然后在这个模型中, 去掉最后的输出层后, 其输出的向量相当于是在原始数据中抽取的高阶特征, 可以将其用在其它一些场景的任务上.</p>
+<p>在NLP中, 词向量的预训练相当于是迁移学习, 利用海量的语料, 来进行无监督学习, 得到的词向量能够表征词本身以及词之间的关系, 可以用在各种下游任务上, 加速模型收敛, 提升模型效果.</p>
+<p>那么, 在结构化的数据中, 是否也能够有迁移学习呢?</p>
+<p>本质上来讲, 迁移学习不是某种具体的方法, 而是一种思想, 即在一些场景下, 用大量的数据, 复杂的模型进行训练, 然后在另外一些场景下, 用一些方式借鉴其成果, 可以较快地用少量数据就可以达到不错的效果.</p>
+<p>在上一节中, 讲到了一些场景中, 数据分布会随时间变化, 导致分布不一致, 然鹅还有一些情形下, 是由于目标分布的样本较少导致的.</p>
+<p>举个栗子, 想要做一个分类器, 通过一些类似气温, 湿度这样的特征, 来预测某地的天气, 真实的目标数据样本(假设为A样本集), 是该地的过往记录, 但是如果一开始这样的样本很少, 怎么办呢? 可以在网上找寻大量的其它一些地方(类似)天气的样本(假设为B样本集), 用来帮助模型学习, 但是其它地方的样本与目标样本是会有分布差异的, 这时候可以将部分A样本集作为测试集, 并考虑如下一些做法:</p>
+<ul>
+<li><p>单样本集</p>
+<ul>
+<li><p>直接使用A样本集建模.</p>
+<p>优点: 分布一致.</p>
+<p>缺点: 样本较少.</p>
+</li>
+<li><p>使用B样本建模, 并使用A样本集作为验证集.</p>
+<p>优点: 数据量上来了.</p>
+<p>缺点: 分布不一致.</p>
+</li>
+</ul>
+</li>
+<li><p>拼接样本集</p>
+<ul>
+<li><p>直接将A样本集与B样本集拼接, 并建模.</p>
+<p>优点: 数据全部用上了.</p>
+<p>缺点: 由于A样本集量少, B样本集占主导, 可能会导致验证集的涨跌与测试集不一致.</p>
+</li>
+<li><p>将A样本集与B样本集拼接, 并添加一列特征来区别AB样本集.</p>
+<p>优点: 数据全部用上了, 并且模型可以通过添加的特征区别两种分布, 可以在A样本集上学得更好.</p>
+<p>缺点: 同上.</p>
+</li>
+</ul>
+<p>这里有个技巧, 就是拼接后, 仍然使用一部分的A样本集来作为验证集, 这样可以一定程度上避免上面说到的缺点.</p>
+</li>
+<li><p>迁移学习</p>
+<ul>
+<li><p>用B样本集训练模型, 并将该模型输出作为A样本集的特征.</p>
+<p>用B样本集训练一个模型, 将其输出作为样本集A的一个特征, 再结合A样本集中挑选出的重要特征, 再在样本集A上训练一个模型, 作为最终模型.</p>
+<p>优点: 利用了B样本集的信息, 也确保了最终模型是在A样本集上训练的.</p>
+<p>缺点: 没啥大缺点.</p>
+</li>
+<li><p>用B样本集加部分样本集A训练模型, 再作为A样本集的特征.</p>
+<p>相比上面的方法, 就是在训练第一个模型的时候, 也将A样本集中的部分样本加入B样本集, 还可以尝试加大A样本集的权重. 然后再将模型输出作为A样本集的特征, 再在A样本集上训练一个模型, 作为最终模型.</p>
+<p>优点: 加入部分A样本和B样本一起训练, 可以让前一个模型的输出质量更高, 并确保了最终模型是在A样本集上训练的.</p>
+<p>缺点: 原本就少的A样本集再分了一部分后, 更加雪上加霜了QAQ</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>上面的方法, 在样本很多, 且分布差异不大的情况下, 作用并不明显. 但是如果目标样本(对应测试集分布的样本)较少, 同时拥有大量差异较大的样本时, 用上面的方法可以获得明显的效果提升.</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>以上, 阐述了关于偏差与方差, loss landscape的理解, 以及讨论数据分布与样本划分的情况, 并且对结构化数据给出了包含迁移学习思想的方法.</p>
+<p>数据是多变的, 当面对一个新的任务, 一份新的数据时, 需要先用一些方法, 来分析数据的模式, 并尝试建模, 根据模型的表现, 来尝试可能带来更好效果的方法. 理解通用的机器学习理论, 多知道一些技巧, 并灵活运用.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/传统机器学习/" rel="tag"># 传统机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/13/大数据/Faiss/" rel="next" title="Faiss">
+                <i class="fa fa-chevron-left"></i> Faiss
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/07/自然语言处理/文本表示/" rel="prev" title="文本表示">
+                文本表示 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#偏差与方差"><span class="nav-number">2.</span> <span class="nav-text">偏差与方差</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Loss-Landscape"><span class="nav-number">3.</span> <span class="nav-text">Loss Landscape</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从优化算法说起"><span class="nav-number">3.1.</span> <span class="nav-text">从优化算法说起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Loss-Landscape-分布变化"><span class="nav-number">3.2.</span> <span class="nav-text">Loss Landscape 分布变化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分布与样本划分"><span class="nav-number">4.</span> <span class="nav-text">数据分布与样本划分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分布一致"><span class="nav-number">4.1.</span> <span class="nav-text">数据分布一致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分布不一致"><span class="nav-number">4.2.</span> <span class="nav-text">数据分布不一致</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#迁移学习"><span class="nav-number">5.</span> <span class="nav-text">迁移学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

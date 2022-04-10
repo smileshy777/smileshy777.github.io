@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="这里就使用实际的数据, 利用用户画像来进行召回, 做一个简单的展示.">
+<meta name="keywords" content="召回,推荐系统,用户画像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户画像(二)">
+<meta property="og:url" content="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="这里就使用实际的数据, 利用用户画像来进行召回, 做一个简单的展示.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/fig_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/fig_2.png">
+<meta property="og:updated_time" content="2020-11-26T10:48:49.830Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用户画像(二)">
+<meta name="twitter:description" content="这里就使用实际的数据, 利用用户画像来进行召回, 做一个简单的展示.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>用户画像(二) | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/10/10/推荐系统/用户画像-二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用户画像(二)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-10 22:15:53" itemprop="dateCreated datePublished" datetime="2020-10-10T22:15:53+08:00">2020-10-10</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-11-26 18:48:49" itemprop="dateModified" datetime="2020-11-26T18:48:49+08:00">2020-11-26</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/推荐系统/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这里就使用实际的数据, 利用用户画像来进行召回, 做一个简单的展示.</p>
+<a id="more"></a>
+<h1 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h1><p>这里使用的数据, 仍然是经典的<a href="https://grouplens.org/datasets/movielens/" target="_blank" rel="noopener">movielens</a>的MovieLens 1M Dataset.</p>
+<p>其中包含约100万的用户对电影的打分记录, 由约6000用户对约4000电影打分而得到.</p>
+<p>包含3份数据, 一份是打分文件”rating.dat”, 格式为<code>用户ID::电影ID::打分::时间戳</code>, 并且:</p>
+<ul>
+<li>用户ID在1到6040之间.</li>
+<li>电影ID在1到3952之间.</li>
+<li>打分有5个等级.</li>
+<li>每个用户至少有20条打分记录.</li>
+</ul>
+<p>一份是用户文件”user.dat”, 格式为<code>用户ID::性别::年龄::职业::邮编</code>.</p>
+<p>还有一份电影文件”movies.dat”, 格式为<code>电影ID::电影名称::风格流派</code>.</p>
+<p>为了模拟曝光后是否点击这一行为, 统计每一个用户的平均打分, 将评分在其平均分以下的电影, 设置为0, 即曝光而未点击; 评分在其平均分以上的电影, 设置为1, 即曝光后点击.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df = []</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/ml-1m/ratings.dat'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        line = line.strip()</span><br><span class="line">        df.append(line.split(<span class="string">'::'</span>))</span><br><span class="line">    f.close()</span><br><span class="line">df = pd.DataFrame(df, columns=[<span class="string">'user_id'</span>, <span class="string">'item_id'</span>, <span class="string">'score'</span>, <span class="string">'time'</span>])</span><br><span class="line">df[<span class="string">'score'</span>] = df[<span class="string">'score'</span>].astype(<span class="string">'int'</span>)</span><br><span class="line">df.head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">user_id</th>
+<th style="text-align:right">item_id</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1193</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">978300760</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">661</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">978302109</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">914</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">978301968</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">3408</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">978300275</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2355</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">978824291</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计每个用户平均分</span></span><br><span class="line">avg_score = df[[<span class="string">'user_id'</span>, <span class="string">'score'</span>]].groupby(<span class="string">'user_id'</span>).agg(avg_score=(<span class="string">'score'</span>, <span class="string">'mean'</span>))</span><br><span class="line">avg_score.head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">avg_score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">user_id</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4.188679</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">4.114713</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">3.026316</td>
+</tr>
+<tr>
+<td style="text-align:right">1000</td>
+<td style="text-align:right">4.130952</td>
+</tr>
+<tr>
+<td style="text-align:right">1001</td>
+<td style="text-align:right">3.652520</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将每个用户平均分以上的电影, 设置为曝光后点击</span></span><br><span class="line">df = pd.merge(left=df, right=avg_score, on=<span class="string">'user_id'</span>, how=<span class="string">'left'</span>)</span><br><span class="line">df[<span class="string">'label'</span>] = df[<span class="string">'score'</span>] &gt;= df[<span class="string">'avg_score'</span>]</span><br><span class="line">df[<span class="string">'label'</span>] = df[<span class="string">'label'</span>].astype(<span class="string">'int'</span>)</span><br><span class="line">df.head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">user_id</th>
+<th style="text-align:right">item_id</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">time</th>
+<th style="text-align:right">avg_score</th>
+<th style="text-align:right">label</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1193</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">978300760</td>
+<td style="text-align:right">4.188679</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">661</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">978302109</td>
+<td style="text-align:right">4.188679</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">914</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">978301968</td>
+<td style="text-align:right">4.188679</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">3408</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">978300275</td>
+<td style="text-align:right">4.188679</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2355</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">978824291</td>
+<td style="text-align:right">4.188679</td>
+<td style="text-align:right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按时间分为训练集和测试集</span></span><br><span class="line">df = df.sort_values(<span class="string">'time'</span>)</span><br><span class="line">df_train = df.iloc[:<span class="number">700000</span>]</span><br><span class="line">df_test = df.iloc[<span class="number">700000</span>:]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集中新出现的用户与电影过滤掉</span></span><br><span class="line">user_list = df_train[<span class="string">'user_id'</span>].unique().tolist()</span><br><span class="line">item_list = df_train[<span class="string">'item_id'</span>].unique().tolist()</span><br><span class="line">df_test = df_test.loc[df_test[<span class="string">'user_id'</span>].isin(user_list)]</span><br><span class="line">df_test = df_test.loc[df_test[<span class="string">'item_id'</span>].isin(item_list)]</span><br><span class="line">df_test.shape</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(135148, 6)</span><br></pre></td></tr></table></figure>
+<h1 id="物品画像构建"><a href="#物品画像构建" class="headerlink" title="物品画像构建"></a>物品画像构建</h1><p>这里由于电影本身包含有分类标签, 且没有更多信息, 简单起见, 就直接使用数据给出的标签作为物品画像.</p>
+<p>然后结合电影的曝光点击记录, 以及贝叶斯平滑计算电影的分值, 并按标签制作倒排表.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算每个电影的点击率, 曝光/点击次数</span></span><br><span class="line"></span><br><span class="line">item_ctr = df_train[[<span class="string">'item_id'</span>, <span class="string">'label'</span>]].groupby(<span class="string">'item_id'</span>).agg(item_ctr=(<span class="string">'label'</span>, <span class="string">'mean'</span>), </span><br><span class="line">                                                                 exposure=(<span class="string">'label'</span>, <span class="string">'count'</span>), </span><br><span class="line">                                                                 click=(<span class="string">'label'</span>, <span class="string">'sum'</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看曝光次数分布</span></span><br><span class="line">item_ctr.loc[item_ctr[<span class="string">'exposure'</span>] &lt; <span class="number">500</span>, <span class="string">'exposure'</span>].hist(bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_0.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看点击率分布</span></span><br><span class="line">item_ctr[<span class="string">'item_ctr'</span>].hist(bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_1.png" alt="fig"></p>
+<p>从图上可以看到, 有一些曝光次数比较少的电影, 其点击率会比较极端地倾向于0或者1.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 贝叶斯平滑, 挑选出记录大于50条的电影的点击率, 用来估计贝塔分布参数</span></span><br><span class="line">avg_ctr = item_ctr.loc[item_ctr[<span class="string">'exposure'</span>] &gt; <span class="number">50</span>, <span class="string">'item_ctr'</span>].mean()</span><br><span class="line">std_ctr = item_ctr.loc[item_ctr[<span class="string">'exposure'</span>] &gt; <span class="number">50</span>, <span class="string">'item_ctr'</span>].std()</span><br><span class="line">print(avg_ctr, std_ctr)</span><br><span class="line">var_ctr = std_ctr**<span class="number">2</span></span><br><span class="line">alpha = avg_ctr * (avg_ctr * (<span class="number">1</span> - avg_ctr) / var_ctr - <span class="number">1</span>)</span><br><span class="line">beta = (<span class="number">1</span> - avg_ctr) * (avg_ctr * (<span class="number">1</span> - avg_ctr) / var_ctr - <span class="number">1</span>)</span><br><span class="line">print(alpha, beta)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0.474422332230172 0.1960938288262356</span><br><span class="line">2.6019528481413885 2.88251251399721</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算每个电影经过贝叶斯平滑后的点击率</span></span><br><span class="line">item_ctr[<span class="string">'bayes_ctr'</span>] = item_ctr.apply(<span class="keyword">lambda</span> x: (x[<span class="string">'click'</span>] + alpha) / (x[<span class="string">'exposure'</span>] + alpha + beta), axis=<span class="number">1</span>)</span><br><span class="line">item_ctr[<span class="string">'bayes_ctr'</span>].hist(bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_2.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df_train = pd.merge(left=df_train, right=item_ctr, on=<span class="string">'item_id'</span>, how=<span class="string">'left'</span>)</span><br><span class="line">df_train[[<span class="string">'user_id'</span>, <span class="string">'item_id'</span>, <span class="string">'bayes_ctr'</span>]].head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">user_id</th>
+<th style="text-align:right">item_id</th>
+<th style="text-align:right">bayes_ctr</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1980</td>
+<td style="text-align:right">2883</td>
+<td style="text-align:right">0.523378</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4593</td>
+<td style="text-align:right">924</td>
+<td style="text-align:right">0.715299</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">2841</td>
+<td style="text-align:right">3863</td>
+<td style="text-align:right">0.414818</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">2841</td>
+<td style="text-align:right">3456</td>
+<td style="text-align:right">0.665445</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">2841</td>
+<td style="text-align:right">3298</td>
+<td style="text-align:right">0.451444</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加电影信息</span></span><br><span class="line"></span><br><span class="line">item_df = []</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/ml-1m/movies.dat'</span>, errors=<span class="string">'ignore'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        line = line.strip()</span><br><span class="line">        item_df.append(line.split(<span class="string">'::'</span>))</span><br><span class="line">    f.close()</span><br><span class="line">item_df = pd.DataFrame(item_df, columns=[<span class="string">'item_id'</span>, <span class="string">'title'</span>, <span class="string">'category'</span>])</span><br><span class="line">item_df[<span class="string">'category_list'</span>] = item_df[<span class="string">'category'</span>].apply(<span class="keyword">lambda</span> x: x.split(<span class="string">'|'</span>))</span><br><span class="line">item_df.head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">item_id</th>
+<th style="text-align:right">title</th>
+<th style="text-align:right">category</th>
+<th style="text-align:right">category_list</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">Toy Story (1995)</td>
+<td style="text-align:right">Animation\</td>
+<td style="text-align:right">Children’s\</td>
+<td>Comedy</td>
+<td>[Animation, Children’s, Comedy]</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">Jumanji (1995)</td>
+<td style="text-align:right">Adventure\</td>
+<td style="text-align:right">Children’s\</td>
+<td>Fantasy</td>
+<td>[Adventure, Children’s, Fantasy]</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">Grumpier Old Men (1995)</td>
+<td style="text-align:right">Comedy\</td>
+<td style="text-align:right">Romance</td>
+<td>[Comedy, Romance]</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">Waiting to Exhale (1995)</td>
+<td style="text-align:right">Comedy\</td>
+<td style="text-align:right">Drama</td>
+<td>[Comedy, Drama]</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">Father of the Bride Part II (1995)</td>
+<td style="text-align:right">Comedy</td>
+<td style="text-align:right">[Comedy]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 制作倒排表</span></span><br><span class="line"></span><br><span class="line">item_df = item_df.loc[item_df[<span class="string">'item_id'</span>].isin(item_list)]</span><br><span class="line">tag_item_dict = &#123;&#125;</span><br><span class="line">tag_set = set([])</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> item_df[<span class="string">'category_list'</span>]:</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> i:</span><br><span class="line">        tag_set.add(j)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> tag_set:</span><br><span class="line">    tag_item_dict[i] = []</span><br><span class="line">item_bayes_dict = dict(zip(item_ctr.index.tolist(), item_ctr[<span class="string">'bayes_ctr'</span>]))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> item_df.iterrows():</span><br><span class="line">    tmp = i[<span class="number">1</span>]</span><br><span class="line">    category_list = tmp[<span class="string">'category_list'</span>]</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> category_list:</span><br><span class="line">        tag_item_dict[j].append((tmp[<span class="string">'item_id'</span>], item_bayes_dict[tmp[<span class="string">'item_id'</span>]]))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> tag_item_dict:</span><br><span class="line">    tag_item_dict[i] = list(sorted(tag_item_dict[i], key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tag_item_dict</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;Comedy&apos;: [(&apos;745&apos;, 0.8938807903284889),</span><br><span class="line">  (&apos;1148&apos;, 0.8879161929505215),</span><br><span class="line">  (&apos;1223&apos;, 0.8476214987993209),</span><br><span class="line">  (&apos;3022&apos;, 0.82820970470273),</span><br><span class="line">  (&apos;3307&apos;, 0.8196317140831266),</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h1 id="用户画像构建"><a href="#用户画像构建" class="headerlink" title="用户画像构建"></a>用户画像构建</h1><p>接下来构建用户画像, 这里做法比较简单, 主要通过用户与电影的交互, 以及电影本身的物品画像, 来构建用户画像.</p>
+<p>在计算用户画像的偏好分值时, 考虑两部分, 一部分是基准值, 即某个标签整体的点击率, 一部分是用户的累计值, 使用如下形式进行计算:</p>
+<script type="math/tex; mode=display">
+score=\frac{\alpha\times 总体点击数+(1-\alpha)\times 用户点击数}{\alpha\times 总体曝光数+(1-\alpha)\times 用户曝光数}</script><p>这里的$\alpha$是拍脑袋决定的, 考虑到整体用户量约6000, 因此取$\alpha=1/5000$.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 遍历数据进行统计, 包括各标签整体的曝光/点击, 以及每个用户的曝光点击</span></span><br><span class="line">df_train = pd.merge(left=df_train, right=item_df[[<span class="string">'item_id'</span>, <span class="string">'category_list'</span>]], on=<span class="string">'item_id'</span>, how=<span class="string">'left'</span>)</span><br><span class="line"></span><br><span class="line">tag_list = list(tag_set)</span><br><span class="line"></span><br><span class="line">all_info_dict = &#123;&#125;</span><br><span class="line">user_info_dict = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> df_train.iterrows():</span><br><span class="line">    tmp = i[<span class="number">1</span>]</span><br><span class="line">    category_list = tmp[<span class="string">'category_list'</span>]</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> category_list:</span><br><span class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> all_info_dict:</span><br><span class="line">            all_info_dict[j] = [<span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">        all_info_dict[j][<span class="number">0</span>] += tmp[<span class="string">'label'</span>]</span><br><span class="line">        all_info_dict[j][<span class="number">1</span>] += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    user_id = tmp[<span class="string">'user_id'</span>]</span><br><span class="line">    <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_info_dict:</span><br><span class="line">        user_info_dict[user_id] =  &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> category_list:</span><br><span class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> user_info_dict[user_id]:</span><br><span class="line">            user_info_dict[user_id][j] = [<span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">        user_info_dict[user_id][j][<span class="number">0</span>] += tmp[<span class="string">'label'</span>]</span><br><span class="line">        user_info_dict[user_id][j][<span class="number">1</span>] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算每个用户各个标签的分值, 并排序</span></span><br><span class="line">user_portrait = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_info_dict:</span><br><span class="line">    tmp_list = []</span><br><span class="line">    <span class="keyword">for</span> tag <span class="keyword">in</span> user_info_dict[user]:</span><br><span class="line">        score = (<span class="number">0.0002</span> * all_info_dict[tag][<span class="number">0</span>] + <span class="number">0.9998</span> * user_info_dict[user][tag][<span class="number">0</span>]) / (<span class="number">0.0002</span> * all_info_dict[tag][<span class="number">1</span>] + <span class="number">0.9998</span> * user_info_dict[user][tag][<span class="number">1</span>])</span><br><span class="line">        tmp_list.append((tag, score))</span><br><span class="line">    tmp_list = list(sorted(tmp_list, key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="literal">True</span>))</span><br><span class="line">    user_portrait[user] = tmp_list</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user_portrait</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;1980&apos;: [(&apos;Documentary&apos;, 0.91404251131667),</span><br><span class="line">  (&apos;Film-Noir&apos;, 0.7423283533126479),</span><br><span class="line">  (&apos;Drama&apos;, 0.7381769567469151),</span><br><span class="line">  (&apos;Romance&apos;, 0.7117057320809761),</span><br><span class="line">  (&apos;War&apos;, 0.6951509552273142),</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h1 id="用户画像召回"><a href="#用户画像召回" class="headerlink" title="用户画像召回"></a>用户画像召回</h1><p>现在有了物品画像, 也有了用户画像, 现在利用它们来进行召回.</p>
+<p>这里使用比较简单的方法, 即对用户各标签分值进行归一化处理, 计算得到每个标签下选取物品的数量, 最后选取头部的物品作为返回.</p>
+<p>比如每个用户召回100个物品, 用户某个标签归一化后, 分值为$0.2$, 那么就去对应标签下选中头部20个物品.</p>
+<p>这里可能更好的做法, 是将倒排表中物品分值等价于选中概率, 即分值越大, 有更大的可能被选中.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标签分值归一化</span></span><br><span class="line">user_portrait_norm = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_portrait:</span><br><span class="line">    user_portrait_norm[user] = &#123;&#125;</span><br><span class="line">    sum_ = sum([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> user_portrait[user]])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> user_portrait[user]:</span><br><span class="line">        user_portrait_norm[user][i[<span class="number">0</span>]] = i[<span class="number">1</span>] / sum_</span><br><span class="line">user_portrait_norm[<span class="string">'1980'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;Documentary&apos;: 0.08392623657346782,</span><br><span class="line"> &apos;Film-Noir&apos;: 0.06815965802899726,</span><br><span class="line"> &apos;Drama&apos;: 0.06777848200493675,</span><br><span class="line"> &apos;Romance&apos;: 0.06534792736858534,</span><br><span class="line"> &apos;War&apos;: 0.0638278885285537,</span><br><span class="line"> &apos;Musical&apos;: 0.061805677488681765,</span><br><span class="line"> &apos;Western&apos;: 0.06155638732308014,</span><br><span class="line"> </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对每个用户统计已经曝光过的电影</span></span><br><span class="line">user_items_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> df_train.iterrows():</span><br><span class="line">    tmp = i[<span class="number">1</span>]</span><br><span class="line">    user = tmp[<span class="string">'user_id'</span>]</span><br><span class="line">    item = tmp[<span class="string">'item_id'</span>]</span><br><span class="line">    <span class="keyword">if</span> user <span class="keyword">not</span> <span class="keyword">in</span> user_items_dict:</span><br><span class="line">        user_items_dict[user] = set([])</span><br><span class="line">    user_items_dict[user].add(item)</span><br><span class="line">user_items_dict[<span class="string">'1980'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;1006&apos;,</span><br><span class="line"> &apos;101&apos;,</span><br><span class="line"> &apos;1041&apos;,</span><br><span class="line"> </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对每个用户召回200部电影, 排除已曝光的</span></span><br><span class="line">match_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> user_portrait_norm:</span><br><span class="line">    match_dict[user] = []</span><br><span class="line">    <span class="keyword">for</span> tag <span class="keyword">in</span> user_portrait_norm[user]:</span><br><span class="line">        num_ = int(user_portrait_norm[user][tag] * <span class="number">200</span>)</span><br><span class="line">        tmp_list = [x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> tag_item_dict[tag] <span class="keyword">if</span> x[<span class="number">0</span>] <span class="keyword">not</span> <span class="keyword">in</span> user_items_dict[user]]</span><br><span class="line">        match_dict[user] += tmp_list[: num_]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在测试集上检验评估指标, 查准率, 查全率, F1</span></span><br><span class="line">test_user_click = df_test.loc[df_test[<span class="string">'label'</span>] == <span class="number">1</span>]</span><br><span class="line">test_users_item_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> test_user_click.iterrows():</span><br><span class="line">    tmp = i[<span class="number">1</span>]</span><br><span class="line">    user = tmp[<span class="string">'user_id'</span>]</span><br><span class="line">    item = tmp[<span class="string">'item_id'</span>]</span><br><span class="line">    <span class="keyword">if</span> user <span class="keyword">not</span> <span class="keyword">in</span> test_users_item_dict:</span><br><span class="line">        test_users_item_dict[user] = set([])</span><br><span class="line">    test_users_item_dict[user].add(item)</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> match_dict:</span><br><span class="line">    match_dict[user] = set(match_dict[user])</span><br><span class="line">    </span><br><span class="line">true_pos = <span class="number">0</span></span><br><span class="line">total_num = <span class="number">0</span></span><br><span class="line">match_num = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> test_users_item_dict:</span><br><span class="line">    tmp_set_0 = test_users_item_dict[user]</span><br><span class="line">    tmp_set_1 = match_dict[user]</span><br><span class="line">    total_num += len(tmp_set_0)</span><br><span class="line">    match_num += len(tmp_set_1)</span><br><span class="line">    true_pos += len(tmp_set_0.intersection(tmp_set_1))</span><br><span class="line">precision = true_pos / match_num</span><br><span class="line">recall = true_pos / total_num</span><br><span class="line">f1 = <span class="number">2</span> * precision * recall / (precision + recall)</span><br><span class="line">print(<span class="string">'查准率: %.4f'</span> % precision)</span><br><span class="line">print(<span class="string">'查全率: %.4f'</span> % recall)</span><br><span class="line">print(<span class="string">'F1: %.4f'</span> % f1)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">查准率: 0.0845</span><br><span class="line">查全率: 0.1776</span><br><span class="line">F1: 0.1145</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>以上, 通过实际的数据与代码, 实现了用户画像与物品画像的构建, 然后使用它们来进行召回.</p>
+<p>上面的做法是比较简单的, 如果考虑到推荐的精准性, 可以对用户标签分值设计更加复杂的计算方法, 如果考虑推荐的多样性, 可以在对每个标签下物品进行选取时, 按概率进行选取, 而不是简单地只选取靠前的物品.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/召回/" rel="tag"># 召回</a>
+          
+            <a href="/tags/推荐系统/" rel="tag"># 推荐系统</a>
+          
+            <a href="/tags/用户画像/" rel="tag"># 用户画像</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/10/推荐系统/用户画像-一/" rel="next" title="用户画像(一)">
+                <i class="fa fa-chevron-left"></i> 用户画像(一)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/10/推荐系统/YouTubeNet召回/" rel="prev" title="YouTubeNet召回">
+                YouTubeNet召回 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据准备"><span class="nav-number">1.</span> <span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#物品画像构建"><span class="nav-number">2.</span> <span class="nav-text">物品画像构建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户画像构建"><span class="nav-number">3.</span> <span class="nav-text">用户画像构建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户画像召回"><span class="nav-number">4.</span> <span class="nav-text">用户画像召回</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
