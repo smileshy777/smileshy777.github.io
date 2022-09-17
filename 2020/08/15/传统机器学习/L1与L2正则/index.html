@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="机器学习中, 为了抑制过拟合, 在一些模型(线性回归)中, 采用L1或者L2正则, 是常见的方法. 那么, 为什么L1与L2正则可以有抑制过拟合的作用, 它们之间又有什么差别呢, 下面来进行具体的阐述.">
+<meta name="keywords" content="传统机器学习,L1正则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="L1与L2正则">
+<meta property="og:url" content="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="机器学习中, 为了抑制过拟合, 在一些模型(线性回归)中, 采用L1或者L2正则, 是常见的方法. 那么, 为什么L1与L2正则可以有抑制过拟合的作用, 它们之间又有什么差别呢, 下面来进行具体的阐述.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/fig_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/fig_2.png">
+<meta property="og:updated_time" content="2020-12-06T13:16:33.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="L1与L2正则">
+<meta name="twitter:description" content="机器学习中, 为了抑制过拟合, 在一些模型(线性回归)中, 采用L1或者L2正则, 是常见的方法. 那么, 为什么L1与L2正则可以有抑制过拟合的作用, 它们之间又有什么差别呢, 下面来进行具体的阐述.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>L1与L2正则 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/08/15/传统机器学习/L1与L2正则/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">L1与L2正则
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-15 16:42:45" itemprop="dateCreated datePublished" datetime="2020-08-15T16:42:45+08:00">2020-08-15</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-12-06 21:16:33" itemprop="dateModified" datetime="2020-12-06T21:16:33+08:00">2020-12-06</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/传统机器学习/" itemprop="url" rel="index"><span itemprop="name">传统机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>机器学习中, 为了抑制过拟合, 在一些模型(线性回归)中, 采用L1或者L2正则, 是常见的方法.</p>
+<p>那么, 为什么L1与L2正则可以有抑制过拟合的作用, 它们之间又有什么差别呢, 下面来进行具体的阐述.</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在机器学习中, 过拟合是一个常见的问题, 所谓过拟合, 通俗来讲, 就是一个模型在训练集上训练后, 在训练集上可以有很好的表现, 但是在验证集或者测试集上表现很差.</p>
+<p>评判过拟合一般也没有什么特别明确的标准, 可以用一些评估指标来进行判别. 假设我们在训练集上训练模型, 在验证集上调整超参数, 最后在测试集上看模型表现, 在一份数据上, 两次训练得到的结果(评估指标为准确率)如下:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">训练集</th>
+<th style="text-align:center">验证集</th>
+<th style="text-align:center">测试集</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">模型一</td>
+<td style="text-align:center">0.90</td>
+<td style="text-align:center">0.70</td>
+<td style="text-align:center">0.60</td>
+</tr>
+<tr>
+<td style="text-align:center">模型二</td>
+<td style="text-align:center">0.75</td>
+<td style="text-align:center">0.70</td>
+<td style="text-align:center">0.65</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>单独看测试集, 当然是模型二更好, 这没得说. 然鹅比较科学的做法, 是在确定模型训练得不错以后, 再到测试集上看模型表现. 那么如果在只看训练集和验证集的评估指标时, 如何判定哪个模型”大概率”更好呢? 上面的数据虽然是编的, 但是在本宝宝有限的建模经验中, 也可以说是经常遇到这种情况了, 即两个模型验证集上准确率相当(差距很小), 但训练集上差距较大. 这时候怎么选, 如果是没有太理解过拟合的同学, 可能会选择模型一, 验证集准确率一样, 训练集准确率高的更好不是很自然的事情吗♪(^∇^*) 但是这就是一个典型的过拟合表现, 即训练集和验证集的差距(gap)过大. 所以, 当两个模型在验证集上表现相当时, 选训练集上评估指标小的那个, 对应过拟合程度更小, 才是比较稳妥的做法, </p>
+<p>上面通过一个小例子, 大致说明了过拟合的表现, 那么, 如何抑制过拟合呢? 其实我一直在用”抑制”这个词, 而没有用”防止”或者”消除”这样的词, 因为过拟合在很多时候是难以避免的, 主要原因有二:</p>
+<ul>
+<li><p>原因一:</p>
+<p>造成过拟合的源头可能有多个, 比如数据本身, 模型结构, 训练过程等, 难以把各方面都做得完美.</p>
+</li>
+<li><p>原因二:</p>
+<p>过拟合的反面就是欠拟合, 通过一些比较极端的方法, 确实可以消除过拟合, 但此时很可能达到了欠拟合的状态.</p>
+<p>而通常稍微过拟合的状态下, 比欠拟合状态下的模型表现要好一些.</p>
+</li>
+</ul>
+<p>一般有如下一些方法可以抑制过拟合:</p>
+<ul>
+<li><p>增大数据量.</p>
+<p>增大训练样本总是没错的, 但是有时候不是想增加就能增加的.</p>
+</li>
+<li><p>简化模型结构.</p>
+<p>比如在GBDT中用更少的树, 在MLP中用更少的隐藏层.</p>
+</li>
+<li><p>调节正则参数.</p>
+<p>比较常见的, 就是L1和L2正则参数了.</p>
+</li>
+</ul>
+<p>先说一下神马是L1和L2正则参数:</p>
+<script type="math/tex; mode=display">
+Loss=L(y,f(x))+\Omega(f)</script><p>上式是损失函数的一般形式, 其中第一项为关于学习目标$y$与模型预测$f(x)$的误差, 第二项为关于模型的正则损失项$\Omega(f)$.</p>
+<p>这里假设$f$为线性模型$f(x)=w_1x_1+w_2x_2+\cdots$, $\Omega$为L1正则, 那么:</p>
+<script type="math/tex; mode=display">
+Loss=L(y,f(x))+\lambda\sum_i|w_i|</script><p>若$\Omega$为L2正则:</p>
+<script type="math/tex; mode=display">
+Loss=L(y,f(x))+\frac{1}{2}\lambda\sum_iw_i^2</script><p>下面就来说为什么L1和L2正则, 可以抑制过拟合.</p>
+<h1 id="抑制过拟合"><a href="#抑制过拟合" class="headerlink" title="抑制过拟合"></a>抑制过拟合</h1><p>首先来观察L1与L2正则在损失函数中的表达式:</p>
+<script type="math/tex; mode=display">
+\lambda\sum_i|w_i|,\quad \frac{1}{2}\lambda\sum_iw_i^2</script><p>单看正则损失项, 对于单个参数$w_i$来说, L1正则损失为一个关于$y$轴的V型函数, L2正则损失为一个二次凸函数. 它们都有一个共同点, 即$w_i$越靠近0, 正则损失越小.</p>
+<p>也就是说, 由于L1和L2正则项的存在, 会使得原本的参数有向0靠拢的趋势, 而这为什么能抑制过拟合呢? 这里仍然举一个栗子来进行说明, 假设有一个线性回归模型:</p>
+<script type="math/tex; mode=display">
+y=w_0+w_1x_1+w_2x_2  \tag{1}</script><p>并假设原本的数据是人为产生的, 产生的式子为:</p>
+<script type="math/tex; mode=display">
+y=2x_1+\epsilon \\[7mm]
+x_2=x_1+\epsilon'</script><p>即只需要一个变量$x_1$就能够拟合$y$, $x_1$与$x_2$为高度相关. 此时若仍然使用(1)式去进行拟合, 且只使用平方误差作为损失函数(不添加正则损失项), 会得到怎么样的结果呢? 可能会完全正确拟合:</p>
+<script type="math/tex; mode=display">
+y=2x_1  \tag{2}</script><p>也可能得到:</p>
+<script type="math/tex; mode=display">
+y=x_1+x_2  \tag{3}</script><p>还有可能得到:</p>
+<script type="math/tex; mode=display">
+y=10x_1-8x_2  \tag{4}</script><p>这里就不更多地列举了, 想说的是, 当线性回归的特征中存在相关性(或多重共线性)时, 可以有多种结果可以达到相似的损失函数值.</p>
+<p>从结果来看, 上面三个模型, 好像都能够达到相同的结果呀, 没问题呀.</p>
+<p>但是在真实的场景中, 数据往往是不完全稳定的, 可能会随着时间发生一些变化, 而且可能会出现一些奇异值(远离数据中心). 从统计的角度来看, $x_1$与$x_2$都可以看做随机变量, 对于(1)式和(2)式, 由于随机变量系数较小, 对应的, 其结果$y$的方差也会较小; 而(3)式由于系数较大, 尽管期望是一致的, 但方差却成倍地被放大.</p>
+<p>方差大意味着什么呢, 其实就是不稳定. 这里举一个实际的栗子, 假如在测试集中, 某个样本的$y$为$2.0$, 对应$x_1$为$1.1$, $x_2$为$1.0$, 使用平方误差$(1/2)(y-\hat{y})^2$那么对应不同模型的结果与误差为:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+&y=2x_1=2.2&    &Loss=0.5\times0.2^2=0.02 \\[7mm]
+&y=x_1+x_2=2.1&    &Loss=0.5\times0.1^2=0.005 \\[7mm]
+&y=10x_1-8x_2=3.0&    &Loss=0.5\times3.0^2=4.5 \\[7mm]
+\end{align*}</script><p>也就是说, 如果在未来出现了一些偏离训练集模式的数据, 那么这种误差对于(2)式和(3)式来说, 还在可接受范围内, 而对于(4)式来说, 误差会被成倍放大.</p>
+<p>所以, 这里知道了, 虽然在训练集上可能三个模型的损失误差是相当的, 对应它们的模型期望相同, 但是前面两个模型的方差更小, 更加稳定, 或者说, (4)式对应的模型存在比较严重的过拟合.</p>
+<p>现在来看看, 如果加入正则损失项, 会有什么变化吧. 假设现在训练集中有一个样本, $y$为$2.0$, $x_1$为$1.0$, $x_2$为$1.0$.</p>
+<p>先试试加入L1正则损失项:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+&y=2x_1=2.0&    &Loss=|2.0|+|0.0|=2.0 \\[7mm]
+&y=x_1+x_2=2.0&    &Loss=|1.0|+|1.0|=2.0 \\[7mm]
+&y=10x_1-8x_2=2.0&    &Loss=|10.0|+|8.0|=18.0 \\[7mm]
+\end{align*}</script><p>再来看加入L2正则损失项:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+&y=2x_1=2.0&    &Loss=0.5\times(4.0+0.0)=2.0 \\[7mm]
+&y=x_1+x_2=2.0&    &Loss=0.5\times(1.0+1.0)=1.0 \\[7mm]
+&y=10x_1-8x_2=2.0&    &Loss=0.5\times(100.0+64.0)=82.0 \\[7mm]
+\end{align*}</script><p>从上面可以很容易看出, 在加了正则损失项以后, 即使各模型能够得拟合得到一样的结果, 但是系数更小(向0靠拢)的模型, 整体损失会更小.</p>
+<p>综上, 结合具体的栗子, 可以知道怎样的模型, 会容易过拟合. 同时也说明了使用正则损失项以后, 能够有效地避免这样的情况, 即模型参数向0靠拢, 那么进一步, L1和L2有什么特点和区别呢, 下面来进行讲解.</p>
+<h1 id="L1与L2的由来"><a href="#L1与L2的由来" class="headerlink" title="L1与L2的由来"></a>L1与L2的由来</h1><p>在上一节中, 是将L1和L2正则的形式, 直接搬了出来, 其实在一些经典的统计模型(如逻辑回归)中, 是可以通过一些基本假设, 从而推导得到的, 下面就用逻辑回归来进行演示.</p>
+<p>关于线性模型的一些相关理论, 可以看一下我的<a href="whitemoonlight.top/2020/10/10/传统机器学习/逻辑回归/">这篇</a>讲解. 在统计中, 可以分为频率学派和贝叶斯学派, 其中频率学派讲求从观察到的现象, 来总结规律, 通俗来讲, 看到的数据是什么样的, 那就是什么样的. 而贝叶斯学派表示, 不能完全相信已观察的数据, 因为现有数据可能并不能代表总体数据, 需要给出先验信息.</p>
+<p>具体说来, 比如对逻辑回归模型进行优化, 如果是频率学派来做, 那么就会首先写出模型的似然函数, 然后根据MLE(极大似然估计), 来进行模型参数的估计和学习.</p>
+<script type="math/tex; mode=display">
+h_w(x)=P(y=1|x;w) \\[7mm]
+P(y|x;w)=h_w(x)^y\cdot \big(1-h_w(x)\big)^{1-y}</script><p>现在换贝叶斯学派来做, 说这样还不够, 模型参数本身应该满足一些先验分布$P(w)$, 再根据大名鼎鼎的贝叶斯公式:</p>
+<script type="math/tex; mode=display">
+P(A|B)=\frac{P(B|A)P(A)}{P(B)}</script><p>可得:</p>
+<script type="math/tex; mode=display">
+P(w|x;y)\sim P(y|x;w)P(w)</script><p>由于在优化过程中$P(x;y)$可以看做常量, 故省去. 上式即为MAP(最大后验估计), 在原本的似然分布的基础上, 增加了一个先验分布$P(w)$, 对应$P(w|x;y)$称为后验分布.</p>
+<p>同时, 若计算得到的后验分布的形式与先验分布, 在形式上一直(比如都是正态分布), 那么称该先验分布为对应似然分布的共轭分布. 这里稍微说一下共轭分布的好处, 由于先验分布与后验分布形式一致, 那么这一次由一批样本经过计算得到的后验分布, 在下一次另一批样本中, 可以当做其先验分布, 从而实现了可以增量计算. 常见的共轭分布, 比如有伯努利分布与贝塔分布, 多项式分布与狄利克雷分布.</p>
+<p>现在来看一个具体的栗子, 假设逻辑回归的先验分布为正态分布, 则:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+J(w)&=-\ln L(w) \\
+&=-\ln P(y|x;w)P(w) \\
+&=-\ln P(y|x;w)-\ln P(w) \\
+&=-\ln P(y|x;w)-\ln \alpha \exp\frac{-w^2}{\beta} \\
+&=-\ln P(y|x;w)+\lambda w^2+constant
+\end{align*}</script><p>可以看到在对MAP做了负对数后, 就是在原本没有加先验信息对应的损失函数后, 增加了$\lambda w^2$这一项, 就是平时见到的L2正则项.</p>
+<p>而如果假设先验分布是拉普拉斯分布, 则:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+J(w)&=-\ln P(y|x;w)-\ln P(w) \\
+&=-\ln P(y|x;w)-\ln \alpha \exp\frac{-|w|}{\beta} \\
+&=-\ln P(y|x;w)+\lambda |w|+constant
+\end{align*}</script><p>这就是L1正则项的形式.</p>
+<p>上面通过介绍贝叶斯学派的做法, 由MLE到MAP, 再通过具体的栗子说明了L1与L2正则的由来, 下面具体讲解L1与L2正则的特点与区别.</p>
+<h1 id="L1倾向于稀疏解"><a href="#L1倾向于稀疏解" class="headerlink" title="L1倾向于稀疏解"></a>L1倾向于稀疏解</h1><p>前面已经说到了, L1和L2都能够使得模型参数向0靠拢, 但是要说它们之间最大的区别, 可能就是L1相比L2更加能够使得模型参数具有稀疏性.</p>
+<p>先问是不是, 在考虑为什么.</p>
+<p>这里仍然使用一个线性回归的小栗子, 来说明L1相比L2会使得模型参数稀疏(等于0).</p>
+<p>仍然仿照之前的做法, 假设有一个线性回归模型:</p>
+<script type="math/tex; mode=display">
+y=w_0+w_1x_1+w_2x_2  \tag{5}</script><p>并假设原本的数据是人为产生的, 产生的式子为:</p>
+<script type="math/tex; mode=display">
+y=3x_1+\epsilon \\[7mm]
+x_2=2x_1+\epsilon'</script><p>即只需要一个变量$x_1$就能够拟合$y$, $x_1$与$x_2$为高度相关. 此时若仍然使用(5)式去进行拟合, 且只使用平方误差作为损失函数, 并分别使用L1与L2正则, 会得到怎么样的结果呢? </p>
+<p>首先考虑L2正则, 在拟合$y$值完全正确的情况下, $x_1$与$x_2$的系数有多种组合:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+&y=3x_1&    &Loss=0.5\times(9.0+0.0)=4.5 \\[7mm]
+&y=x_1+x_2&    &Loss=0.5\times(1.0+1.0)=1.0 \\[7mm]
+&y=0.6x_1+1.2x_2&    &Loss=0.5\times(0.36+1.44)=0.9 \\[7mm]
+&y=1.5x_2&    &Loss=0.5\times(0.0+2.25)=1.125 \\[7mm]
+\end{align*}</script><p>从上面的几个模型对应的损失, 可以发现, 当系数集中在某个变量上时, 损失较大, 而当系数分摊到各个变量时, 损失较小. 其实$y=0.6x_1+1.2x_2$应该就是这里损失最小的模型, $x_1$与$x_2$高度正相关, 单位$x_2$对$y$造成的影响是$x_1$的两倍, 那么对应其在模型中的权重系数, $x_2$就是$x_1$的两倍.</p>
+<p>是的, L2的特点是让模型参数向0靠拢, 同时会尽可能地按照各个自变量对因变量的贡献(影响), 来将权重系数(参数)分配给它们, 使得权重系数比较均匀.</p>
+<p>接着来考虑L1正则, 同上, 在拟合$y$值完全正确的情况下, $x_1$与$x_2$的系数有多种组合:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+&y=3x_1&    &Loss=|3.0|+0.0=3.0 \\[7mm]
+&y=x_1+x_2&    &Loss=|1.0|+|1.0|=2.0 \\[7mm]
+&y=0.6x_1+1.2x_2&    &Loss=|0.6|+|1.2|=1.8 \\[7mm]
+&y=1.5x_2&    &Loss=|0.0|+|1.5|=1.5 \\[7mm]
+\end{align*}</script><p>先说结论, $y=1.5x_2$是这里L1下的最优模型. 在L1的眼中, 如果发现某个变量($x_1$), 能够被一个更强的变量$x_2$代替掉, 那么它不会像L2那样仍然分一些权重系数给相对弱的变量, 而是会直接将其系数变为0, 以使得正则损失最小. 当然, L1正则将某个参数变为0, 也不一定是这个参数有一个上位替代, 也可能是这个参数对应的变量本身不显著.</p>
+<p>从上面的小栗子可以看得出来, L1好像相比L2确实更容易使得模型参数稀疏, 那么为什么呢? 这里从三个角度来进行解释.</p>
+<h2 id="先验分布"><a href="#先验分布" class="headerlink" title="先验分布"></a>先验分布</h2><p>在上文中已经说过, L1正则可以由拉普拉斯分布得到, L2正则可以由正态分布得到, 而正态分布一般来说是长这样的:</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>拉普拉斯分布长这样:</p>
+<p><img src="fig_1.png" alt="fig"></p>
+<p>对比这两个分布, 可以发现, 在靠近期望(比如0)时, 对于正态分布来说, 相对比较平缓, 也就是说在期望的附近, 仍然有不小的概率密度分布.</p>
+<p>但是对于拉普拉斯分布来说, 期望附近的概率密度分布比较陡峭, 更多的概率集中在期望值那里, 往两侧则迅速下降.</p>
+<p>所以, 从先验分布来看, L1正则相比L2正则更容易使模型参数趋向于0.</p>
+<h2 id="几何解释"><a href="#几何解释" class="headerlink" title="几何解释"></a>几何解释</h2><p>几何解释也是相对直观的一种方法:</p>
+<p><img src="fig_2.png" alt="fig"></p>
+<p>上图中, 左边对应L2正则的损失函数, 右边对应L1正则的损失函数. 蓝色误差等高线表示模型损失项, 橙色图形表示正则损失项, $w_1$和$w_2$表示模型参数.</p>
+<p>先看蓝色部分, 如果不考虑正则损失, 那么图中的蓝色中心点, 应该是最优模型参数.</p>
+<p>再看橙色部分, 对于L2对应的正态分布来说, 正则损失的误差等高线是一个中心在原点的圆; 对于L1对应的拉普拉斯分布来说, 正则损失的误差等高线是一个中心在原点的正方形(侧转45度).</p>
+<p>而最优模型参数在哪呢, 或者说可能出现在哪呢? 只可能出现在蓝色的误差等高线和橙色的误差等高线的切点上. 所谓切点, 即两个图像在边缘处有且只有一个公共点(交点).</p>
+<p>为什么必须是切点呢, 因为如果假设不是切点(有两个交点), 那么固定其中一个误差等高线不动, 将另外一个误差等高线往其中心缩小, 那么在这个过程中, 整体的损失函数必然是在下降的, 所以这就是必须是切点的原因.</p>
+<p>现在明白了最优点可能出现在两个误差等高线的切点处, 分别来看两个正则项的差异. 对L2正则项来说, 正则损失的误差等高线是一个光滑的圆, 其切点出现的位置并不带有任何偏向性, 结合模型损失项的误差等高线, 切点可以出现在各个方向上. 而对于L1正则项来说, 正则损失的误差等高线是”不光滑”的, 在轴的方向上更为突出, 这就会导致切点出现的位置, 更有可能在某个轴上, 对应的就会有其它一些轴的变量参数为0.</p>
+<p>其实这里几何解释, 本质上也是两种分布的差异带来的结果.</p>
+<h2 id="数学解释"><a href="#数学解释" class="headerlink" title="数学解释"></a>数学解释</h2><p>最后, 再用偏数学的方法, 来对L1容易形成稀疏性进行解释.</p>
+<p>在给出带正则项的损失函数后, 使用常用的梯度下降法进行优化.</p>
+<p>对于L2正则:</p>
+<script type="math/tex; mode=display">
+Loss=L(y,f(x))+\frac{1}{2}\lambda\sum_iw_i^2 \\[7mm]
+\frac{\partial Loss}{\partial w_i}=\frac{\partial L}{\partial w_i}+\lambda w_i \\[7mm]
+w_i'=w_i-\eta\frac{\partial Loss}{\partial w_i}=(1-\eta\lambda)w_i-\eta\frac{\partial L}{\partial w_i}</script><p>一般来说, 正则参数$\lambda$比较小, 学习率$\eta$也小于0, 所以前面一项$(1-\eta\lambda)w_i$可以看做是在对$w_i$做一个缩小, 且$\lambda$越大, 缩小幅度越大, 但并不会直接将其变成0.</p>
+<p>再来看L1正则, 严格意义上$|w_i|$在0点不可导, 所以采用分段优化:</p>
+<script type="math/tex; mode=display">
+Loss=L(y,f(x))+\lambda\sum_i|w_i| \\[7mm]</script><p>当$w_i\le0$时:</p>
+<script type="math/tex; mode=display">
+\frac{\partial Loss}{\partial w_i}=\frac{\partial L}{\partial w_i}-\lambda \\[7mm]
+w_i'=\min\bigg(0,w_i-\eta\frac{\partial Loss}{\partial w_i}\bigg)=\min\bigg(0,w_i+\eta\lambda-\eta\frac{\partial L}{\partial w_i}\bigg)</script><p>当$w_i&gt;0$时:</p>
+<script type="math/tex; mode=display">
+\frac{\partial Loss}{\partial w_i}=\frac{\partial L}{\partial w_i}+\lambda \\[7mm]
+w_i'=\max\bigg(0,w_i-\eta\frac{\partial Loss}{\partial w_i}\bigg)=\max\bigg(0,w_i-\eta\lambda-\eta\frac{\partial L}{\partial w_i}\bigg)</script><p>观察上面的结果, 发现相比L2时每次迭代进行缩放, 在L1这里每次迭代会直接用相加或相减正则参数, 来向0靠拢. 同时由于分段优化的条件, 当模型损失项的梯度作用小于正则项梯度, 参数更新越过0值时, 会被直接置为0, 即损失函数极小值(最小值)出现在边界0处. 此后, 若模型损失项的梯度的绝对值一直小于正则项梯度绝对值时, 对应模型参数将会被固定在0处:</p>
+<script type="math/tex; mode=display">
+-\lambda\le-\frac{\partial L}{\partial w_i}\le\lambda,\quad w_i=0</script><p>以上, 就是关于L1为什么相比L2更容易形成稀疏性的数学解释了. 这里再用通俗的话来表述一遍, 对于L1正则来说, 就好像在0附近, 有一块强力磁铁, 这块磁铁比较特殊, 它对于任何位置的参数, 吸引力是一样的, 但是一旦当参数被吸附到0点, 除非有比较强大的动能(模型损失梯度), 来帮助参数脱离磁铁, 否则难以脱身. 这样说, 会不会更加通俗易懂了呢♪(^∇^*)</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>以上, 便是L1与L2正则的全部内容了, 通过介绍机器学习中的过拟合现象, 引入L1与L2正则方法来抑制过拟合. 然后进一步阐述了L1与L2的特点与区别, 并详细说明了为什么L1相比L2, 更容易得到稀疏解(模型参数).</p>
+<p>在真实的场景中, L1和L2是可以混用的, 并且由于在大数据场景下, 由于特征非常多, 模型可能也很复杂, 这时候使用L1使得模型参数稀疏化, 会带来一些工程上的便利. 不过L1正则也不是在仍和场景下, 都能够给模型参数带来稀疏性, 而这个问题, 将会在以后介绍FTRL时再进行讨论.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/传统机器学习/" rel="tag"># 传统机器学习</a>
+          
+            <a href="/tags/L1正则/" rel="tag"># L1正则</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/13/传统机器学习/概率校准/" rel="next" title="概率校准">
+                <i class="fa fa-chevron-left"></i> 概率校准
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/15/传统机器学习/为什么梯度是上升最快的方向/" rel="prev" title="为什么梯度是上升最快的方向">
+                为什么梯度是上升最快的方向 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#抑制过拟合"><span class="nav-number">2.</span> <span class="nav-text">抑制过拟合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#L1与L2的由来"><span class="nav-number">3.</span> <span class="nav-text">L1与L2的由来</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#L1倾向于稀疏解"><span class="nav-number">4.</span> <span class="nav-text">L1倾向于稀疏解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#先验分布"><span class="nav-number">4.1.</span> <span class="nav-text">先验分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几何解释"><span class="nav-number">4.2.</span> <span class="nav-text">几何解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数学解释"><span class="nav-number">4.3.</span> <span class="nav-text">数学解释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

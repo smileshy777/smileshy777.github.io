@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="这一篇中, 将会介绍著名的YouTubeNet, 着重于其召回部分, 并进行简单地代码复现.">
+<meta name="keywords" content="召回,推荐系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YouTubeNet召回">
+<meta property="og:url" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/index.html">
+<meta property="og:site_name" content="阿枂蛋糕店">
+<meta property="og:description" content="这一篇中, 将会介绍著名的YouTubeNet, 着重于其召回部分, 并进行简单地代码复现.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_0.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_1.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_2.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_3.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_4.png">
+<meta property="og:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_5.png">
+<meta property="og:updated_time" content="2020-12-12T13:21:45.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="YouTubeNet召回">
+<meta name="twitter:description" content="这一篇中, 将会介绍著名的YouTubeNet, 着重于其召回部分, 并进行简单地代码复现.">
+<meta name="twitter:image" content="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/fig_0.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>YouTubeNet召回 | 阿枂蛋糕店</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿枂蛋糕店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">在下月小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://smileshy777.github.io/2020/10/10/推荐系统/YouTubeNet召回/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="月小白">
+      <meta itemprop="description" content="这是一家有爱的小店">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿枂蛋糕店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">YouTubeNet召回
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-10 22:15:55" itemprop="dateCreated datePublished" datetime="2020-10-10T22:15:55+08:00">2020-10-10</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-12-12 21:21:45" itemprop="dateModified" datetime="2020-12-12T21:21:45+08:00">2020-12-12</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/推荐系统/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一篇中, 将会介绍著名的YouTubeNet, 着重于其召回部分, 并进行简单地代码复现.</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>对原文Deep Neural Networks for YouTube Recommendations感兴趣的同学, 可以点<a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf" target="_blank" rel="noopener">这里</a>.</p>
+<p>这篇论文大概讲了个啥事呢, 就是说对于YouTube这家很大的视频分享网站来说, 能够快速地, 精准地推荐给用户喜欢的视频, 以提高用户的观看时长, 是有效提高其商业利润的关键. 据此, YouTube整体采用了召回-排序的系统架构, 如下图:</p>
+<p><img src="fig_0.png" alt="fig"></p>
+<p>第一级用候选集生成模型(Candidate Generation Model)完成对海量候选视频的快速筛选; 第二级采用排序模型(Ranking Model), 完成对几百个候选视频的精排.</p>
+<p>本文重点介绍YouTubeNet的召回部分, 因为我认为其具有一定的通用性与代表性.</p>
+<p>下文中的YouTubeNet都是指的召回部分的模型.</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>回想前面介绍的一些召回方法, 如协同过滤一类的模型, 对于这类模型来说, 一个很明显的特征就是只使用到了用户与物品的ID信息.</p>
+<p>但是实际上, 还有一些其它特征是可以拿来使用的, 理论上更多的信息一般可以带来更好的, 至少是不一样的效果, 所以是有必要进行尝试的.</p>
+<p>而YouTubeNet正是很好地在模型中, 加入了更多的信息, 同时也维持了工程上的实用性, 下面来对YouTubeNet进行具体的讲解.</p>
+<p><img src="fig_1.png" alt="fig"></p>
+<p>模型结构如上图, 我们从下往上来说.</p>
+<p>最下面的是特征输入层, 图中包含了如下一些特征:</p>
+<ul>
+<li>用户历史观看视频Embedding.</li>
+<li>搜索词Embedding.</li>
+<li>地理属性特征Embedding.</li>
+<li>样本年龄.</li>
+<li>性别.</li>
+</ul>
+<p>其中前面的一些Embedding, 可以是一些通过其他方法(如item2vec)预训练好的向量. 样本年龄, 指的应该是目标推荐视频的上传时间, 距离推荐预测时的时间间隔, 其目的是说, 一个视频通常在刚上传的一段时间有较高热度, 而后下降, 通过这个特征可以来对这种情况进行刻画. 性别当然就是用户的一些基础特征了.</p>
+<p>上面的特征有什么共同特点吗, 是的, 它们都是用户侧的特征. 为什么不加物品侧的特征呢, 这与整体的模型设计架构有关, 接着往上看.</p>
+<p>在有了特征以后, 往上就是常见的全连接神经网络MLP了, 没啥好说的.</p>
+<p>然后是最上面, 咋一看有些复杂, 先看右边的训练部分.</p>
+<p>YouTubeNet在训练时, 学习任务是”predicting the next watched video”, 即一个多分类问题, 通过用户的信息, 预测用户下一次会观看哪个视频.</p>
+<p>MLP最后一层ReLU输出的向量, 可以当做是用户的Embedding, 因为前面说了, 底层特征全是关于用户的信息.</p>
+<p>而softmax层, 可以看成一个$k\times n$的矩阵(最后一层ReLU输出的向量维度为$k$, 物品数量为$n$), 此时YouTubeNet比较精髓的地方来了, 物品的Embedding, 可以用$k\times n$矩阵中的权重系数来进行表示! 物品向量与用户向量都是$k$维, 当两者内积较大时, 表明用户会观看该视频.</p>
+<p>接下来考虑一个问题, 这个模型训练好了以后, 怎么使用呢? 作为一个召回模型, 应该能够快速地在海量视频中, 捞出候选集, 如果是这样一个多分类模型的话, 那么是跑一遍模型, 然后将输出概率较大的一些视频作为候选集吗?</p>
+<p>这里就要说到一个效率问题了, 对于预测目标很多(海量视频)的softmax来说, 运算一次是费劲的. 所以在训练时, 可以使用负采样的方法.</p>
+<p>负采样, 永远滴神!</p>
+<p>而在训练完, 进行召回服务的时候, 是不需要再过一遍模型的. 前面说到了, MLP的最后一层可以当做用户的Embedding, softmax对应的矩阵, 可以当做物品的Embedding. 可以把这些Embedding事先进行存储, 然后要对某个用户进行召回时, 直接拿该用户的Embedding, 去物品的Embedding集中使用某种方法进行最近邻检索, 筛选出TOP-N个物品, 可以非常地快.</p>
+<p>如果不去深究某些特别细节的东西, YouTubeNet是朴实无华的, 总结一下其整体流程:</p>
+<ul>
+<li>训练.<ul>
+<li>输出用户侧特征.</li>
+<li>经过MLP得到用户Embedding.</li>
+<li>经过softmax预测用户是否观看视频.</li>
+<li>softmax矩阵表示物品Embedding, 可用负采样训练.</li>
+</ul>
+</li>
+<li>服务.<ul>
+<li>储存用户与物品的Embedding.</li>
+<li>给定用户Embedding, 使用最近邻算法检索出TOP-N物品.</li>
+</ul>
+</li>
+</ul>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>这里使用的数据, 仍然是经典的<a href="https://grouplens.org/datasets/movielens/" target="_blank" rel="noopener">movielens</a>的MovieLens 1M Dataset.</p>
+<p>其中包含约100万的用户对电影的打分记录, 由约6000用户对约4000电影打分而得到.</p>
+<p>包含3份数据, 一份是打分文件”rating.dat”, 格式为<code>用户ID::电影ID::打分::时间戳</code>, 并且:</p>
+<ul>
+<li>用户ID在1到6040之间.</li>
+<li>电影ID在1到3952之间.</li>
+<li>打分有5个等级.</li>
+<li>每个用户至少有20条打分记录.</li>
+</ul>
+<p>一份是用户文件”user.dat”, 格式为<code>用户ID::性别::年龄::职业::邮编</code>.</p>
+<p>还有一份电影文件”movies.dat”, 格式为<code>电影ID::电影名称::风格流派</code>.</p>
+<p>这里有具体的每个用户给每个电影的打分, 这里为了模拟负采样下二分类的学习任务, 将对根据每个用户整体的打分水平, 将其中打分偏高的作为正样本, 打分偏低的作为负样本.</p>
+<p>而对于用户侧的信息, 这里仅选择直接给到的特征:</p>
+<ul>
+<li>用户ID.</li>
+<li>性别.</li>
+<li>年龄.</li>
+<li>职业.</li>
+</ul>
+<p>在数据预处理的过程中, 为了保证模型能够有效学习, 把记录过少的用户与电影进行过滤, 同时对于过于活跃的用户以及被观看次数过多的电影, 进行随机下采样.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line"></span><br><span class="line">data_list = []</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/ml-1m/ratings.dat'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        line = line.strip()</span><br><span class="line">        data_list.append(line.split(<span class="string">'::'</span>))</span><br><span class="line">    f.close()</span><br><span class="line">data_list[:<span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[[&apos;1&apos;, &apos;1193&apos;, &apos;5&apos;, &apos;978300760&apos;],</span><br><span class="line"> [&apos;1&apos;, &apos;661&apos;, &apos;3&apos;, &apos;978302109&apos;],</span><br><span class="line"> [&apos;1&apos;, &apos;914&apos;, &apos;3&apos;, &apos;978301968&apos;],</span><br><span class="line"> [&apos;1&apos;, &apos;3408&apos;, &apos;4&apos;, &apos;978300275&apos;],</span><br><span class="line"> [&apos;1&apos;, &apos;2355&apos;, &apos;5&apos;, &apos;978824291&apos;]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">n_user = len(set([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list]))</span><br><span class="line">n_item = len(set([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list]))</span><br><span class="line">n_user, n_item</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(6040, 3706)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计分析数据集中的用户观看影片数量分布</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line">c_user = Counter([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list])</span><br><span class="line">sns.distplot(list(c_user.values()), bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_2.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对观看影片多于500的用户进行随机抽样, 避免样本占比过多影响模型学习</span></span><br><span class="line">df = pd.DataFrame(data_list, columns=[<span class="string">'user_id'</span>, <span class="string">'item_id'</span>, <span class="string">'score'</span>, <span class="string">'time'</span>])</span><br><span class="line"></span><br><span class="line">sample_user = [x <span class="keyword">for</span> x <span class="keyword">in</span> c_user <span class="keyword">if</span> c_user[x] &gt; <span class="number">500</span>]</span><br><span class="line"></span><br><span class="line">res_df = pd.DataFrame()</span><br><span class="line"><span class="keyword">for</span> user <span class="keyword">in</span> sample_user:</span><br><span class="line">    tmp_df = df.loc[df[<span class="string">'user_id'</span>] == user].sample(n=<span class="number">500</span>, random_state=<span class="number">7</span>)</span><br><span class="line">    res_df = res_df.append(tmp_df)</span><br><span class="line">    </span><br><span class="line">res_df = res_df.append(df.loc[~df[<span class="string">'user_id'</span>].isin(sample_user)])</span><br><span class="line"></span><br><span class="line">data_list = res_df.values.tolist()</span><br><span class="line"></span><br><span class="line">c_user = Counter([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list])</span><br><span class="line">sns.distplot(list(c_user.values()), bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_3.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计分析数据集中的影片被观看次数分布</span></span><br><span class="line"></span><br><span class="line">c_item = Counter([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list])</span><br><span class="line">sns.distplot(list(c_item.values()), bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_4.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对被观看多于500的电影进行随机抽样, 避免样本占比过多影响模型学习</span></span><br><span class="line">df = pd.DataFrame(data_list, columns=[<span class="string">'user_id'</span>, <span class="string">'item_id'</span>, <span class="string">'score'</span>, <span class="string">'time'</span>])</span><br><span class="line"></span><br><span class="line">sample_item = [x <span class="keyword">for</span> x <span class="keyword">in</span> c_item <span class="keyword">if</span> c_item[x] &gt; <span class="number">500</span>]</span><br><span class="line"></span><br><span class="line">res_df = pd.DataFrame()</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> sample_item:</span><br><span class="line">    tmp_df = df.loc[df[<span class="string">'item_id'</span>] == item].sample(n=<span class="number">500</span>, random_state=<span class="number">7</span>)</span><br><span class="line">    res_df = res_df.append(tmp_df)</span><br><span class="line"></span><br><span class="line">res_df = res_df.append(df.loc[~df[<span class="string">'item_id'</span>].isin(sample_item)])</span><br><span class="line"></span><br><span class="line">data_list = res_df.values.tolist()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 统计分析数据集中的影片被观看次数分布</span></span><br><span class="line"></span><br><span class="line">c_item = Counter([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list])</span><br><span class="line">sns.distplot(list(c_item.values()), bins=<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="fig_5.png" alt="fig"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(data_list), len(data_list) * <span class="number">0.7</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(662366, 463656.19999999995)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加用户其它信息</span></span><br><span class="line"></span><br><span class="line">user_list = []</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'./data/ml-1m/users.dat'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        line = line.strip()</span><br><span class="line">        user_list.append(line.split(<span class="string">'::'</span>))</span><br><span class="line">    f.close()</span><br><span class="line">user_df = pd.DataFrame(user_list, columns=[<span class="string">'user_id'</span>, <span class="string">'gender'</span>, <span class="string">'age'</span>, <span class="string">'occupation'</span>, <span class="string">'zip'</span>])</span><br><span class="line">user_df.head()</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">user_id</th>
+<th style="text-align:right">gender</th>
+<th style="text-align:right">age</th>
+<th style="text-align:right">occupation</th>
+<th style="text-align:right">zip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">F</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">48067</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">M</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">70072</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">M</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">55117</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">M</td>
+<td style="text-align:right">45</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">02460</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">M</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">55455</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">user_set = set([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data_list])</span><br><span class="line">user_df = user_df.loc[user_df[<span class="string">'user_id'</span>].isin(list(user_set))]</span><br><span class="line"><span class="keyword">del</span> user_df[<span class="string">'zip'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelEncoder</span><br><span class="line"><span class="keyword">for</span> ft <span class="keyword">in</span> [<span class="string">'gender'</span>, <span class="string">'age'</span>, <span class="string">'occupation'</span>]:</span><br><span class="line">    led = LabelEncoder()</span><br><span class="line">    user_df[ft] = led.fit_transform(user_df[ft])</span><br><span class="line">    </span><br><span class="line">user_list = user_df.values</span><br><span class="line">user_dict = dict(zip(user_list[:, <span class="number">0</span>], user_list[:, <span class="number">1</span>:]))</span><br><span class="line"></span><br><span class="line">data_list = [x + list(user_dict[x[<span class="number">0</span>]]) <span class="keyword">for</span> x <span class="keyword">in</span> data_list]</span><br><span class="line"></span><br><span class="line">data_list[:<span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[[&apos;4959&apos;, &apos;2394&apos;, &apos;4&apos;, &apos;962634004&apos;, 1, 2, 9],</span><br><span class="line"> [&apos;1606&apos;, &apos;2394&apos;, &apos;3&apos;, &apos;974736208&apos;, 0, 3, 14],</span><br><span class="line"> [&apos;2308&apos;, &apos;2394&apos;, &apos;5&apos;, &apos;974487994&apos;, 0, 4, 8],</span><br><span class="line"> [&apos;3285&apos;, &apos;2394&apos;, &apos;2&apos;, &apos;968118037&apos;, 1, 2, 15],</span><br><span class="line"> [&apos;2325&apos;, &apos;2394&apos;, &apos;5&apos;, &apos;974435017&apos;, 0, 1, 15]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据每个用户的打分, 把样本分为正/负样本</span></span><br><span class="line">user_score_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> list_ <span class="keyword">in</span> data_list:</span><br><span class="line">    user = list_[<span class="number">0</span>]</span><br><span class="line">    score = int(list_[<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">if</span> user <span class="keyword">not</span> <span class="keyword">in</span> user_score_dict:</span><br><span class="line">        user_score_dict[user] = [score, <span class="number">1</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        user_score_dict[user][<span class="number">0</span>] += score</span><br><span class="line">        user_score_dict[user][<span class="number">1</span>] += <span class="number">1</span></span><br><span class="line">user_mean_score_dict = dict([(x, user_score_dict[x][<span class="number">0</span>] / user_score_dict[x][<span class="number">1</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> user_score_dict])</span><br><span class="line">data_list = [x + [int(int(x[<span class="number">2</span>]) &gt; user_mean_score_dict[x[<span class="number">0</span>]])] <span class="keyword">for</span> x <span class="keyword">in</span> data_list]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按时间戳排序, 并按排序划分训练集/测试集</span></span><br><span class="line"></span><br><span class="line">data_list = list(sorted(data_list, key=<span class="keyword">lambda</span> x: x[<span class="number">3</span>]))</span><br><span class="line">train_list = data_list[:<span class="number">463656</span>]</span><br><span class="line">test_list = data_list[<span class="number">463656</span>:]</span><br><span class="line">len(train_list), len(test_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(463656, 198710)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将训练集中, 影片被观看次数少于20的剔除</span></span><br><span class="line">c_item_train = Counter([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> train_list])</span><br><span class="line"></span><br><span class="line">drop_item_set = set([x <span class="keyword">for</span> x <span class="keyword">in</span> c_item_train <span class="keyword">if</span> c_item_train[x] &lt; <span class="number">20</span>])</span><br><span class="line">new_train_list = []</span><br><span class="line"><span class="keyword">for</span> list_ <span class="keyword">in</span> train_list:</span><br><span class="line">    <span class="keyword">if</span> list_[<span class="number">1</span>] <span class="keyword">not</span> <span class="keyword">in</span> drop_item_set:</span><br><span class="line">        new_train_list.append(list_)</span><br><span class="line">train_list = new_train_list</span><br><span class="line"></span><br><span class="line">len(train_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">456504</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将训练集中, 观看影片次数少于20的用户删除</span></span><br><span class="line">c_user_train = Counter([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> train_list])</span><br><span class="line">drop_user_set = set([x <span class="keyword">for</span> x <span class="keyword">in</span> c_user_train <span class="keyword">if</span> c_user_train[x] &lt; <span class="number">20</span>])</span><br><span class="line">new_train_list = []</span><br><span class="line"><span class="keyword">for</span> list_ <span class="keyword">in</span> train_list:</span><br><span class="line">    <span class="keyword">if</span> list_[<span class="number">0</span>] <span class="keyword">not</span> <span class="keyword">in</span> drop_item_set:</span><br><span class="line">        new_train_list.append(list_)</span><br><span class="line">train_list = new_train_list</span><br><span class="line"></span><br><span class="line">len(train_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集中, 没有在训练集出现过的物品剔除</span></span><br><span class="line">train_item_set = set([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> train_list])</span><br><span class="line">new_test_list = []</span><br><span class="line"><span class="keyword">for</span> list_ <span class="keyword">in</span> test_list:</span><br><span class="line">    <span class="keyword">if</span> list_[<span class="number">1</span>] <span class="keyword">in</span> train_item_set:</span><br><span class="line">        new_test_list.append(list_)</span><br><span class="line">test_list = new_test_list</span><br><span class="line"></span><br><span class="line">len(test_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">194354</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将测试集中, 没有在训练集出现过的用户剔除</span></span><br><span class="line">train_user_set = set([x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> train_list])</span><br><span class="line">new_test_list = []</span><br><span class="line"><span class="keyword">for</span> list_ <span class="keyword">in</span> test_list:</span><br><span class="line">    <span class="keyword">if</span> list_[<span class="number">0</span>] <span class="keyword">in</span> train_user_set:</span><br><span class="line">        new_test_list.append(list_)</span><br><span class="line">test_list = new_test_list</span><br><span class="line"></span><br><span class="line">len(test_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">66537</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 整理用户, 电影的编号</span></span><br><span class="line">train_user_dict = dict(zip(train_user_set, range(len(train_user_set))))</span><br><span class="line"></span><br><span class="line">train_item_set = set([x[<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> train_list])</span><br><span class="line">train_item_dict = dict(zip(train_item_set, range(len(train_item_set))))</span><br><span class="line"></span><br><span class="line">train_dataset = np.array([[train_user_dict[x[<span class="number">0</span>]], train_item_dict[x[<span class="number">1</span>]], x[<span class="number">4</span>], x[<span class="number">5</span>], x[<span class="number">6</span>], x[<span class="number">-1</span>]] <span class="keyword">for</span> x <span class="keyword">in</span> train_list])</span><br><span class="line">test_dataset = np.array([[train_user_dict[x[<span class="number">0</span>]], train_item_dict[x[<span class="number">1</span>]], x[<span class="number">4</span>], x[<span class="number">5</span>], x[<span class="number">6</span>], x[<span class="number">-1</span>]] <span class="keyword">for</span> x <span class="keyword">in</span> test_list])</span><br><span class="line"></span><br><span class="line"><span class="comment"># shuffle</span></span><br><span class="line">np.random.seed(<span class="number">7</span>)</span><br><span class="line">np.random.shuffle(train_dataset)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># user_id, gender, age, occupation, item_id</span></span><br><span class="line">train_dataset, train_y = train_dataset[:, [<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">1</span>]], train_dataset[:, <span class="number">-1</span>]</span><br><span class="line">test_dataset, test_y = test_dataset[:, [<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">1</span>]], test_dataset[:, <span class="number">-1</span>]</span><br><span class="line">train_dataset.max(axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([4177,    1,    6,   20, 2716])</span><br></pre></td></tr></table></figure>
+<h2 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sparse_feature</span><span class="params">(name, num, dim=<span class="number">8</span>)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    返回离散特征信息字典.</span></span><br><span class="line"><span class="string">    :param name: 特征名称.</span></span><br><span class="line"><span class="string">    :param num: 特征离散属性数量.</span></span><br><span class="line"><span class="string">    :param dim: Embedding维度.</span></span><br><span class="line"><span class="string">    :return: 信息字典.</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'name'</span>: name, <span class="string">'num'</span>: num, <span class="string">'dim'</span>: dim, <span class="string">'type'</span>: <span class="string">'sparse'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dense_feature</span><span class="params">(name)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    返回稠密特征信息字典.</span></span><br><span class="line"><span class="string">    :param name: 特征名称.</span></span><br><span class="line"><span class="string">    :return: 信息字典.</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'name'</span>: name, <span class="string">'type'</span>: <span class="string">'dense'</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line">tf.random.set_seed(<span class="number">7</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">YouTubeNet</span><span class="params">(keras.Model)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, feature_info_list)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        :param feature_info_list: 包含各个特征信息(字典)的列表.</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.feature_info_list = feature_info_list</span><br><span class="line">        self.item_dim = feature_info_list[<span class="number">-1</span>][<span class="string">'dim'</span>]</span><br><span class="line">        self.item_num = feature_info_list[<span class="number">-1</span>][<span class="string">'num'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self, input_shape)</span>:</span></span><br><span class="line">        self.embedding_list = []</span><br><span class="line">        <span class="keyword">for</span> ft_info <span class="keyword">in</span> self.feature_info_list[:<span class="number">-1</span>]:</span><br><span class="line">            <span class="keyword">if</span> ft_info[<span class="string">'type'</span>] == <span class="string">'sparse'</span>:</span><br><span class="line">                dim = ft_info[<span class="string">'dim'</span>]</span><br><span class="line">                num = ft_info[<span class="string">'num'</span>]</span><br><span class="line">                self.embedding_list.append(keras.layers.Embedding(num, dim, input_length=<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">elif</span> ft_info[<span class="string">'type'</span>] == <span class="string">'dense'</span>:</span><br><span class="line">                self.embedding_list.append(<span class="literal">None</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">raise</span> Exception(<span class="string">'特征类型错误!'</span>)</span><br><span class="line"></span><br><span class="line">        self.relu_layer_0 = keras.layers.Dense(<span class="number">200</span>, activation=<span class="string">'relu'</span>)</span><br><span class="line">        self.relu_layer_1 = keras.layers.Dense(<span class="number">100</span>, activation=<span class="string">'relu'</span>)</span><br><span class="line">        self.relu_layer_2 = keras.layers.Dense(self.item_dim, activation=<span class="string">'relu'</span>)</span><br><span class="line">        self.item_embedding = keras.layers.Embedding(self.item_num, self.item_dim)</span><br><span class="line">        self.built = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span><span class="params">(self, inputs, training=None, mask=None)</span>:</span></span><br><span class="line">        <span class="comment"># inputs: (batch_size, feature)</span></span><br><span class="line">        item_vec = self.item_embedding(inputs[:, <span class="number">-1</span>])</span><br><span class="line">        item_vec = tf.reshape(item_vec, shape=(<span class="number">-1</span>, self.item_dim))</span><br><span class="line">        ft_list = []</span><br><span class="line">        <span class="keyword">for</span> i, ft_info <span class="keyword">in</span> enumerate(self.feature_info_list[:<span class="number">-1</span>]):</span><br><span class="line">            ft = inputs[:, i]</span><br><span class="line">            <span class="keyword">if</span> ft_info[<span class="string">'type'</span>] == <span class="string">'sparse'</span>:</span><br><span class="line">                ft = self.embedding_list[i](ft)</span><br><span class="line">                ft = tf.reshape(ft, shape=(<span class="number">-1</span>, self.feature_info_list[i][<span class="string">'dim'</span>]))</span><br><span class="line">                ft_list.append(ft)</span><br><span class="line">            <span class="keyword">elif</span> ft_info[<span class="string">'type'</span>] == <span class="string">'dense'</span>:</span><br><span class="line">                ft = tf.reshape(ft, shape=(<span class="number">-1</span>, <span class="number">1</span>))</span><br><span class="line">                ft_list.append(ft)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">raise</span> Exception(<span class="string">'特征类型错误!'</span>)</span><br><span class="line"></span><br><span class="line">        ft_concat = tf.concat(ft_list, axis=<span class="number">-1</span>)</span><br><span class="line">        x = self.relu_layer_0(ft_concat)</span><br><span class="line">        x = self.relu_layer_1(x)</span><br><span class="line">        x = self.relu_layer_2(x)</span><br><span class="line">        output = keras.layers.dot([x, item_vec], axes=<span class="number">1</span>)</span><br><span class="line">        output = tf.sigmoid(output)</span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">keras.backend.clear_session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># [4177,    1,    6,   20, 2716]</span></span><br><span class="line"><span class="comment"># 这里虽然定义了dense_feature, 但全部是当做sparse_feature来做的</span></span><br><span class="line">feature_info_list = [sparse_feature(<span class="string">'user_id'</span>, <span class="number">4178</span>, <span class="number">32</span>),</span><br><span class="line">                    sparse_feature(<span class="string">'gender'</span>, <span class="number">2</span>, <span class="number">8</span>),</span><br><span class="line">                    sparse_feature(<span class="string">'age'</span>, <span class="number">7</span>, <span class="number">16</span>),</span><br><span class="line">                    sparse_feature(<span class="string">'occupation'</span>, <span class="number">21</span>, <span class="number">16</span>),</span><br><span class="line">                    sparse_feature(<span class="string">'item_id'</span>, <span class="number">2717</span>, <span class="number">32</span>)]</span><br><span class="line"></span><br><span class="line">model = YouTubeNet(feature_info_list)</span><br><span class="line"></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>, loss=<span class="string">'binary_crossentropy'</span>, metrics=[<span class="string">'AUC'</span>])</span><br><span class="line"></span><br><span class="line">model.fit(train_dataset,</span><br><span class="line">          train_y,</span><br><span class="line">          validation_split=<span class="number">0.2</span>,</span><br><span class="line">          batch_size=<span class="number">64</span>,</span><br><span class="line">          epochs=<span class="number">100</span>,</span><br><span class="line">          shuffle=<span class="literal">True</span>,</span><br><span class="line">          callbacks=[</span><br><span class="line">              keras.callbacks.EarlyStopping(monitor=<span class="string">'val_auc'</span>,</span><br><span class="line">                                            patience=<span class="number">5</span>,</span><br><span class="line">                                            restore_best_weights=<span class="literal">True</span>,</span><br><span class="line">                                            mode=<span class="string">'max'</span>),</span><br><span class="line">              keras.callbacks.ReduceLROnPlateau(monitor=<span class="string">'val_auc'</span>,</span><br><span class="line">                                                factor=<span class="number">0.2</span>,</span><br><span class="line">                                                patience=<span class="number">1</span>,</span><br><span class="line">                                                mode=<span class="string">'max'</span>),</span><br><span class="line">          ])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Epoch 1/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.6270 - auc: 0.6942 - val_loss: 0.6157 - val_auc: 0.7102</span><br><span class="line">Epoch 2/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.6040 - auc: 0.7251 - val_loss: 0.6111 - val_auc: 0.7183</span><br><span class="line">Epoch 3/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.5892 - auc: 0.7437 - val_loss: 0.6000 - val_auc: 0.7336</span><br><span class="line">Epoch 4/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.5665 - auc: 0.7696 - val_loss: 0.5930 - val_auc: 0.7453</span><br><span class="line">Epoch 5/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.5475 - auc: 0.7885 - val_loss: 0.5928 - val_auc: 0.7486</span><br><span class="line">Epoch 6/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.5327 - auc: 0.8019 - val_loss: 0.5999 - val_auc: 0.7475</span><br><span class="line">Epoch 7/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.5052 - auc: 0.8247 - val_loss: 0.6144 - val_auc: 0.7462</span><br><span class="line">Epoch 8/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.4968 - auc: 0.8312 - val_loss: 0.6192 - val_auc: 0.7456</span><br><span class="line">Epoch 9/100</span><br><span class="line">5025/5025 [==============================] - 19s 4ms/step - loss: 0.4950 - auc: 0.8325 - val_loss: 0.6197 - val_auc: 0.7455</span><br><span class="line">Epoch 10/100</span><br><span class="line">5025/5025 [==============================] - 20s 4ms/step - loss: 0.4947 - auc: 0.8328 - val_loss: 0.6198 - val_auc: 0.7455</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.evaluate(test_dataset, test_y)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2080/2080 [==============================] - 4s 2ms/step - loss: 0.6245 - auc: 0.7276</span><br><span class="line">[0.6244723796844482, 0.7276008129119873]</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>上面介绍了YouTubeNet召回部分的模型, 由于本身是工业界提出的算法, 并不是特别复杂, 比较容易实现, 同时对于实际的业务场景也比较友好.</p>
+<p>相比协同过滤一类的召回算法, YouTubeNet在保证了仍然可以用训练好的Embedding向量进行最近邻检索, 以维持快速响应外, 在用户侧加入了除ID以外的更多用户信息, 理论上可以获得更好的效果.</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/召回/" rel="tag"># 召回</a>
+          
+            <a href="/tags/推荐系统/" rel="tag"># 推荐系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/10/推荐系统/用户画像-二/" rel="next" title="用户画像(二)">
+                <i class="fa fa-chevron-left"></i> 用户画像(二)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/10/推荐系统/DSSM召回/" rel="prev" title="DSSM召回">
+                DSSM召回 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">月小白</p>
+  <div class="site-description motion-element" itemprop="description">这是一家有爱的小店</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据准备"><span class="nav-number">3.1.</span> <span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练"><span class="nav-number">3.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">月小白</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+<script>
+// GET RESPONSIVE HEIGHT PASSED FROM IFRAME
+
+window.addEventListener("message", function(e) {
+  var data = e.data;
+  if ((typeof data === 'string') && (data.indexOf('ciu_embed') > -1)) {
+    var featureID = data.split(':')[1];
+    var height = data.split(':')[2];
+    $(`iframe[data-feature=${featureID}]`).height(parseInt(height) + 30);
+  }
+}, false);
+</script>
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
